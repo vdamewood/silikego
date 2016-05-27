@@ -1,29 +1,28 @@
-# Xavi Project Overview
+# Silikego Project Overview
 
-<http://damewood.us/projects/xavi>
+<http://damewood.us/projects/Siliko>
 
-The Xavi project is an example project for teaching programmers how to manage
-and organize their code, as well as streamline the development process. As
-the main examples, Xavi and XaviPP are libraries for processing and evaluating
-mathematical expressions using mixed integer and floating-point arithmetic.
-Xavi is written in C, and XaviPP is written in C++. They are mutually redundant.
-So a C programmer can safely ignore XaviPP and a C++ programmer can ignore Xavi.
-The Xavi Project also includes example programs and tests that interact with the
-libraries. These programs offer a minimal user interface, and demonstrate how to
-use the base libraries. There is also a companion book to the Xavi project.
-Information on finding the book is on the Xavi Project page linked above. 
+Silikego is an example project for teaching programmers how to manage
+and organize their code, and is a library, written in C++ for processing and
+evaluating mathematical expressions using mixed integer and floating-point
+arithmetic. C Developers may be intereted in Siliko, a C library that is
+virtually identical to Silikego.
 
-For instructions on how to build the Xavi project, see the file Build.txt.
+Testing and interface programs are also included in the project. These programs
+demonstrate how to use the base library. There is also a companion book for the
+Siliko and Silikego. Information on finding the book is on the Siliko Project
+page linked above.
 
-The libraries, Xavi and XaviPP, may be copied, modified, and distributed under
-the terms of the GNU Lesser General Public License version 3 or later. See the
-file LGPL-3.0.txt for details. Tests and example programs may be copied,
-modified, and distributed under the terms of the GNU General Public License
-version 3 or later. See the file GPL-3.0.txt for details.
+For instructions on how to build Silikego, see the file Build.txt.
 
-Xavi and XaviPP have some level of extendability. Using their default
-components, Xavi and XaviPP support infix-notation arithmatic expressions with
-the following features:
+The library may be copied, modified, and distributed under the terms of the GNU
+Lesser General Public License version 3 or later. See the file LGPL-3.0.txt for
+details. The text and interface programs may be copied, modified, and
+distributed under the terms of the GNU General Public License version 3 or
+later. See the file GPL-3.0.txt for details.
+
+Silikego has some level of extendability. Using its default components, Silikego
+supports infix-notation arithmatic expressions with the following features:
 
 * Four-function calculations, such as `2 + 2`, `3 * 4.0`, `9.0 - 3.0` and
   `8 / 2`.
@@ -36,11 +35,11 @@ the following features:
 * Functions: `abs()`, `acos()`, `asin()`, `atan()`, `ceil()`, `cos()`,
   `cosh()`, `exp()`, `floor()`, `log()`, `log10()`, `sin()`, `sinh()`,
   `sqrt()`, `tan()`, and `tanh()`.
-* Xavi and XaviPP ignore space and tab characters in their input, except to
+* Siliko ignores space and tab characters in its input, except to
   separate tokens.
 
-When mixing numeric types, Xavi and XaviPP will give integer results in
-calculations involving only integers and floating-point results in calculations
-involving either integers and floating-point numbers, or only floating-point
-numbers. If division involves two integers where the result would not be a whole
-number, they return a floating-point value.
+When mixing numeric types, Silikego will give integer results in operations
+involving only integers and will give floating-point results in calculations
+involving floating-point numbers whether integers are also included or not. If
+division involves two integers where the result would not be a whole number, the
+operation will yeald a floating-point value.
