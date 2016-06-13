@@ -15,8 +15,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 set(EXENAME Silikego-Cli)
-set(SRCS Main.cpp StringSource.cpp)
-set(HDRS StringSource.cpp)
+set(SRCS Main.cc StringSource.cc)
+set(HDRS StringSource.hh)
 set(LIBS ${CXXLIB})
 
 if (UNIX)

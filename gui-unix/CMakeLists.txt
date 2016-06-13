@@ -15,8 +15,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 set(EXENAME Silikego-Gui-Gtk)
-set(HDRS EvalWindow.hpp)
-set(SRCS Silikego-Gui-Gtk.cpp EvalWindow.cpp)
+set(HDRS EvalWindow.hh)
+set(SRCS Silikego-Gui-Gtk.cc EvalWindow.cc)
 set(LIBS ${CXXLIB} ${GTKMM2_LIBRARIES})
 set(SHARE "${SHARE_INSTALL_PATH}/Silikego-Gui-Gtk")
 

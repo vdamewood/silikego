@@ -21,27 +21,27 @@ set(LIB_VERSION_PATCH 0)
 set(LIB_VERSION_STRING "${LIB_VERSION_MAJOR}.${LIB_VERSION_MINOR}.${LIB_VERSION_PATCH}")
 
 set(PHDRS
-  W32Dll.hpp
-  Value.hpp
-  FunctionCaller.hpp
-  SyntaxTree.hpp
-  DataSource.hpp
-  CStringSource.hpp
-  Token.hpp
-  Lexer.hpp
-  InfixParser.hpp)
+  W32Dll.hh
+  Value.hh
+  FunctionCaller.hh
+  SyntaxTree.hh
+  DataSource.hh
+  CStringSource.hh
+  Token.hh
+  Lexer.hh
+  InfixParser.hh)
 set(HDRS
   ${PHDRS}
-  Functions.hpp)
+  Functions.hh)
 set(SRCS
-  Value.cpp
-  Functions.cpp
-  FunctionCaller.cpp
-  SyntaxTree.cpp
-  CStringSource.cpp
-  Token.cpp
-  Lexer.cpp
-  InfixParser.cpp)
+  Value.cc
+  Functions.cc
+  FunctionCaller.cc
+  SyntaxTree.cc
+  CStringSource.cc
+  Token.cc
+  Lexer.cc
+  InfixParser.cc)
 
 add_library(${LIBNAME} ${HDRS} ${SRCS})
 set_target_properties(${LIBNAME}

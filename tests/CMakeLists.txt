@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-add_executable(TestFunctions TestFunctions.cpp)
+add_executable(TestFunctions TestFunctions.cc)
 target_link_libraries(TestFunctions Silikego)
 
-add_executable(TestLexer TestLexer.cpp)
+add_executable(TestLexer TestLexer.cc)
 target_link_libraries(TestLexer Silikego)
 
-add_executable(TestLinkage TestLinkage.cpp)
+add_executable(TestLinkage TestLinkage.cc)
 target_link_libraries(TestLinkage Silikego)

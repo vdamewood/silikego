@@ -17,10 +17,10 @@
 
 #import "Delegate.hh"
 
-#include "InfixParser.hpp"
-#include "SyntaxTree.hpp"
-#include "FunctionCaller.hpp"
-#include "CStringSource.hpp"
+#include "InfixParser.hh"
+#include "SyntaxTree.hh"
+#include "FunctionCaller.hh"
+#include "CStringSource.hh"
 
 #import <Cocoa/Cocoa.h>
 
