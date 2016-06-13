@@ -1,5 +1,5 @@
-/* DataSource.hh: Abstract interface for input data
- * Copyright 2014, 2015, 2016 Vincent Damewood
+/* DataSource.cc: Abstract interface for input data
+ * Copyright 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,20 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_DATA_SOURCE_HH
-#define SILIKEGO_DATA_SOURCE_HH
+#include "DataSource.hh"
 
-#include "W32Dll.hh"
-
-namespace Silikego
+Silikego::DataSource::~DataSource()
 {
-	class SILIKEGO_API DataSource
-	{
-	public:
-		virtual ~DataSource();
-		virtual bool Advance() = 0;
-		virtual char GetCurrent() = 0;
-	};
-};
-
-#endif // SILIKEGO_DATA_SOURCE_HH
+}

@@ -38,6 +38,7 @@ set(SRCS
   Functions.cc
   FunctionCaller.cc
   SyntaxTree.cc
+  DataSource.cc
   CStringSource.cc
   Token.cc
   Lexer.cc
