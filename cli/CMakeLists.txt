@@ -19,13 +19,27 @@ set(SRCS Main.cc StringSource.cc)
 set(HDRS StringSource.hh)
 set(LIBS ${CXXLIB})
 
+message("-- Finding readline")
+find_path(READLINE_INC NAMES readline/readline.h)
+find_library(READLINE_LIB readline)
+
+if(READLINE_LIB AND READLINE_INC)
+	message("-- Finding readline -- found")
+	list(APPEND LIBS ${READLINE_LIB})
+	include_directories(${READLINE_INC})
+	add_definitions(-DHAVE_READLINE=1)
+else()
+	message("-- Finding readline -- not found")
+	add_definitions(-DHAVE_READLINE=0)
+endif()
+
 if (UNIX)
   add_definitions(-DUSE_UNIX=1)
 else()
   add_definitions(-DUSE_UNIX=0)
 endif()
 
-add_executable(${EXENAME} ${HDRA} ${SRCS})
+add_executable(${EXENAME} ${HDRS} ${SRCS})
 target_link_libraries(${EXENAME} ${LIBS})
 install(TARGETS ${EXENAME}
   RUNTIME    DESTINATION ${RUNTIME_INSTALL_PATH})

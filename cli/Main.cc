@@ -31,6 +31,9 @@
 #include "InfixParser.hh"
 #include "StringSource.hh"
 
+#if HAVE_READLINE
+#include <readline/readline.h>
+#else
 char *readline(const char *prompt)
 {
 	size_t inputChar = 0;
@@ -85,6 +88,10 @@ char *readline(const char *prompt)
 	return rVal;
 }
 
+void add_history(char *command)
+{
+}
+#endif /* HAVE_READLINE */
 
 int main(int argc, char *argv[])
 {
@@ -104,15 +111,27 @@ int main(int argc, char *argv[])
 
 	Silikego::FunctionCaller::SetUp();
 
+	char *expression = NULL;
+	char *old_expression = NULL;
 	while(-1)
 	{
-		char *expression = readline(prompt);
-		Silikego::SyntaxTreeNode *Tree;
-		if(!expression)
-			break;
+		expression = readline(prompt);
 
-		Tree = Silikego::ParseInfix(new StringSource(expression));
-		free(expression);
+		if(!expression)
+		{
+			free(static_cast<void*>(old_expression));
+			old_expression = NULL;
+			break;
+		}
+
+		if(*expression && (!old_expression || std::strcmp(expression, old_expression) != 0))
+			add_history(expression);
+
+		free(static_cast<void*>(old_expression));
+		old_expression = NULL;
+
+		Silikego::SyntaxTreeNode *Tree
+			= Silikego::ParseInfix(new StringSource(expression));
 
 		Silikego::Value result = Tree->Evaluate();
 		delete Tree;
@@ -121,6 +140,7 @@ int main(int argc, char *argv[])
 		char *ResultString = result.ToCString();
 		std::cout << ResultString << std::endl;
 		delete[] ResultString;
+		old_expression = expression;
 	}
 
 	Silikego::FunctionCaller::TearDown();
