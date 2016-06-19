@@ -37,16 +37,6 @@ option(BUILD_GUI "Build a GUI using native API" On)
 # Dependency Searches #
 #######################
 
-# Detect if system has separate math library (libm)
-message("-- Finding Math Library")
-find_library(MATH m)
-if(${MATH} STREQUAL "MATH-NOTFOUND")
-    message("-- Finding Math Library - not needed")
-    set(MATH "")
-else()
-    message("-- Finding Math Library - found")
-endif()
-
 # Find Cocoa and ibtool
 if (BUILD_GUI AND APPLE)
   set(USE_COCOA On)
