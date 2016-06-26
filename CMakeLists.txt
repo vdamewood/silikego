@@ -229,19 +229,19 @@ add_subdirectory(lib)
 include_directories(${Silikego_SOURCE_DIR}/lib)
 
 # Command-line Programs
-add_subdirectory(cli)
+add_subdirectory(command)
 
 # GUI Programs
 if(USE_COCOA)
-  add_subdirectory(gui-osx)
+  add_subdirectory(cocoa)
 endif()
 
 if(USE_GTK)
-  add_subdirectory(gui-unix)
+  add_subdirectory(gtkmm2)
 endif()
 
 if(USE_MFC)
-    add_subdirectory(gui-windows)
+    add_subdirectory(mfc)
 endif()
 
 ##################################
