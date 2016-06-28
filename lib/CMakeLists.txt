@@ -48,7 +48,7 @@ set(RESOURCES
 
 add_library(${LIBNAME} ${HDRS} ${SRCS} ${RESOURCES})
 set_target_properties(${LIBNAME} PROPERTIES
-    FRAMEWORK     TRUE
+    FRAMEWORK     ${BUILD_MACOSX}
     PUBLIC_HEADER "${PHDRS}"
     RESOURCE      "${RESOURCES}"
     VERSION       ${LIB_VERSION_STRING}
