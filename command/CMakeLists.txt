@@ -17,8 +17,8 @@
 set(EXENAME Silikego-Cli)
 set(SRCS Main.cc StringSource.cc)
 set(HDRS StringSource.hh)
-set(LIBS ${CXXLIB})
 
+set(LIBS ${LIB})
 message("-- Finding readline")
 find_path(READLINE_INC NAMES readline/readline.h)
 find_library(READLINE_LIB readline)

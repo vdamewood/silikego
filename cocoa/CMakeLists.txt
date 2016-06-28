@@ -14,20 +14,44 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(EXENAME Silikego-Gui-Cocoa)
+set(EXENAME Silikego-Gui)
 set(HDRS Delegate.hh)
 set(XIB MainMenu)
 set(SRCS Delegate.mm Main.mm "${XIB}.nib")
-set(LIBS ${COCOA} ${CXXLIB})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.vdamewood.${EXENAME}")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Silikego")
 set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${Silikego_VERSION_STRING})
 set(MACOSX_BUNDLE_BUNDLE_VERSION 1.0.0)
-set(MACOSX_BUNDLE_COPYRIGHT ${Silikego_APP_COPYRIGHT_STATEMENT})
+set(MACOSX_BUNDLE_COPYRIGHT ${COPYRIGHT_STATEMENT})
 set(MACOSX_BUNDLE_MAIN_NIB_FILE ${XIB})
 set(MACOSX_BUNDLE_PRINCIPAL_CLASS "NSApplication")
+
+set(LIBS ${LIB})
+message("-- Finding Cocoa")
+find_library(COCOA Cocoa)
+if(NOT ${COCOA} STREQUAL "COCOA-NOTFOUND")
+  message("-- Finding Cocoa - found")
+  list(APPEND LIBS ${COCOA})
+  set(COCOA_FOUND Yes)
+else()
+  message("-- Finding Cocoa - not found")
+  set(COCOA_FOUND No)
+endif()
+
+find_program(IBTOOL ibtool)
+if (NOT ${IBTOOL} STREQUAL "IBTOOL-NOTFOUND")
+  message("-- Finding ibtool - found")
+  set(IBTOOL_FOUND Yes)
+else()
+  message("-- Finding ibtool - not found")
+  set(IBTOOL_FOUND No)
+endif()
+
+if(NOT COCOA_FOUND OR NOT IBTOOL_FOUND)
+  message(FATAL_ERROR "Can't build GUI. Quitting.")
+endif()
 
 add_custom_command(OUTPUT "${XIB}.nib"
 	COMMAND ${IBTOOL} --compile ${XIB}.nib ${CMAKE_CURRENT_SOURCE_DIR}/${XIB}.xib
@@ -43,4 +67,4 @@ install(TARGETS "${EXENAME}"
   BUNDLE  DESTINATION ${BUNDLE_INSTALL_PATH})
 
 install(CODE "include(BundleUtilities)")
-install(CODE "fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${EXENAME}.app\" \"\" \"${CXXLIB_BINARY_DIR}\")")
+install(CODE "fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${EXENAME}.app\" \"\" \"${LIB_BINARY_DIR}\")")

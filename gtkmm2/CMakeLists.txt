@@ -14,14 +14,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(EXENAME Silikego-Gui-Gtk)
+set(EXENAME Silikego-Gui)
 set(HDRS EvalWindow.hh)
-set(SRCS Silikego-Gui-Gtk.cc EvalWindow.cc)
-set(LIBS ${CXXLIB} ${GTKMM2_LIBRARIES})
-set(SHARE "${SHARE_INSTALL_PATH}/Silikego-Gui-Gtk")
+set(SRCS Main.cc EvalWindow.cc)
 
-include_directories(${GTKMM2_INCLUDE_DIRS})
-add_definitions("-DSHARE_PATH=\"${CMAKE_INSTALL_PREFIX}/${SHARE}\"")
+set(LIBS ${LIB})
+message("-- Finding GTKmm 2")
+find_package(GTK2 QUIET COMPONENTS gtk gtkmm)
+if(GTK2_FOUND)
+  message("-- Finding GTKmm 2 - found")
+  list(APPEND LIBS ${GTK2_LIBRARIES})
+  include_directories(${GTK2_INCLUDE_DIRS})
+else()
+  message("-- Finding GTKmm 2 - not found")
+endif()
+
+if(NOT GTK2_FOUND)
+  message(FATAL_ERROR "Can't build GUI. Quitting.")
+endif()
+
+add_definitions("-DSHARE_PATH=\"${SHARE_INSTALL_PREFIX}"\"")
 add_executable(${EXENAME} ${SRCS} ${HDRS})
 target_link_libraries(${EXENAME} ${LIBS})
 
@@ -30,4 +42,4 @@ install(TARGETS ${EXENAME}
 
 install(
   FILES EvalWindow.glade
-  DESTINATION ${SHARE})
+  DESTINATION ${SHARE_INSTALL_PREFIX})

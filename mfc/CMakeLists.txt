@@ -14,13 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(EXENAME Silikego-Gui-Win32)
+set(EXENAME Silikego-Gui)
 set(HDRS EvalWindow.hh About.hh Id.h)
 set(SRCS App.cc EvalWindow.cc EvalWindow.rc About.cc About.rc)
-set(LIBS ${CXXLIB})
 
-ADD_DEFINITIONS(-D_AFXDLL -D_WIN32_WINNT=NTDDI_WIN7)
-SET(CMAKE_MFC_FLAG 2)
+set(LIBS ${LIB})
+message("-- Finding MFC Framework")
+find_package(MFC QUIET)
+if(MFC_FOUND)
+  message("-- Finding MFC Framework - found")
+  ADD_DEFINITIONS(-D_AFXDLL -D_WIN32_WINNT=NTDDI_WIN7)
+  SET(CMAKE_MFC_FLAG 2)
+else()
+  message("-- Finding MFC Framework - not found")
+endif()
+
+if(NOT MFC_FOUND)
+  message(FATAL_ERROR "Can't build GUI. Quitting.")
+endif()
 
 add_executable(${EXENAME} WIN32 ${HDRS} ${SRCS})
 target_link_libraries(${EXENAME} ${LIBS})
