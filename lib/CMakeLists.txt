@@ -14,13 +14,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-set(LIBNAME Silikego)
-set(LIB_VERSION_MAJOR 0)
-set(LIB_VERSION_MINOR 0)
-set(LIB_VERSION_PATCH 0)
-set(LIB_VERSION_STRING "${LIB_VERSION_MAJOR}.${LIB_VERSION_MINOR}.${LIB_VERSION_PATCH}")
+set(TARGET SilikegoLib)
 
-set(PHDRS
+set(PUB_HEADERS
   W32Dll.hh
   Value.hh
   FunctionCaller.hh
@@ -30,10 +26,10 @@ set(PHDRS
   Token.hh
   Lexer.hh
   InfixParser.hh)
-set(HDRS
-  ${PHDRS}
+set(HEADERS
+  ${PUB_HEADERS}
   Functions.hh)
-set(SRCS
+set(SOURCES
   Value.cc
   Functions.cc
   FunctionCaller.cc
@@ -46,20 +42,21 @@ set(SRCS
 set(RESOURCES
   SilikegoConfig.cmake)
 
-add_library(${LIBNAME} ${HDRS} ${SRCS} ${RESOURCES})
-set_target_properties(${LIBNAME} PROPERTIES
+add_library(${TARGET} ${HEADERS} ${SOURCES} ${RESOURCES})
+set_target_properties(${TARGET} PROPERTIES
+    OUTPUT_NAME   ${ONAMEDLIB}
     FRAMEWORK     ${BUILD_MACOSX}
-    PUBLIC_HEADER ${PHDRS}
+    PUBLIC_HEADER ${PUB_HEADERS}
     RESOURCE      ${RESOURCES}
-    VERSION       ${LIB_VERSION_STRING}
-    SOVERSION     ${LIB_VERSION_MAJOR})
-install(TARGETS ${LIBNAME}
+    VERSION       ${PROJECT_VERSION}
+    SOVERSION     ${PROJECT_VERSION_MAJOR})
+
+install(TARGETS ${TARGET}
   RUNTIME       DESTINATION ${INSTBIN}
   ARCHIVE       DESTINATION ${INSTLIB}
   LIBRARY       DESTINATION ${INSTLIB}
   FRAMEWORK     DESTINATION .
   RESOURCE      DESTINATION ${INSTDAT}
-  PUBLIC_HEADER DESTINATION ${INSTINC}/${LIBNAME})
+  PUBLIC_HEADER DESTINATION ${INSTINC}/Silikego)
 
-set(LIB ${LIBNAME} PARENT_SCOPE)
 set(LIB_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)

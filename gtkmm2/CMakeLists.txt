@@ -14,16 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(EXENAME Silikego-Gui)
-set(HDRS EvalWindow.hh)
-set(SRCS Main.cc EvalWindow.cc)
+set(TARGET SilikegoGui)
+set(HEADERS EvalWindow.hh)
+set(SOURCES Main.cc EvalWindow.cc)
+set(LAYOUTS EvalWindow.glade)
 
-set(LIBS ${LIB})
+set(DEPS SilikoLib)
 message("-- Finding GTKmm 2")
 find_package(GTK2 QUIET COMPONENTS gtk gtkmm)
 if(GTK2_FOUND)
   message("-- Finding GTKmm 2 - found")
-  list(APPEND LIBS ${GTK2_LIBRARIES})
+  list(APPEND DEPS ${GTK2_LIBRARIES})
   include_directories(${GTK2_INCLUDE_DIRS})
 else()
   message("-- Finding GTKmm 2 - not found")
@@ -34,12 +35,15 @@ if(NOT GTK2_FOUND)
 endif()
 
 add_definitions("-DSHARE_PATH=\"${CMAKE_INSTALL_PREFIX}/${INSTDAT}\"")
-add_executable(${EXENAME} ${SRCS} ${HDRS})
-target_link_libraries(${EXENAME} ${LIBS})
 
-install(TARGETS ${EXENAME}
+add_executable(${TARGET} ${SOURCES} ${HEADERS})
+set_target_properties(${TARGET} PROPERTIES
+	OUTPUT_NAME ${ONAMEGUI})
+target_link_libraries(${TARGET} ${DEPS})
+
+install(TARGETS ${TARGET}
   RUNTIME    DESTINATION ${INSTBIN})
 
 install(
-  FILES EvalWindow.glade
+  FILES ${LAYOUTS}
   DESTINATION ${INSTDAT})

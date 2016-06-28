@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(EXENAME Silikego-Gui)
-set(HDRS EvalWindow.hh About.hh Id.h)
-set(SRCS App.cc EvalWindow.cc EvalWindow.rc About.cc About.rc)
+set(TARGET SilikegoGui)
+set(HEADERS EvalWindow.hh About.hh Id.h)
+set(SOURCES App.cc EvalWindow.cc EvalWindow.rc About.cc About.rc)
+set(DEPS SilikegoLib)
 
-set(LIBS ${LIB})
 message("-- Finding MFC Framework")
 find_package(MFC QUIET)
 if(MFC_FOUND)
@@ -33,8 +33,10 @@ if(NOT MFC_FOUND)
   message(FATAL_ERROR "Can't build GUI. Quitting.")
 endif()
 
-add_executable(${EXENAME} WIN32 ${HDRS} ${SRCS})
-target_link_libraries(${EXENAME} ${LIBS})
+add_executable(${TARGET} WIN32 ${HEADERS} ${SOURCES})
+set_target_properties(${TARGET} PROPERTIES
+	OUTPUT_NAME ${ONAMEGUI})
+target_link_libraries(${TARGET} ${DEPS})
 
-install(TARGETS ${EXENAME}
+install(TARGETS ${TARGET}
   RUNTIME DESTINATION ${INSTBIN})

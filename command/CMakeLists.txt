@@ -14,18 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(EXENAME Silikego-Cli)
-set(SRCS Main.cc StringSource.cc)
-set(HDRS StringSource.hh)
+set(TARGET SilikegoCli)
+set(SOURCES Main.cc StringSource.cc)
+set(HEADERS StringSource.hh)
 
-set(LIBS ${LIB})
+set(DEPS SilikegoLib)
 message("-- Finding readline")
 find_path(READLINE_INC NAMES readline/readline.h)
 find_library(READLINE_LIB readline)
 
 if(READLINE_LIB AND READLINE_INC)
 	message("-- Finding readline -- found")
-	list(APPEND LIBS ${READLINE_LIB})
+	list(APPEND DEPS ${READLINE_LIB})
 	include_directories(${READLINE_INC})
 	add_definitions(-DHAVE_READLINE=1)
 else()
@@ -39,7 +39,10 @@ else()
   add_definitions(-DUSE_UNIX=0)
 endif()
 
-add_executable(${EXENAME} ${HDRS} ${SRCS})
-target_link_libraries(${EXENAME} ${LIBS})
-install(TARGETS ${EXENAME}
+add_executable(${TARGET} ${HEADERS} ${SOURCES})
+set_target_properties(${TARGET} PROPERTIES
+  OUTPUT_NAME ${ONAMECLI})
+target_link_libraries(${TARGET} ${DEPS})
+
+install(TARGETS ${TARGET}
   RUNTIME    DESTINATION ${INSTBIN})

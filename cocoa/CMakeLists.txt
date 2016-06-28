@@ -14,26 +14,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(EXENAME Silikego-Gui)
-set(HDRS Delegate.hh)
+set(TARGET SilikegoGui)
+set(HEADERS Delegate.hh)
 set(XIB MainMenu)
-set(SRCS Delegate.mm Main.mm "${XIB}.nib")
+set(SOURCES Delegate.mm Main.mm "${XIB}.nib")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc")
-set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.vdamewood.${EXENAME}")
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.vdamewood.${TARGET}")
 set(MACOSX_BUNDLE_BUNDLE_NAME "Silikego")
-set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION_STRING})
-set(MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION_STRING})
+set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
+set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
 set(MACOSX_BUNDLE_COPYRIGHT ${COPYRIGHT_STATEMENT})
 set(MACOSX_BUNDLE_MAIN_NIB_FILE ${XIB})
 set(MACOSX_BUNDLE_PRINCIPAL_CLASS "NSApplication")
 
-set(LIBS ${LIB})
+set(DEPS SilikegoLib)
 message("-- Finding Cocoa")
 find_library(COCOA Cocoa)
 if(NOT ${COCOA} STREQUAL "COCOA-NOTFOUND")
   message("-- Finding Cocoa - found")
-  list(APPEND LIBS ${COCOA})
+  list(APPEND DEPS ${COCOA})
   set(COCOA_FOUND Yes)
 else()
   message("-- Finding Cocoa - not found")
@@ -58,13 +58,16 @@ add_custom_command(OUTPUT "${XIB}.nib"
         COMMENT "Compiling ${CMAKE_CURRENT_SOURCE_DIR}/${XIB}.xib")
 set_source_files_properties("${XIB}.nib" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-add_executable(${EXENAME} MACOSX_BUNDLE ${HDRS} ${SRCS})
-target_link_libraries(${EXENAME} ${LIBS})
-set_target_properties(${EXENAME} PROPERTIES
-    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in")
-install(TARGETS "${EXENAME}"
+add_executable(${TARGET} MACOSX_BUNDLE ${HEADERS} ${SOURCES})
+set_target_properties(${TARGET} PROPERTIES
+  OUTPUT_NAME ${ONAMEGUI}
+  MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in")
+target_link_libraries(${TARGET} ${DEPS})
+
+install(TARGETS "${TARGET}"
   RUNTIME DESTINATION ${INSTBIN}
   BUNDLE  DESTINATION .)
 
 install(CODE "include(BundleUtilities)")
-install(CODE "fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${EXENAME}.app\" \"\" \"${LIB_BINARY_DIR}\")")
+install(CODE "message(\"Installing Libs from ${LIB_BINARY_DIR}\")")
+install(CODE "fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${ONAMEGUI}.app\" \"\" \"${LIB_BINARY_DIR}\")")
