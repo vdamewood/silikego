@@ -20,10 +20,9 @@
 
 cmake_minimum_required(VERSION 3.1.0)
 
-project(Silikego CXX)
-set(Silikego_VERSION_MAJOR 0)
-set(Silikego_VERSION_MINOR 0)
-set(Silikego_VERSION_PATCH 0)
+project(Silikego
+  LANGUAGES CXX
+  VERSION   0.0.0)
 
 #########################
 # Configuration Options #
@@ -68,7 +67,6 @@ endif()
 # Build-Independent Values #
 ############################
 
-set(VERSION_STRING "${Silikego_VERSION_MAJOR}.${Silikego_VERSION_MINOR}.${Silikego_VERSION_PATCH}")
 set(COPYRIGHT_STATEMENT "Copyright 2012, 2014, 2015, 2016 Vincent Damewood.\
  Silikego library licensed under the terms of the GNU Lesser General Public License, version 3 or later.\
  Silikego interface programs licensed under the terms of the GNU General Public License, version 3 or later.")
@@ -127,7 +125,7 @@ endif()
 set(CPACK_PACKAGE_VERSION_MAJOR ${Silikego_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${Silikego_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${Silikego_VERSION_PATCH})
-set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${VERSION_STRING}")
+set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${VERSION_STRING}")
 set(CPACK_SOURCE_GENERATOR TGZ TBZ2 ZIP)
 set(CPACK_SOURCE_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME})
 set(CPACK_SOURCE_IGNORE_FILES "/.git/" "/.gitignore" "/Build/" "/build/")
