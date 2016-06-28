@@ -42,4 +42,4 @@ endif()
 add_executable(${EXENAME} ${HDRS} ${SRCS})
 target_link_libraries(${EXENAME} ${LIBS})
 install(TARGETS ${EXENAME}
-  RUNTIME    DESTINATION ${RUNTIME_INSTALL_PATH})
+  RUNTIME    DESTINATION ${INSTBIN})
