@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 
 #if defined USE_UNIX
 #	include <unistd.h>
@@ -63,7 +64,7 @@ int main(int argc, char *argv[])
 
 		if(!expression)
 		{
-			free(static_cast<void*>(old_expression));
+			std::free(static_cast<void*>(old_expression));
 			old_expression = NULL;
 			break;
 		}
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
 		if(*expression && (!old_expression || std::strcmp(expression, old_expression) != 0))
 			add_history(expression);
 
-		free(static_cast<void*>(old_expression));
+		std::free(static_cast<void*>(old_expression));
 		old_expression = NULL;
 
 		Silikego::SyntaxTreeNode *Tree
