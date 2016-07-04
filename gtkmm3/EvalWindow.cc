@@ -23,8 +23,8 @@
 
 #include "EvalWindow.hh"
 
-#if !defined SHARE_PATH
-#error "You must define SHARE_PATH to build this file."
+#if !defined GLADEDIR
+#error "You must define GLADEDIR to build this file."
 #endif
 
 void EvalWindow::Calculate()
@@ -48,7 +48,7 @@ EvalWindow::EvalWindow()
 	MyInput(0),
 	MyOutput(0)
 {
-	MyBuilder = Gtk::Builder::create_from_file(SHARE_PATH "/EvalWindow.glade");
+	MyBuilder = Gtk::Builder::create_from_file(GLADEDIR "/EvalWindow.glade");
 	MyBuilder->get_widget("EvalWindow", MyWindow);
 	MyBuilder->get_widget("CalculateButton", MyButton);
 	MyBuilder->get_widget("Input", MyInput);

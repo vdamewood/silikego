@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 
 #if defined USE_UNIX
 #	include <unistd.h>
@@ -34,63 +34,8 @@
 #if HAVE_READLINE
 #include <readline/readline.h>
 #else
-char *readline(const char *prompt)
-{
-	size_t inputChar = 0;
-	int currentPosition = 0;
-	size_t bufSize = 10;
-	char *rVal;
-	char *newVal;
-
-	fputs(prompt, stdout);
-	fflush(stdout);
-
-	if (!(rVal = (char*)malloc(bufSize)))
-	{
-		return NULL;
-	}
-
-	while(-1)
-	{
-		inputChar = fgetc(stdin);
-
-		if (inputChar == EOF)
-		{
-			free(rVal);
-			rVal = NULL;
-			break;
-		}
-		else if (inputChar == '\n')
-		{
-			rVal[currentPosition] = '\0';
-			break;
-		}
-
-		rVal[currentPosition++] = (char) inputChar;
-
-		if(currentPosition == bufSize)
-		{
-			bufSize += 10;
-			newVal = (char *) realloc(rVal, bufSize);
-			if (newVal)
-			{
-				rVal = newVal;
-			}
-			else
-			{
-				free(rVal);
-				rVal = NULL;
-				break;
-			}
-		}
-	}
-
-	return rVal;
-}
-
-void add_history(char *command)
-{
-}
+extern "C" char *readline(const char *);
+extern "C" void add_history(char *);
 #endif /* HAVE_READLINE */
 
 int main(int argc, char *argv[])
@@ -119,7 +64,7 @@ int main(int argc, char *argv[])
 
 		if(!expression)
 		{
-			free(static_cast<void*>(old_expression));
+			std::free(static_cast<void*>(old_expression));
 			old_expression = NULL;
 			break;
 		}
@@ -127,7 +72,7 @@ int main(int argc, char *argv[])
 		if(*expression && (!old_expression || std::strcmp(expression, old_expression) != 0))
 			add_history(expression);
 
-		free(static_cast<void*>(old_expression));
+		std::free(static_cast<void*>(old_expression));
 		old_expression = NULL;
 
 		Silikego::SyntaxTreeNode *Tree
