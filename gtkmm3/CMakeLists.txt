@@ -19,7 +19,7 @@ set(HEADERS EvalWindow.hh)
 set(SOURCES Main.cc EvalWindow.cc)
 set(LAYOUTS EvalWindow.glade)
 
-set(DEPS SilikoLib)
+set(DEPS SilikegoLib)
 message("-- Finding GTKmm 2")
 find_package(GTK2 QUIET COMPONENTS gtk gtkmm)
 if(GTK2_FOUND)
