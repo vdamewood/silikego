@@ -60,7 +60,7 @@ set_source_files_properties("${XIB}.nib" PROPERTIES MACOSX_PACKAGE_LOCATION Reso
 
 add_executable(${TARGET} MACOSX_BUNDLE ${HEADERS} ${SOURCES})
 set_target_properties(${TARGET} PROPERTIES
-  OUTPUT_NAME ${ONAMEGUI}
+  OUTPUT_NAME "${ONAMEGUI}"
   MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in")
 target_link_libraries(${TARGET} ${DEPS})
 
