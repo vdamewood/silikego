@@ -31,7 +31,7 @@ if(READLINE_LIB AND READLINE_INC)
 else()
 	message("-- Finding readline -- not found")
 	add_definitions(-DHAVE_READLINE=0)
-	list(APPEND SRCS rl.cc)
+	list(APPEND SOURCES rl.cc)
 endif()
 
 if (UNIX)
