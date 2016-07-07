@@ -17,8 +17,8 @@
 set(TARGET SilikegoCli)
 set(SOURCES Main.cc StringSource.cc)
 set(HEADERS StringSource.hh)
+set(DEPS ${LIB})
 
-set(DEPS SilikegoLib)
 message("-- Finding readline")
 find_path(READLINE_INC NAMES readline/readline.h)
 find_library(READLINE_LIB readline)

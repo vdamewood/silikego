@@ -18,7 +18,7 @@ set(TARGET SilikegoGui)
 set(HEADERS EvalWindow.hh)
 set(SOURCES Main.cc EvalWindow.cc)
 set(LAYOUTS EvalWindow.glade)
-set(DEPS SilikegoLib)
+set(DEPS ${LIB})
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM3 REQUIRED gtkmm-3.0)
