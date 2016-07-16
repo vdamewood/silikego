@@ -78,7 +78,7 @@ if(BUILD_SLIB)
     DESTINATION ${INSTINC}/Silikego)
 endif()
 
-if(UNIX)
+if(BUILD_UNIX)
   configure_file(Silikego.pc.in Silikego.pc @ONLY)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Silikego.pc" DESTINATION "${INSTLIB}/pkgconfig")
 endif()
