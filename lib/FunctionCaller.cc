@@ -24,7 +24,7 @@
 // bindings can be created for language interpreters written in C.
 std::unordered_map<std::string, Silikego::FunctionCaller::FunctionPointer> *lookup = 0;
 
-bool Silikego::FunctionCaller::SetUp(void)
+bool Silikego::FunctionCaller::SetUp()
 {
 	try
 	{
@@ -66,7 +66,7 @@ bool Silikego::FunctionCaller::SetUp(void)
 	return true;
 }
 
-void Silikego::FunctionCaller::TearDown(void)
+void Silikego::FunctionCaller::TearDown()
 {
 	delete lookup;
 	lookup = 0;

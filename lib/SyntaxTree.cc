@@ -156,30 +156,30 @@ bool Silikego::BranchNode::GraftRight(Silikego::SyntaxTreeNode *NewChild)
 	}
 }
 
-Silikego::SyntaxErrorNode::~SyntaxErrorNode(void)
+Silikego::SyntaxErrorNode::~SyntaxErrorNode()
 {
 }
 
-Silikego::Value Silikego::SyntaxErrorNode::Evaluate(void)
+Silikego::Value Silikego::SyntaxErrorNode::Evaluate()
 {
 	return Silikego::Value::SYNTAX_ERR;
 }
 
-void Silikego::SyntaxErrorNode::Negate(void)
+void Silikego::SyntaxErrorNode::Negate()
 {
 }
 
-Silikego::NothingNode::~NothingNode(void)
+Silikego::NothingNode::~NothingNode()
 {
 	// Do Nothing
 }
 
-Silikego::Value Silikego::NothingNode::Evaluate(void)
+Silikego::Value Silikego::NothingNode::Evaluate()
 {
 	return 0;
 }
 
-void Silikego::NothingNode::Negate(void)
+void Silikego::NothingNode::Negate()
 {
 	// Do Nothing
 }

@@ -41,8 +41,8 @@ namespace Silikego
 	{
 	public:
 		IntegerNode(int NewValue);
-		virtual Silikego::Value Evaluate(void);
-		virtual void Negate(void);
+		virtual Silikego::Value Evaluate();
+		virtual void Negate();
 	private:
 		int MyInteger;
 	};
@@ -51,8 +51,8 @@ namespace Silikego
 	{
 	public:
 		FloatNode(float NewValue);
-		virtual Silikego::Value Evaluate(void);
-		virtual void Negate(void);
+		virtual Silikego::Value Evaluate();
+		virtual void Negate();
 	private:
 		float MyFloat;
 	};
@@ -78,17 +78,17 @@ namespace Silikego
 	class SILIKEGO_API SyntaxErrorNode : public SyntaxTreeNode
 	{
 	public:
-		virtual ~SyntaxErrorNode(void);
-		virtual Silikego::Value Evaluate(void);
-		virtual void Negate(void);
+		virtual ~SyntaxErrorNode();
+		virtual Silikego::Value Evaluate();
+		virtual void Negate();
 	};
 
 	class SILIKEGO_API NothingNode : public SyntaxTreeNode
 	{
 	public:
-		virtual ~NothingNode(void);
-		virtual Silikego::Value Evaluate(void);
-		virtual void Negate(void);
+		virtual ~NothingNode();
+		virtual Silikego::Value Evaluate();
+		virtual void Negate();
 	};
 };
 

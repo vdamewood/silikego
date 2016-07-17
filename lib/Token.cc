@@ -55,22 +55,22 @@ Silikego::Token::~Token()
 		delete[] MyId;
 }
 
-Silikego::Token::TokenType Silikego::Token::Type(void) const
+Silikego::Token::TokenType Silikego::Token::Type() const
 {
 	return MyType;
 }
 
-int Silikego::Token::Integer(void) const
+int Silikego::Token::Integer() const
 {
 	return MyInteger;
 }
 
-float Silikego::Token::Float(void) const
+float Silikego::Token::Float() const
 {
 	return MyFloat;
 }
 
-const char *Silikego::Token::Id(void) const
+const char *Silikego::Token::Id() const
 {
 	return MyId;
 }

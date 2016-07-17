@@ -49,7 +49,7 @@ Silikego::Value::Value(float NewValue)
 	MyFloat = NewValue;
 }
 
-Silikego::Value::ValueStatus Silikego::Value::Status(void) const
+Silikego::Value::ValueStatus Silikego::Value::Status() const
 {
 	return MyStatus;
 }

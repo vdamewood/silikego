@@ -66,7 +66,7 @@ enum SilikegoDfaState
 	DFA_END
 };
 
-void Silikego::Lexer::Next(void)
+void Silikego::Lexer::Next()
 {
 	SilikegoDfaState dfaState = DFA_START;
 	std::string lexeme = std::string();
@@ -266,13 +266,13 @@ Silikego::Lexer::Lexer(DataSource * InputSource)
 	Next();
 }
 
-Silikego::Lexer::~Lexer(void)
+Silikego::Lexer::~Lexer()
 {
 	delete MyToken;
 	delete MySource;
 }
 
-Silikego::Token &Silikego::Lexer::GetToken(void)
+Silikego::Token &Silikego::Lexer::GetToken()
 {
 	return *MyToken;
 }
