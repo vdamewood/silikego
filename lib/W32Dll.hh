@@ -17,8 +17,8 @@
 
 #if !defined SILIKEGO_W32_DLL_HH
 
-#if defined _WIN32 && defined _MSC_VER
-#  if defined SILIKEGO_EXPORTS
+#if defined _WIN32 && defined _MSC_VER && !defined SILIKEGO_STATIC
+#  if defined SilikegoDLib_EXPORTS
 #    define SILIKEGO_API __declspec(dllexport)
 #    define SILIKEGO_EXTERN
 #  else // SILIKEGO_EXPORTS

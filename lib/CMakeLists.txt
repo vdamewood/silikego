@@ -64,6 +64,8 @@ endif()
 
 if(BUILD_SLIB)
   add_library(${STARGET} STATIC ${HEADERS} ${SOURCES} ${RESOURCES})
+  target_compile_definitions(${STARGET}
+      PUBLIC        SILIKEGO_STATIC=1)
   set_target_properties(${STARGET} PROPERTIES
       OUTPUT_NAME   ${ONAMESLIB}
       RESOURCE      ${RESOURCES}
