@@ -24,53 +24,56 @@
 
 #include "Token.h"
 
-Silikego::Token::Token(TokenType NewType)
+namespace Silikego
 {
-	MyType = NewType;
-	MyInteger = 0;
-}
+	Token::Token(TokenType NewType)
+	{
+		MyType = NewType;
+		MyInteger = 0;
+	}
 
-Silikego::Token::Token(int NewIntegerValue)
-{
-	MyType = INTEGER;
-	MyInteger = NewIntegerValue;
-}
+	Token::Token(int NewIntegerValue)
+	{
+		MyType = INTEGER;
+		MyInteger = NewIntegerValue;
+	}
 
-Silikego::Token::Token(float NewFloatValue)
-{
-	MyType = FLOAT;
-	MyFloat = NewFloatValue;
-}
+	Token::Token(float NewFloatValue)
+	{
+		MyType = FLOAT;
+		MyFloat = NewFloatValue;
+	}
 
-Silikego::Token::Token(const char *NewIdValue)
-{
-	MyType = ID;
-	MyId = new char[std::strlen(NewIdValue) + 1];
-	std::strcpy(MyId, NewIdValue);
-}
+	Token::Token(const char *NewIdValue)
+	{
+		MyType = ID;
+		MyId = new char[std::strlen(NewIdValue) + 1];
+		std::strcpy(MyId, NewIdValue);
+	}
 
-Silikego::Token::~Token()
-{
-	if (MyType == ID)
-		delete[] MyId;
-}
+	Token::~Token()
+	{
+		if (MyType == ID)
+			delete[] MyId;
+	}
 
-Silikego::Token::TokenType Silikego::Token::Type() const
-{
-	return MyType;
-}
+	Token::TokenType Token::Type() const
+	{
+		return MyType;
+	}
 
-int Silikego::Token::Integer() const
-{
-	return MyInteger;
-}
+	int Token::Integer() const
+	{
+		return MyInteger;
+	}
 
-float Silikego::Token::Float() const
-{
-	return MyFloat;
-}
+	float Token::Float() const
+	{
+		return MyFloat;
+	}
 
-const char *Silikego::Token::Id() const
-{
-	return MyId;
+	const char *Token::Id() const
+	{
+		return MyId;
+	}
 }

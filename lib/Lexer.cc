@@ -65,214 +65,216 @@ enum SilikegoDfaState
 	DFA_TERM_EOI,
 	DFA_END
 };
-
-void Silikego::Lexer::Next()
+namespace Silikego
 {
-	SilikegoDfaState dfaState = DFA_START;
-	std::string lexeme = std::string();
-
-	if (MyToken->Type() == Token::EOL || MyToken->Type() == Token::ERROR)
-		return;
-
-	delete MyToken;
-
-	while (dfaState != DFA_END)
-	switch (dfaState)
+	void Lexer::Next()
 	{
-	case DFA_END:
-		break;
-	case DFA_START:
-		if(isOperator(MySource->GetCurrent()))
+		SilikegoDfaState dfaState = DFA_START;
+		std::string lexeme = std::string();
+
+		if (MyToken->Type() == Token::EOL || MyToken->Type() == Token::ERROR)
+			return;
+
+		delete MyToken;
+
+		while (dfaState != DFA_END)
+		switch (dfaState)
 		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_TERM_CHAR;
+		case DFA_END:
+			break;
+		case DFA_START:
+			if(isOperator(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_TERM_CHAR;
+			}
+			else if (MySource->GetCurrent() == 'd')
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_DICE;
+			}
+			else if (MySource->GetCurrent() == 'e')
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_E;
+			}
+			else if (MySource->GetCurrent() == 'p')
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_PI_1;
+			}
+			else if (std::isdigit(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_INTEGER;
+			}
+			else if (std::isalpha(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_ID;
+			}
+			else if (std::isspace(MySource->GetCurrent()))
+			{
+				MySource->Advance();
+			}
+			else if (MySource->GetCurrent() == '\0')
+			{
+				dfaState = DFA_TERM_EOI;
+			}
+			else
+			{
+				dfaState = DFA_ERROR;
+			}
+			break;
+		case DFA_DICE:
+			if (std::isalpha(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_ID;
+			}
+			else
+			{
+				dfaState = DFA_TERM_CHAR;
+			}
+			break;
+		case DFA_E:
+			if (std::isalnum(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_ID;
+			}
+			else
+			{
+				dfaState = DFA_TERM_E;
+			}
+			break;
+		case DFA_PI_1:
+			if (MySource->GetCurrent() == 'i')
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_PI_2;
+			}
+			else if (isIdCharacter(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_ID;
+			}
+			else
+			{
+				dfaState = DFA_TERM_STRING;
+			}
+			break;
+		case DFA_PI_2:
+			if (isIdCharacter(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_ID;
+			}
+			else
+			{
+				dfaState = DFA_TERM_PI;
+			}
+			break;
+		case DFA_ID:
+			if (isalnum(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+			}
+			else
+			{
+				dfaState = DFA_TERM_STRING;
+			}
+			break;
+		case DFA_INTEGER:
+			if (MySource->GetCurrent() == '.')
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+				dfaState = DFA_FLOAT;
+			}
+			else if (std::isdigit(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+			}
+			else
+			{
+				dfaState = DFA_TERM_INTEGER;
+			}
+			break;
+		case DFA_FLOAT:
+			if (std::isdigit(MySource->GetCurrent()))
+			{
+				lexeme += MySource->GetCurrent();
+				MySource->Advance();
+			}
+			else
+			{
+				dfaState = DFA_TERM_FLOAT;
+			}
+			break;
+		case DFA_TERM_INTEGER:
+			MyToken = new Token(atoi(lexeme.c_str()));
+			dfaState = DFA_END;
+			break;
+		case DFA_TERM_FLOAT:
+			MyToken = new Token(static_cast<float>(atof(lexeme.c_str())));
+			dfaState = DFA_END;
+			break;
+		case DFA_TERM_E:
+			MyToken = new Token(static_cast<float>(EULER));
+			dfaState = DFA_END;
+			break;
+		case DFA_TERM_PI:
+			MyToken = new Token(static_cast<float>(PI));
+			dfaState = DFA_END;
+			break;
+		case DFA_TERM_CHAR:
+			MyToken = new Token(static_cast<Token::TokenType>(lexeme[0]));
+			dfaState = DFA_END;
+			break;
+		case DFA_TERM_STRING:
+			MyToken = new Token(lexeme.c_str());
+			dfaState = DFA_END;
+			break;
+		case DFA_TERM_EOI:
+			MyToken = new Token(Token::EOL);
+			dfaState = DFA_END;
+			break;
+		case DFA_ERROR:
+			MyToken = new Token(Token::ERROR);
+			dfaState = DFA_END;
+			break;
 		}
-		else if (MySource->GetCurrent() == 'd')
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_DICE;
-		}
-		else if (MySource->GetCurrent() == 'e')
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_E;
-		}
-		else if (MySource->GetCurrent() == 'p')
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_PI_1;
-		}
-		else if (std::isdigit(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_INTEGER;
-		}
-		else if (std::isalpha(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_ID;
-		}
-		else if (std::isspace(MySource->GetCurrent()))
-		{
-			MySource->Advance();
-		}
-		else if (MySource->GetCurrent() == '\0')
-		{
-			dfaState = DFA_TERM_EOI;
-		}
-		else
-		{
-			dfaState = DFA_ERROR;
-		}
-		break;
-	case DFA_DICE:
-		if (std::isalpha(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_ID;
-		}
-		else
-		{
-			dfaState = DFA_TERM_CHAR;
-		}
-		break;
-	case DFA_E:
-		if (std::isalnum(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_ID;
-		}
-		else
-		{
-			dfaState = DFA_TERM_E;
-		}
-		break;
-	case DFA_PI_1:
-		if (MySource->GetCurrent() == 'i')
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_PI_2;
-		}
-		else if (isIdCharacter(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_ID;
-		}
-		else
-		{
-			dfaState = DFA_TERM_STRING;
-		}
-		break;
-	case DFA_PI_2:
-		if (isIdCharacter(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_ID;
-		}
-		else
-		{
-			dfaState = DFA_TERM_PI;
-		}
-		break;
-	case DFA_ID:
-		if (isalnum(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-		}
-		else
-		{
-			dfaState = DFA_TERM_STRING;
-		}
-		break;
-	case DFA_INTEGER:
-		if (MySource->GetCurrent() == '.')
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-			dfaState = DFA_FLOAT;
-		}
-		else if (std::isdigit(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-		}
-		else
-		{
-			dfaState = DFA_TERM_INTEGER;
-		}
-		break;
-	case DFA_FLOAT:
-		if (std::isdigit(MySource->GetCurrent()))
-		{
-			lexeme += MySource->GetCurrent();
-			MySource->Advance();
-		}
-		else
-		{
-			dfaState = DFA_TERM_FLOAT;
-		}
-		break;
-	case DFA_TERM_INTEGER:
-		MyToken = new Token(atoi(lexeme.c_str()));
-		dfaState = DFA_END;
-		break;
-	case DFA_TERM_FLOAT:
-		MyToken = new Token(static_cast<float>(atof(lexeme.c_str())));
-		dfaState = DFA_END;
-		break;
-	case DFA_TERM_E:
-		MyToken = new Token(static_cast<float>(EULER));
-		dfaState = DFA_END;
-		break;
-	case DFA_TERM_PI:
-		MyToken = new Token(static_cast<float>(PI));
-		dfaState = DFA_END;
-		break;
-	case DFA_TERM_CHAR:
-		MyToken = new Token(static_cast<Token::TokenType>(lexeme[0]));
-		dfaState = DFA_END;
-		break;
-	case DFA_TERM_STRING:
-		MyToken = new Token(lexeme.c_str());
-		dfaState = DFA_END;
-		break;
-	case DFA_TERM_EOI:
-		MyToken = new Token(Token::EOL);
-		dfaState = DFA_END;
-		break;
-	case DFA_ERROR:
-		MyToken = new Token(Token::ERROR);
-		dfaState = DFA_END;
-		break;
 	}
-}
 
-Silikego::Lexer::Lexer(DataSource * InputSource)
-{
-	MySource = InputSource;
-	MyToken = new Token(Token::UNSET);
-	Next();
-}
+	Lexer::Lexer(DataSource * InputSource)
+	{
+		MySource = InputSource;
+		MyToken = new Token(Token::UNSET);
+		Next();
+	}
 
-Silikego::Lexer::~Lexer()
-{
-	delete MyToken;
-	delete MySource;
-}
+	Lexer::~Lexer()
+	{
+		delete MyToken;
+		delete MySource;
+	}
 
-Silikego::Token &Silikego::Lexer::GetToken()
-{
-	return *MyToken;
+	Token &Lexer::GetToken()
+	{
+		return *MyToken;
+	}
 }

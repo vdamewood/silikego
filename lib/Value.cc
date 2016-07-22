@@ -25,95 +25,98 @@
 
 #include "Value.h"
 
-Silikego::Value::Value()
+namespace Silikego
 {
-	MyStatus = INTEGER;
-	MyInteger = 0;
-}
-
-Silikego::Value::Value(Silikego::Value::ValueStatus NewStatus)
-{
-	MyStatus = NewStatus;
-	MyInteger = 0;
-}
-
-Silikego::Value::Value(int NewValue)
-{
-	MyStatus = INTEGER;
-	MyInteger = NewValue;
-}
-
-Silikego::Value::Value(float NewValue)
-{
-	MyStatus = FLOAT;
-	MyFloat = NewValue;
-}
-
-Silikego::Value::ValueStatus Silikego::Value::Status() const
-{
-	return MyStatus;
-}
-
-int Silikego::Value::Integer() const
-{
-	if (MyStatus == INTEGER)
-		return MyInteger;
-	else if (MyStatus == FLOAT)
-		return static_cast<int>(MyFloat);
-	else
-		return 0;
-}
-
-float Silikego::Value::Float() const
-{
-	if (MyStatus == INTEGER)
-		return static_cast<float>(MyInteger);
-	else if (MyStatus == FLOAT)
-		return MyFloat;
-	else
-		return std::numeric_limits<float>::quiet_NaN();
-}
-
-bool Silikego::Value::IsNumber() const
-{
-	return (MyStatus == INTEGER || MyStatus == FLOAT);
-}
-
-char *Silikego::Value::ToCString() const
-{
-	std::ostringstream tmp;
-	switch (MyStatus)
+	Value::Value()
 	{
-	case INTEGER:
-		tmp << Integer();
-		break;
-	case FLOAT:
-		tmp << Float();
-		break;
-	case MEMORY_ERR:
-		tmp << "Error: Out of memory";
-		break;
-	case SYNTAX_ERR:
-		tmp << "Error: Syntax error";
-		break;
-	case ZERO_DIV_ERR:
-		tmp << "Error: Division by zero";
-		break;
-	case BAD_FUNCTION:
-		tmp << "Error: Function not found";
-		break;
-	case BAD_ARGUMENTS:
-		tmp << "Error: Bad argument count";
-		break;
-	case DOMAIN_ERR:
-		tmp << "Error: Domain error";
-		break;
-	case RANGE_ERR:
-		tmp << "Error: Range error";
+		MyStatus = INTEGER;
+		MyInteger = 0;
 	}
 
-	const std::string &tmpString = tmp.str();
-	char * rValue = new char[tmpString.size()+1];
-	std::strcpy(rValue, tmpString.c_str());
-	return rValue;
+	Value::Value(Value::ValueStatus NewStatus)
+	{
+		MyStatus = NewStatus;
+		MyInteger = 0;
+	}
+
+	Value::Value(int NewValue)
+	{
+		MyStatus = INTEGER;
+		MyInteger = NewValue;
+	}
+
+	Value::Value(float NewValue)
+	{
+		MyStatus = FLOAT;
+		MyFloat = NewValue;
+	}
+
+	Value::ValueStatus Value::Status() const
+	{
+		return MyStatus;
+	}
+
+	int Value::Integer() const
+	{
+		if (MyStatus == INTEGER)
+			return MyInteger;
+		else if (MyStatus == FLOAT)
+			return static_cast<int>(MyFloat);
+		else
+			return 0;
+	}
+
+	float Value::Float() const
+	{
+		if (MyStatus == INTEGER)
+			return static_cast<float>(MyInteger);
+		else if (MyStatus == FLOAT)
+			return MyFloat;
+		else
+			return std::numeric_limits<float>::quiet_NaN();
+	}
+
+	bool Value::IsNumber() const
+	{
+		return (MyStatus == INTEGER || MyStatus == FLOAT);
+	}
+
+	char *Value::ToCString() const
+	{
+		std::ostringstream tmp;
+		switch (MyStatus)
+		{
+		case INTEGER:
+			tmp << Integer();
+			break;
+		case FLOAT:
+			tmp << Float();
+			break;
+		case MEMORY_ERR:
+			tmp << "Error: Out of memory";
+			break;
+		case SYNTAX_ERR:
+			tmp << "Error: Syntax error";
+			break;
+		case ZERO_DIV_ERR:
+			tmp << "Error: Division by zero";
+			break;
+		case BAD_FUNCTION:
+			tmp << "Error: Function not found";
+			break;
+		case BAD_ARGUMENTS:
+			tmp << "Error: Bad argument count";
+			break;
+		case DOMAIN_ERR:
+			tmp << "Error: Domain error";
+			break;
+		case RANGE_ERR:
+			tmp << "Error: Range error";
+		}
+
+		const std::string &tmpString = tmp.str();
+		char * rValue = new char[tmpString.size()+1];
+		std::strcpy(rValue, tmpString.c_str());
+		return rValue;
+	}
 }

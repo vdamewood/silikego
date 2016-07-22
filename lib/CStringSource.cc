@@ -24,32 +24,35 @@
 
 #include "CStringSource.h"
 
-Silikego::CStringSource::CStringSource(const char *NewSource)
+namespace Silikego
 {
-	Source = new char[std::strlen(NewSource) + 1];
-	std::strcpy(Source, NewSource);
-	Index = 0;
-}
-
-Silikego::CStringSource::~CStringSource()
-{
-	delete[] Source;
-}
-
-bool Silikego::CStringSource::Advance()
-{
-	if (Source[Index] != '\0')
+	CStringSource::CStringSource(const char *NewSource)
 	{
-		Index++;
-		return true;
+		Source = new char[std::strlen(NewSource) + 1];
+		std::strcpy(Source, NewSource);
+		Index = 0;
 	}
-	else
-	{
-		return false;
-	}
-}
 
-char Silikego::CStringSource::GetCurrent()
-{
-	return Source[Index];
+	CStringSource::~CStringSource()
+	{
+		delete[] Source;
+	}
+
+	bool CStringSource::Advance()
+	{
+		if (Source[Index] != '\0')
+		{
+			Index++;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	char CStringSource::GetCurrent()
+	{
+		return Source[Index];
+	}
 }

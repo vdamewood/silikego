@@ -20,335 +20,338 @@
 #include "Lexer.h"
 #include "InfixParser.h"
 
-static Silikego::SyntaxTreeNode *GetExpr0(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetExpr0r(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetExpr1(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetExpr1r(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetExpr2(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetExpr2lf(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetExpr3(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetExpr3lf(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetAtom(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetNumber(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetUNumber(Silikego::Lexer&);
-static Silikego::SyntaxTreeNode *GetFCall(Silikego::Lexer&);
-static void                  GetArguments(Silikego::Lexer&, Silikego::BranchNode&);
-
-
-Silikego::SyntaxTreeNode* Silikego::ParseInfix(Silikego::DataSource* NewSource)
+namespace Silikego
 {
-	Silikego::Lexer MyLexer(NewSource);
-	Silikego::SyntaxTreeNode* rVal = 0;
+	static SyntaxTreeNode *GetExpr0(Lexer&);
+	static SyntaxTreeNode *GetExpr0r(Lexer&);
+	static SyntaxTreeNode *GetExpr1(Lexer&);
+	static SyntaxTreeNode *GetExpr1r(Lexer&);
+	static SyntaxTreeNode *GetExpr2(Lexer&);
+	static SyntaxTreeNode *GetExpr2lf(Lexer&);
+	static SyntaxTreeNode *GetExpr3(Lexer&);
+	static SyntaxTreeNode *GetExpr3lf(Lexer&);
+	static SyntaxTreeNode *GetAtom(Lexer&);
+	static SyntaxTreeNode *GetNumber(Lexer&);
+	static SyntaxTreeNode *GetUNumber(Lexer&);
+	static SyntaxTreeNode *GetFCall(Lexer&);
+	static void                  GetArguments(Lexer&, BranchNode&);
 
-	if (MyLexer.GetToken().Type() == Token::EOL)
+
+	SyntaxTreeNode* ParseInfix(DataSource* NewSource)
 	{
-		rVal = new Silikego::IntegerNode(0);
-	}
-	else
-	{
-		rVal = GetExpr0(MyLexer);
-		if (MyLexer.GetToken().Type() != Token::EOL
-			&& typeid(rVal) != typeid(Silikego::SyntaxErrorNode))
+		Lexer MyLexer(NewSource);
+		SyntaxTreeNode* rVal = 0;
+
+		if (MyLexer.GetToken().Type() == Token::EOL)
 		{
-			delete rVal;
-			rVal = new SyntaxErrorNode();
+			rVal = new IntegerNode(0);
+		}
+		else
+		{
+			rVal = GetExpr0(MyLexer);
+			if (MyLexer.GetToken().Type() != Token::EOL
+				&& typeid(rVal) != typeid(SyntaxErrorNode))
+			{
+				delete rVal;
+				rVal = new SyntaxErrorNode();
+			}
+		}
+
+		return rVal;
+	}
+
+	static SyntaxTreeNode *GetExpr0(Lexer& MyLexer)
+	{
+		SyntaxTreeNode *Left = GetExpr1(MyLexer);
+		SyntaxTreeNode *Rest = GetExpr0r(MyLexer);
+
+		if (typeid(*Rest) == typeid(NothingNode))
+		{
+			delete Rest;
+			return Left;
+		}
+
+		if (reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Left))
+			return Rest;
+
+		delete Rest;
+		delete Left;
+		return new SyntaxErrorNode();
+	}
+
+	static SyntaxTreeNode *GetExpr0r(Lexer& MyLexer)
+	{
+		const char *FunctionId;
+		switch (MyLexer.GetToken().Type())
+		{
+		case '+':
+			FunctionId = "add";
+			break;
+		case '-':
+			FunctionId = "subtract";
+			break;
+		default:
+			return new NothingNode();
+		}
+
+		MyLexer.Next();
+
+		BranchNode *Branch = new BranchNode(FunctionId);
+		Branch->PushRight(0);
+		Branch->PushRight(GetExpr1(MyLexer));
+		SyntaxTreeNode *Rest = GetExpr0r(MyLexer);
+
+		if (typeid(*Rest) == typeid(NothingNode))
+		{
+			delete Rest;
+			return Branch;
+		}
+		else
+		{
+			reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Branch);
+			return Rest;
 		}
 	}
 
-	return rVal;
-}
-
-static Silikego::SyntaxTreeNode *GetExpr0(Silikego::Lexer& MyLexer)
-{
-	Silikego::SyntaxTreeNode *Left = GetExpr1(MyLexer);
-	Silikego::SyntaxTreeNode *Rest = GetExpr0r(MyLexer);
-
-	if (typeid(*Rest) == typeid(Silikego::NothingNode))
+	static SyntaxTreeNode *GetExpr1(Lexer& MyLexer)
 	{
+		SyntaxTreeNode *Left = GetExpr2(MyLexer);
+		SyntaxTreeNode *Rest = GetExpr1r(MyLexer);
+
+		if (typeid(*Rest) == typeid(NothingNode))
+		{
+			delete Rest;
+			return Left;
+		}
+
+		if (reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Left))
+			return Rest;
+
 		delete Rest;
-		return Left;
+		delete Left;
+		return new SyntaxErrorNode();
 	}
 
-	if (reinterpret_cast<Silikego::BranchNode*>(Rest)->GraftLeft(Left))
-		return Rest;
-
-	delete Rest;
-	delete Left;
-	return new Silikego::SyntaxErrorNode();
-}
-
-static Silikego::SyntaxTreeNode *GetExpr0r(Silikego::Lexer& MyLexer)
-{
-	const char *FunctionId;
-	switch (MyLexer.GetToken().Type())
+	static SyntaxTreeNode *GetExpr1r(Lexer& MyLexer)
 	{
-	case '+':
-		FunctionId = "add";
-		break;
-	case '-':
-		FunctionId = "subtract";
-		break;
-	default:
-		return new Silikego::NothingNode();
-	}
+		const char *FunctionId;
+		switch (MyLexer.GetToken().Type())
+		{
+			case '*':
+				FunctionId = "multiply";
+				break;
+			case '/':
+				FunctionId = "divide";
+				break;
+			default:
+				return new NothingNode();
+		}
 
-	MyLexer.Next();
-
-	Silikego::BranchNode *Branch = new Silikego::BranchNode(FunctionId);
-	Branch->PushRight(0);
-	Branch->PushRight(GetExpr1(MyLexer));
-	Silikego::SyntaxTreeNode *Rest = GetExpr0r(MyLexer);
-
-	if (typeid(*Rest) == typeid(Silikego::NothingNode))
-	{
-		delete Rest;
-		return Branch;
-	}
-	else
-	{
-		reinterpret_cast<Silikego::BranchNode*>(Rest)->GraftLeft(Branch);
-		return Rest;
-	}
-}
-
-static Silikego::SyntaxTreeNode *GetExpr1(Silikego::Lexer& MyLexer)
-{
-	Silikego::SyntaxTreeNode *Left = GetExpr2(MyLexer);
-	Silikego::SyntaxTreeNode *Rest = GetExpr1r(MyLexer);
-
-	if (typeid(*Rest) == typeid(Silikego::NothingNode))
-	{
-		delete Rest;
-		return Left;
-	}
-
-	if (reinterpret_cast<Silikego::BranchNode*>(Rest)->GraftLeft(Left))
-		return Rest;
-
-	delete Rest;
-	delete Left;
-	return new Silikego::SyntaxErrorNode();
-}
-
-static Silikego::SyntaxTreeNode *GetExpr1r(Silikego::Lexer& MyLexer)
-{
-	const char *FunctionId;
-	switch (MyLexer.GetToken().Type())
-	{
-		case '*':
-			FunctionId = "multiply";
-			break;
-		case '/':
-			FunctionId = "divide";
-			break;
-		default:
-			return new Silikego::NothingNode();
-	}
-
-	MyLexer.Next();
-
-	Silikego::BranchNode *Branch = new Silikego::BranchNode(FunctionId);
-	Branch->PushRight(0);
-	Branch->PushRight(GetExpr2(MyLexer));
-	Silikego::SyntaxTreeNode *Rest = GetExpr1r(MyLexer);
-
-	if (typeid(*Rest) == typeid(Silikego::NothingNode))
-	{
-		delete Rest;
-		return Branch;
-	}
-	else
-	{
-		reinterpret_cast<Silikego::BranchNode*>(Rest)->GraftLeft(Branch);
-		return Rest;
-	}
-}
-
-
-static Silikego::SyntaxTreeNode *GetExpr2(Silikego::Lexer& MyLexer)
-{
-	Silikego::SyntaxTreeNode *leftValue = GetExpr3(MyLexer);
-	Silikego::SyntaxTreeNode *Rest = GetExpr2lf(MyLexer);
-
-	if (typeid(*Rest) == typeid(Silikego::NothingNode))
-	{
-		delete Rest;
-		return leftValue;
-	}
-
-	Silikego::BranchNode *rVal = new Silikego::BranchNode("power");
-	rVal->PushRight(leftValue);
-	rVal->PushRight(Rest);
-	return rVal;
-}
-
-static Silikego::SyntaxTreeNode *GetExpr2lf(Silikego::Lexer& MyLexer)
-{
-	if (MyLexer.GetToken().Type() != '^')
-		return new Silikego::NothingNode();
-
-	MyLexer.Next();
-
-	switch (MyLexer.GetToken().Type())
-	{
-	case Silikego::Token::INTEGER:
-	case Silikego::Token::FLOAT:
-	case '-':
-	case Silikego::Token::ID:
-	case '(':
-		return GetExpr2(MyLexer);
-	default:
-		return new Silikego::SyntaxErrorNode();
-	}
-}
-
-static Silikego::SyntaxTreeNode *GetExpr3(Silikego::Lexer& MyLexer)
-{
-	Silikego::SyntaxTreeNode *leftValue = GetAtom(MyLexer);
-	Silikego::SyntaxTreeNode *Rest = GetExpr3lf(MyLexer);
-
-	if (typeid(*Rest) == typeid(Silikego::NothingNode))
-	{
-		delete Rest;
-		return leftValue;
-	}
-
-	Silikego::BranchNode *rVal = new Silikego::BranchNode("dice");
-	rVal->PushRight(leftValue);
-	rVal->PushRight(Rest);
-	return rVal;
-}
-
-static Silikego::SyntaxTreeNode *GetExpr3lf(Silikego::Lexer& MyLexer)
-{
-	if(MyLexer.GetToken().Type() != 'd')
-		return new Silikego::NothingNode();
-
-	MyLexer.Next();
-
-	if (MyLexer.GetToken().Type() == Silikego::Token::INTEGER)
-	{
-		Silikego::SyntaxTreeNode *rVal = new Silikego::IntegerNode(MyLexer.GetToken().Integer());
 		MyLexer.Next();
+
+		BranchNode *Branch = new BranchNode(FunctionId);
+		Branch->PushRight(0);
+		Branch->PushRight(GetExpr2(MyLexer));
+		SyntaxTreeNode *Rest = GetExpr1r(MyLexer);
+
+		if (typeid(*Rest) == typeid(NothingNode))
+		{
+			delete Rest;
+			return Branch;
+		}
+		else
+		{
+			reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Branch);
+			return Rest;
+		}
+	}
+
+
+	static SyntaxTreeNode *GetExpr2(Lexer& MyLexer)
+	{
+		SyntaxTreeNode *leftValue = GetExpr3(MyLexer);
+		SyntaxTreeNode *Rest = GetExpr2lf(MyLexer);
+
+		if (typeid(*Rest) == typeid(NothingNode))
+		{
+			delete Rest;
+			return leftValue;
+		}
+
+		BranchNode *rVal = new BranchNode("power");
+		rVal->PushRight(leftValue);
+		rVal->PushRight(Rest);
 		return rVal;
 	}
-	else
-	{
-		return new Silikego::SyntaxErrorNode();
-	}
-}
 
-static Silikego::SyntaxTreeNode *GetAtom(Silikego::Lexer& MyLexer)
-{
-	Silikego::SyntaxTreeNode *value;
-
-	switch(MyLexer.GetToken().Type())
+	static SyntaxTreeNode *GetExpr2lf(Lexer& MyLexer)
 	{
-	case '-':
-	case Silikego::Token::INTEGER:
-	case Silikego::Token::FLOAT:
-		return GetNumber(MyLexer);
-	case '(':
+		if (MyLexer.GetToken().Type() != '^')
+			return new NothingNode();
+
 		MyLexer.Next();
-		value = GetExpr0(MyLexer);
+
+		switch (MyLexer.GetToken().Type())
+		{
+		case Token::INTEGER:
+		case Token::FLOAT:
+		case '-':
+		case Token::ID:
+		case '(':
+			return GetExpr2(MyLexer);
+		default:
+			return new SyntaxErrorNode();
+		}
+	}
+
+	static SyntaxTreeNode *GetExpr3(Lexer& MyLexer)
+	{
+		SyntaxTreeNode *leftValue = GetAtom(MyLexer);
+		SyntaxTreeNode *Rest = GetExpr3lf(MyLexer);
+
+		if (typeid(*Rest) == typeid(NothingNode))
+		{
+			delete Rest;
+			return leftValue;
+		}
+
+		BranchNode *rVal = new BranchNode("dice");
+		rVal->PushRight(leftValue);
+		rVal->PushRight(Rest);
+		return rVal;
+	}
+
+	static SyntaxTreeNode *GetExpr3lf(Lexer& MyLexer)
+	{
+		if(MyLexer.GetToken().Type() != 'd')
+			return new NothingNode();
+
+		MyLexer.Next();
+
+		if (MyLexer.GetToken().Type() == Token::INTEGER)
+		{
+			SyntaxTreeNode *rVal = new IntegerNode(MyLexer.GetToken().Integer());
+			MyLexer.Next();
+			return rVal;
+		}
+		else
+		{
+			return new SyntaxErrorNode();
+		}
+	}
+
+	static SyntaxTreeNode *GetAtom(Lexer& MyLexer)
+	{
+		SyntaxTreeNode *value;
+
+		switch(MyLexer.GetToken().Type())
+		{
+		case '-':
+		case Token::INTEGER:
+		case Token::FLOAT:
+			return GetNumber(MyLexer);
+		case '(':
+			MyLexer.Next();
+			value = GetExpr0(MyLexer);
+
+			if (MyLexer.GetToken().Type() != ')')
+			{
+				delete value;
+				return new SyntaxErrorNode();
+			}
+
+			MyLexer.Next();
+			return value;
+		case Token::ID:
+			return GetFCall(MyLexer);
+		default:
+			return new SyntaxErrorNode();
+		}
+	}
+
+	static SyntaxTreeNode *GetNumber(Lexer& MyLexer)
+	{
+		SyntaxTreeNode *rVal;
+
+		switch (MyLexer.GetToken().Type())
+		{
+		case Token::INTEGER:
+		case Token::FLOAT:
+			return GetUNumber(MyLexer);
+		case '-':
+			MyLexer.Next();
+			rVal = GetUNumber(MyLexer);
+			rVal->Negate();
+			return rVal;
+		default:
+			return new SyntaxErrorNode();
+		}
+	}
+
+	static SyntaxTreeNode *GetUNumber(Lexer& MyLexer)
+	{
+		SyntaxTreeNode *rVal;
+
+		switch (MyLexer.GetToken().Type())
+		{
+		case Token::INTEGER:
+			rVal = new IntegerNode(MyLexer.GetToken().Integer());
+			MyLexer.Next();
+			return rVal;
+		case Token::FLOAT:
+			rVal = new FloatNode(MyLexer.GetToken().Float());
+			MyLexer.Next();
+			return rVal;
+		default:
+			return new SyntaxErrorNode();
+		}
+	}
+
+	static SyntaxTreeNode *GetFCall(Lexer& MyLexer)
+	{
+		if (MyLexer.GetToken().Type() != Token::ID)
+			return new SyntaxErrorNode();
+
+		BranchNode *rVal = new BranchNode(MyLexer.GetToken().Id());
+		MyLexer.Next();
+
+		if (MyLexer.GetToken().Type() != '(')
+		{
+			rVal->PushRight(new SyntaxErrorNode());
+			return rVal;
+		}
+		MyLexer.Next();
+
+		GetArguments(MyLexer, *rVal);
 
 		if (MyLexer.GetToken().Type() != ')')
 		{
-			delete value;
-			return new Silikego::SyntaxErrorNode();
+			rVal->PushRight(new SyntaxErrorNode());
+			return rVal;
 		}
-
 		MyLexer.Next();
-		return value;
-	case Silikego::Token::ID:
-		return GetFCall(MyLexer);
-	default:
-		return new Silikego::SyntaxErrorNode();
-	}
-}
 
-static Silikego::SyntaxTreeNode *GetNumber(Silikego::Lexer& MyLexer)
-{
-	Silikego::SyntaxTreeNode *rVal;
-
-	switch (MyLexer.GetToken().Type())
-	{
-	case Silikego::Token::INTEGER:
-	case Silikego::Token::FLOAT:
-		return GetUNumber(MyLexer);
-	case '-':
-		MyLexer.Next();
-		rVal = GetUNumber(MyLexer);
-		rVal->Negate();
-		return rVal;
-	default:
-		return new Silikego::SyntaxErrorNode();
-	}
-}
-
-static Silikego::SyntaxTreeNode *GetUNumber(Silikego::Lexer& MyLexer)
-{
-	Silikego::SyntaxTreeNode *rVal;
-
-	switch (MyLexer.GetToken().Type())
-	{
-	case Silikego::Token::INTEGER:
-		rVal = new Silikego::IntegerNode(MyLexer.GetToken().Integer());
-		MyLexer.Next();
-		return rVal;
-	case Silikego::Token::FLOAT:
-		rVal = new Silikego::FloatNode(MyLexer.GetToken().Float());
-		MyLexer.Next();
-		return rVal;
-	default:
-		return new Silikego::SyntaxErrorNode();
-	}
-}
-
-static Silikego::SyntaxTreeNode *GetFCall(Silikego::Lexer& MyLexer)
-{
-	if (MyLexer.GetToken().Type() != Silikego::Token::ID)
-		return new Silikego::SyntaxErrorNode();
-
-	Silikego::BranchNode *rVal = new Silikego::BranchNode(MyLexer.GetToken().Id());
-	MyLexer.Next();
-
-	if (MyLexer.GetToken().Type() != '(')
-	{
-		rVal->PushRight(new Silikego::SyntaxErrorNode());
 		return rVal;
 	}
-	MyLexer.Next();
 
-	GetArguments(MyLexer, *rVal);
-
-	if (MyLexer.GetToken().Type() != ')')
+	static void GetArguments(Lexer& MyLexer, BranchNode& rVal)
 	{
-		rVal->PushRight(new Silikego::SyntaxErrorNode());
-		return rVal;
-	}
-	MyLexer.Next();
-
-	return rVal;
-}
-
-static void GetArguments(Silikego::Lexer& MyLexer, Silikego::BranchNode& rVal)
-{
-	while(true)
-	{
-		Silikego::SyntaxTreeNode *Expression = GetExpr0(MyLexer);
-		rVal.PushRight(Expression);
-
-		if (typeid(*Expression) == typeid(Silikego::SyntaxErrorNode)
-			|| MyLexer.GetToken().Type() == ')')
+		while(true)
 		{
-			break;
+			SyntaxTreeNode *Expression = GetExpr0(MyLexer);
+			rVal.PushRight(Expression);
+
+			if (typeid(*Expression) == typeid(SyntaxErrorNode)
+				|| MyLexer.GetToken().Type() == ')')
+			{
+				break;
+			}
+			else if (MyLexer.GetToken().Type() != ',')
+			{
+				rVal.PushRight(new SyntaxErrorNode());
+				break;
+			}
+			MyLexer.Next();
 		}
-		else if (MyLexer.GetToken().Type() != ',')
-		{
-			rVal.PushRight(new Silikego::SyntaxErrorNode());
-			break;
-		}
-		MyLexer.Next();
 	}
 }

@@ -20,69 +20,73 @@
 #include "FunctionCaller.h"
 #include "Functions.h"
 
-// This is initialized as a null pointer rather than a static object so that
-// bindings can be created for language interpreters written in C.
-std::unordered_map<std::string, Silikego::FunctionCaller::FunctionPointer> *lookup = 0;
-
-bool Silikego::FunctionCaller::SetUp()
+namespace Silikego
 {
+
+	// This is initialized as a null pointer rather than a static object so that
+	// bindings can be created for language interpreters written in C.
+	std::unordered_map<std::string, FunctionCaller::FunctionPointer> *lookup = 0;
+
+	bool FunctionCaller::SetUp()
+	{
+		try
+		{
+			lookup = new std::unordered_map<std::string,
+				FunctionCaller::FunctionPointer>();
+		}
+		catch (...)
+		{
+			lookup = 0;
+			return false;
+		}
+
+		// Built-in operators
+		Install("add", Functions::add);
+		Install("subtract", Functions::subtract);
+		Install("multiply", Functions::multiply);
+		Install("divide", Functions::divide);
+		Install("power", Functions::power);
+		Install("dice", Functions::dice);
+
+		// Math library functions
+		Install("abs", Functions::abs);
+		Install("acos", Functions::acos);
+		Install("asin", Functions::asin);
+		Install("atan", Functions::atan);
+		Install("ceil", Functions::ceil);
+		Install("cos", Functions::cos);
+		Install("cosh", Functions::cosh);
+		Install("exp", Functions::exp);
+		Install("floor", Functions::floor);
+		Install("log", Functions::log);
+		Install("log10", Functions::log10);
+		Install("sin", Functions::sin);
+		Install("sinh", Functions::sinh);
+		Install("sqrt", Functions::sqrt);
+		Install("tan", Functions::tan);
+		Install("tanh", Functions::tanh);
+
+		return true;
+	}
+
+	void FunctionCaller::TearDown()
+	{
+		delete lookup;
+		lookup = 0;
+	}
+
+	void FunctionCaller::Install(const std::string &Name, FunctionPointer Function)
+	{
+		(*lookup)[Name] = Function;
+	}
+
+	Value FunctionCaller::Call(const std::string &Name, std::vector<Value> Args)
 	try
 	{
-		lookup = new std::unordered_map<std::string,
-			Silikego::FunctionCaller::FunctionPointer>();
+		return lookup->at(Name)(Args);
 	}
-	catch (...)
+	catch (const std::out_of_range &)
 	{
-		lookup = 0;
-		return false;
+		return Value::BAD_FUNCTION;
 	}
-
-	// Built-in operators
-	Install("add", Silikego::Functions::add);
-	Install("subtract", Silikego::Functions::subtract);
-	Install("multiply", Silikego::Functions::multiply);
-	Install("divide", Silikego::Functions::divide);
-	Install("power", Silikego::Functions::power);
-	Install("dice", Silikego::Functions::dice);
-
-	// Math library functions
-	Install("abs", Silikego::Functions::abs);
-	Install("acos", Silikego::Functions::acos);
-	Install("asin", Silikego::Functions::asin);
-	Install("atan", Silikego::Functions::atan);
-	Install("ceil", Silikego::Functions::ceil);
-	Install("cos", Silikego::Functions::cos);
-	Install("cosh", Silikego::Functions::cosh);
-	Install("exp", Silikego::Functions::exp);
-	Install("floor", Silikego::Functions::floor);
-	Install("log", Silikego::Functions::log);
-	Install("log10", Silikego::Functions::log10);
-	Install("sin", Silikego::Functions::sin);
-	Install("sinh", Silikego::Functions::sinh);
-	Install("sqrt", Silikego::Functions::sqrt);
-	Install("tan", Silikego::Functions::tan);
-	Install("tanh", Silikego::Functions::tanh);
-
-	return true;
-}
-
-void Silikego::FunctionCaller::TearDown()
-{
-	delete lookup;
-	lookup = 0;
-}
-
-void Silikego::FunctionCaller::Install(const std::string &Name, FunctionPointer Function)
-{
-	(*lookup)[Name] = Function;
-}
-
-Silikego::Value Silikego::FunctionCaller::Call(const std::string &Name, std::vector<Silikego::Value> Args)
-try
-{
-	return lookup->at(Name)(Args);
-}
-catch (const std::out_of_range &)
-{
-	return Silikego::Value::BAD_FUNCTION;
 }

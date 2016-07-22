@@ -17,6 +17,9 @@
 
 #include "DataSource.h"
 
-Silikego::DataSource::~DataSource()
+namespace Silikego
 {
+	DataSource::~DataSource()
+	{
+	}
 }
