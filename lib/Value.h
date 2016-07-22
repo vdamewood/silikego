@@ -1,4 +1,4 @@
-/* Value.hh: Data structure to represent a single value
+/* Value.h: Data structure to represent a single value
  * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,10 +15,10 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_VALUE_HH
-#define SILIKEGO_VALUE_HH
+#if !defined SILIKEGO_VALUE_H
+#define SILIKEGO_VALUE_H
 
-#include "W32Dll.hh"
+#include "W32Dll.h"
 
 namespace Silikego
 {
@@ -67,4 +67,4 @@ namespace Silikego
 	};
 }
 
-#endif // SILIKEGO_VALUE_HH
+#endif // SILIKEGO_VALUE_H

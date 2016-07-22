@@ -17,11 +17,11 @@
 
 #include <gtkmm.h>
 
-#include "CStringSource.hh"
-#include "InfixParser.hh"
-#include "Value.hh"
+#include "CStringSource.h"
+#include "InfixParser.h"
+#include "Value.h"
 
-#include "EvalWindow.hh"
+#include "EvalWindow.h"
 
 #if !defined GLADEDIR
 #error "You must define GLADEDIR to build this file."

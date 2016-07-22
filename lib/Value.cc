@@ -23,7 +23,7 @@
 #include <sstream>
 #include <limits>
 
-#include "Value.hh"
+#include "Value.h"
 
 Silikego::Value::Value()
 {

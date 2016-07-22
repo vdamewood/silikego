@@ -18,12 +18,12 @@
 #include <cstdlib>
 #include <afxwin.h>
 
-#include "CStringSource.hh"
-#include "InfixParser.hh"
-#include "Value.hh"
+#include "CStringSource.h"
+#include "InfixParser.h"
+#include "Value.h"
 
-#include "About.hh"
-#include "EvalWindow.hh"
+#include "About.h"
+#include "EvalWindow.h"
 #include "Id.h"
 
 #define OUT_BORDER    8

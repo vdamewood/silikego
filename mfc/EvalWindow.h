@@ -1,5 +1,5 @@
-/* StringSource.hh: Class to input data from a string
- * Copyright 2014, 2015, 2016 Vincent Damewood
+/* EvalWindow.h: Expression evaluation window
+ * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,23 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined STRING_SOURCE_HH
-#define STRING_SOURCE_HH
+#if !defined EVAL_WINDOW_H
+#define EVAL_WINDOW_H
 
-#include <string>
-#include "DataSource.hh"
+#include <afxwin.h>
 
-class StringSource : public Silikego::DataSource
+class EvalWindow : public CFrameWnd
 {
 public:
-	StringSource(const std::string &);
-	virtual bool Advance();
-	virtual char GetCurrent();
-	virtual ~StringSource();
+	EvalWindow();
+	BOOL PreTranslateMessage(MSG *Message);
+
+protected:
+	void OnGetMinMaxInfo(MINMAXINFO* pMMI);
+	void OnSize(UINT nType, int cx, int cy);
+	void Calculate();
+	void CalculatorExit();
+	void HelpAbout();
+	DECLARE_MESSAGE_MAP();
 
 private:
-	const std::string Source;
-	std::string::const_iterator Iterator;
+	CStatic Output;
+	CEdit Input;
+	CButton Button;
 };
 
-#endif // STRING_SOURCE_HH
+#endif /* EVAL_WINDOW_H */

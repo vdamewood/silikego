@@ -17,8 +17,8 @@
 
 #include <gtkmm.h>
 
-#include "FunctionCaller.hh"
-#include "EvalWindow.hh"
+#include "FunctionCaller.h"
+#include "EvalWindow.h"
 
 int main(int argc, char *argv[])
 {

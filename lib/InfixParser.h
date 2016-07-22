@@ -1,5 +1,5 @@
-/* Lexer.hh: Lexical analyzer
- * Copyright 2012, 2014, 2015, 2016 Vincent Damewood
+/* InfixParser.h: Recursive-descent infix parser
+ * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,29 +15,16 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_LEXER_HH
-#define SILIKEGO_LEXER_HH
+#if !defined SILIKEGO_INFIX_PARSER_H
+#define SILIKEGO_INFIX_PARSER_H
 
-#include "W32Dll.hh"
-#include "DataSource.hh"
-#include "Token.hh"
+#include "W32Dll.h"
+#include "DataSource.h"
+#include "SyntaxTree.h"
 
 namespace Silikego
 {
-	class SILIKEGO_API Lexer
-	{
-	public:
-		Lexer(DataSource *InputSource);
-		~Lexer();
-
-		Silikego::Token &GetToken();
-		void Next();
-
-	private:
-		void Load();
-		DataSource *MySource;
-		Silikego::Token *MyToken;
-	};
+	SILIKEGO_API SyntaxTreeNode *ParseInfix(DataSource *Input);
 };
 
-#endif // SILIKEGO_LEXER_HH
+#endif // SILIKEGO_INFIX_PARSER_H

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "About.hh"
+#include "About.h"
 #include "Id.h"
 
 AboutDialog::AboutDialog()

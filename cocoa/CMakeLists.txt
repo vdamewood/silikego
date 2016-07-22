@@ -15,7 +15,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 set(TARGET SilikegoGui)
-set(HEADERS Delegate.hh)
+set(HEADERS Delegate.h)
 set(XIB MainMenu)
 set(SOURCES Delegate.mm Main.mm "${XIB}.nib")
 set(DEPS ${LIB})

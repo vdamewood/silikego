@@ -1,5 +1,5 @@
-/* Delegate.hh: Delegate for Cocoa
- * Copyright 2014, 2015, 2016 Vincent Damewood
+/* About.h: About dialog window
+ * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import <Cocoa/Cocoa.h>
+#if !defined ABOUT_H
+#define ABOUT_H
 
-@interface SilikegoDelegate : NSObject <NSApplicationDelegate>
+#include <afxdialogex.h>
 
-@property (weak) IBOutlet NSTextField *input;
-@property (weak) IBOutlet NSTextField *output;
+class AboutDialog : public CDialogEx
+{
+	public:
+		AboutDialog();
+};
 
--(IBAction) Calculate:(id)sender;
-
-@end
+#endif /* ABOUT_H */

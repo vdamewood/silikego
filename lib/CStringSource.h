@@ -1,4 +1,4 @@
-/* DataSource.hh: Abstract interface for input data
+/* CStringSource.h: Class to input data from a C-style string
  * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,20 +15,26 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_DATA_SOURCE_HH
-#define SILIKEGO_DATA_SOURCE_HH
+#if !defined SILIKEGO_CSTRING_SOURCE_H
+#define SILIKEGO_CSTRING_SOURCE_H
 
-#include "W32Dll.hh"
+#include "W32Dll.h"
+#include "DataSource.h"
 
 namespace Silikego
 {
-	class SILIKEGO_API DataSource
+	class SILIKEGO_API CStringSource : public DataSource
 	{
 	public:
-		virtual ~DataSource();
-		virtual bool Advance() = 0;
-		virtual char GetCurrent() = 0;
+		CStringSource(const char *);
+		virtual bool Advance();
+		virtual char GetCurrent();
+		virtual ~CStringSource();
+
+	private:
+		char *Source;
+		int Index;
 	};
 };
 
-#endif // SILIKEGO_DATA_SOURCE_HH
+#endif // SILIKEGO_CSTRING_SOURCE_H

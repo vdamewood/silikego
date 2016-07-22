@@ -23,8 +23,8 @@
 #include <cstring>
 #include <list>
 
-#include "SyntaxTree.hh"
-#include "FunctionCaller.hh"
+#include "SyntaxTree.h"
+#include "FunctionCaller.h"
 
 Silikego::IntegerNode::IntegerNode(int NewValue)
 {

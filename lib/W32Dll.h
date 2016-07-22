@@ -1,4 +1,4 @@
-/* W32Dll.hh: Header to accomodate building a DLL on Microsoft Windows
+/* W32Dll.h: Header to accomodate building a DLL on Microsoft Windows
  * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,7 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_W32_DLL_HH
+#if !defined SILIKEGO_W32_DLL_H
+#define SILIKEGO_W32_DLL_H
 
 #if defined _WIN32 && defined _MSC_VER && !defined SILIKEGO_STATIC
 #  if defined SilikegoDLib_EXPORTS
@@ -27,4 +28,4 @@
 #  define SILIKEGO_API
 #endif // _WIN32 && __MSC_VER
 
-#endif // SILIKEGO_W32_DLL_HH
+#endif // SILIKEGO_W32_DLL_H

@@ -1,4 +1,4 @@
-/* InfixParser.hh: Recursive-descent infix parser
+/* DataSource.h: Abstract interface for input data
  * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,16 +15,20 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_INFIX_PARSER_HH
-#define SILIKEGO_INFIX_PARSER_HH
+#if !defined SILIKEGO_DATA_SOURCE_H
+#define SILIKEGO_DATA_SOURCE_H
 
-#include "W32Dll.hh"
-#include "DataSource.hh"
-#include "SyntaxTree.hh"
+#include "W32Dll.h"
 
 namespace Silikego
 {
-	SILIKEGO_API SyntaxTreeNode *ParseInfix(DataSource *Input);
+	class SILIKEGO_API DataSource
+	{
+	public:
+		virtual ~DataSource();
+		virtual bool Advance() = 0;
+		virtual char GetCurrent() = 0;
+	};
 };
 
-#endif // SILIKEGO_INFIX_PARSER_HH
+#endif // SILIKEGO_DATA_SOURCE_H

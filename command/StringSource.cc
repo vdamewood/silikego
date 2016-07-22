@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "StringSource.hh"
+#include "StringSource.h"
 
 StringSource::StringSource(const std::string &NewSource)
 	: Source(NewSource), Iterator(Source.begin())

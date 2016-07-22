@@ -15,7 +15,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 set(TARGET SilikegoGui)
-set(HEADERS EvalWindow.hh About.hh Id.h)
+set(HEADERS EvalWindow.h About.h Id.h)
 set(SOURCES App.cc EvalWindow.cc EvalWindow.rc About.cc About.rc)
 set(DEPS ${LIB})
 

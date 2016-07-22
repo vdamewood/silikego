@@ -18,18 +18,18 @@ set(DTARGET SilikegoDLib)
 set(STARGET SilikegoSLib)
 
 set(PUB_HEADERS
-  W32Dll.hh
-  Value.hh
-  FunctionCaller.hh
-  SyntaxTree.hh
-  DataSource.hh
-  CStringSource.hh
-  Token.hh
-  Lexer.hh
-  InfixParser.hh)
+  W32Dll.h
+  Value.h
+  FunctionCaller.h
+  SyntaxTree.h
+  DataSource.h
+  CStringSource.h
+  Token.h
+  Lexer.h
+  InfixParser.h)
 set(HEADERS
   ${PUB_HEADERS}
-  Functions.hh)
+  Functions.h)
 set(SOURCES
   Value.cc
   Functions.cc

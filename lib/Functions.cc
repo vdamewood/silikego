@@ -20,7 +20,7 @@
 #include <ctime>
 #include <limits>
 
-#include "Functions.hh"
+#include "Functions.h"
 
 Silikego::Value Silikego::Functions::add(std::vector<Silikego::Value> Args)
 {

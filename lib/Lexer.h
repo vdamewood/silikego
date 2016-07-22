@@ -1,5 +1,5 @@
-/* CStringSource.hh: Class to input data from a C-style string
- * Copyright 2014, 2015, 2016 Vincent Damewood
+/* Lexer.h: Lexical analyzer
+ * Copyright 2012, 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,26 +15,29 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_CSTRING_SOURCE_HH
-#define SILIKEGO_CSTRING_SOURCE_HH
+#if !defined SILIKEGO_LEXER_H
+#define SILIKEGO_LEXER_H
 
-#include "W32Dll.hh"
-#include "DataSource.hh"
+#include "W32Dll.h"
+#include "DataSource.h"
+#include "Token.h"
 
 namespace Silikego
 {
-	class SILIKEGO_API CStringSource : public DataSource
+	class SILIKEGO_API Lexer
 	{
 	public:
-		CStringSource(const char *);
-		virtual bool Advance();
-		virtual char GetCurrent();
-		virtual ~CStringSource();
+		Lexer(DataSource *InputSource);
+		~Lexer();
+
+		Silikego::Token &GetToken();
+		void Next();
 
 	private:
-		char *Source;
-		int Index;
+		void Load();
+		DataSource *MySource;
+		Silikego::Token *MyToken;
 	};
 };
 
-#endif // SILIKEGO_CSTRING_SOURCE_HH
+#endif // SILIKEGO_LEXER_H

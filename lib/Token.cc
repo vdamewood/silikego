@@ -22,7 +22,7 @@
 
 #include <cstring>
 
-#include "Token.hh"
+#include "Token.h"
 
 Silikego::Token::Token(TokenType NewType)
 {

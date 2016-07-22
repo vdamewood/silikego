@@ -1,4 +1,4 @@
-/* SyntaxTree.hh: Abstract syntax tree classes
+/* SyntaxTree.h: Abstract syntax tree classes
  * Copyright 2012, 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,11 +15,11 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_SYNTAX_TREE_HH
-#define SILIKEGO_SYNTAX_TREE_HH
+#if !defined SILIKEGO_SYNTAX_TREE_H
+#define SILIKEGO_SYNTAX_TREE_H
 
-#include "W32Dll.hh"
-#include "Value.hh"
+#include "W32Dll.h"
+#include "Value.h"
 
 namespace Silikego
 {
@@ -86,4 +86,4 @@ namespace Silikego
 	};
 };
 
-#endif // SILIKEGO_SYNTAX_TREE_HH
+#endif // SILIKEGO_SYNTAX_TREE_H

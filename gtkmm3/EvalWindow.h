@@ -1,4 +1,4 @@
-/* EvalWindow.hh: Expression evaluation window
+/* EvalWindow.h: Expression evaluation window
  * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,29 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined EVAL_WINDOW_HH
-#define EVAL_WINDOW_HH
+#if !defined EVAL_WINDOW_H
+#define EVAL_WINDOW_H
 
-#include <afxwin.h>
+#include <gtkmm.h>
 
-class EvalWindow : public CFrameWnd
+class EvalWindow
 {
 public:
 	EvalWindow();
-	BOOL PreTranslateMessage(MSG *Message);
-
-protected:
-	void OnGetMinMaxInfo(MINMAXINFO* pMMI);
-	void OnSize(UINT nType, int cx, int cy);
 	void Calculate();
-	void CalculatorExit();
-	void HelpAbout();
-	DECLARE_MESSAGE_MAP();
-
+	Gtk::Window &Window() { return *MyWindow; }
 private:
-	CStatic Output;
-	CEdit Input;
-	CButton Button;
+	Glib::RefPtr<Gtk::Builder> MyBuilder;
+	Gtk::Window *MyWindow;
+	Gtk::Button *MyButton;
+	Gtk::Entry *MyInput;
+	Gtk::Label *MyOutput;
 };
 
-#endif /* EVAL_WINDOW_HH */
+#endif /* EVAL_WINDOW_H */

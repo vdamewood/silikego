@@ -1,4 +1,4 @@
-/* Token.hh: Token passed from tokenizer to parser
+/* Token.h: Token passed from tokenizer to parser
  * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_TOKEN_HH
-#define SILIKEGO_TOKEN_HH
+#if !defined SILIKEGO_TOKEN_H
+#define SILIKEGO_TOKEN_H
 
 #include <string>
 
-#include "W32Dll.hh"
+#include "W32Dll.h"
 
 namespace Silikego
 {
@@ -68,4 +68,4 @@ namespace Silikego
 	};
 };
 
-#endif // SILIKEGO_TOKEN_HH
+#endif // SILIKEGO_TOKEN_H

@@ -19,7 +19,7 @@
 #include <cctype>
 #include <cstring>
 
-#include "Lexer.hh"
+#include "Lexer.h"
 
 /* Values taken from Google Calculator 2011-07-06 */
 #define EULER 2.71828183

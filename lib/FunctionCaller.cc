@@ -17,8 +17,8 @@
 
 #include <unordered_map>
 
-#include "FunctionCaller.hh"
-#include "Functions.hh"
+#include "FunctionCaller.h"
+#include "Functions.h"
 
 // This is initialized as a null pointer rather than a static object so that
 // bindings can be created for language interpreters written in C.

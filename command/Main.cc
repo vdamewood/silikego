@@ -27,9 +27,9 @@
 
 #include <iostream>
 
-#include "FunctionCaller.hh"
-#include "InfixParser.hh"
-#include "StringSource.hh"
+#include "FunctionCaller.h"
+#include "InfixParser.h"
+#include "StringSource.h"
 
 #if HAVE_READLINE
 #include <readline/readline.h>

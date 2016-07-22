@@ -1,4 +1,4 @@
-/* Functions.hh: Built-in functions
+/* Functions.h: Built-in functions
  * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_FUNCTIONS_HH
-#define SILIKEGO_FUNCTIONS_HH
+#if !defined SILIKEGO_FUNCTIONS_H
+#define SILIKEGO_FUNCTIONS_H
 
 #include <vector>
 
-#include "Value.hh"
+#include "Value.h"
 
 namespace Silikego
 {
@@ -50,4 +50,4 @@ namespace Silikego
 		Silikego::Value tanh(std::vector<Silikego::Value> Args);
 	};
 };
-#endif // SILIKEGO_FUNCTIONS_HH
+#endif // SILIKEGO_FUNCTIONS_H

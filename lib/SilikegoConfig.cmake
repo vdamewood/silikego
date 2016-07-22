@@ -17,7 +17,7 @@
 include(FindPackageHandleStandardArgs)
 
 find_path(SILIKEGO_INC
-  NAMES Silikego/Value.hh
+  NAMES Silikego/Value.h
   DOC "Silikego Include Files")
 
 find_library(SILIKEGO_LIB

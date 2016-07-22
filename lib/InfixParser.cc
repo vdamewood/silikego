@@ -17,8 +17,8 @@
 
 #include <typeinfo>
 
-#include "Lexer.hh"
-#include "InfixParser.hh"
+#include "Lexer.h"
+#include "InfixParser.h"
 
 static Silikego::SyntaxTreeNode *GetExpr0(Silikego::Lexer&);
 static Silikego::SyntaxTreeNode *GetExpr0r(Silikego::Lexer&);

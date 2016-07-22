@@ -22,7 +22,7 @@
 
 #include <cstring>
 
-#include "CStringSource.hh"
+#include "CStringSource.h"
 
 Silikego::CStringSource::CStringSource(const char *NewSource)
 {

@@ -1,5 +1,5 @@
-/* EvalWindow.hh: Expression evaluation window
- * Copyright 2015, 2016 Vincent Damewood
+/* StringSource.h: Class to input data from a string
+ * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,23 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined EVAL_WINDOW_HH
-#define EVAL_WINDOW_HH
+#if !defined STRING_SOURCE_H
+#define STRING_SOURCE_H
 
-#include <gtkmm.h>
+#include <string>
+#include "DataSource.h"
 
-class EvalWindow
+class StringSource : public Silikego::DataSource
 {
 public:
-	EvalWindow();
-	void Calculate();
-	Gtk::Window &Window() { return *MyWindow; }
+	StringSource(const std::string &);
+	virtual bool Advance();
+	virtual char GetCurrent();
+	virtual ~StringSource();
+
 private:
-	Glib::RefPtr<Gtk::Builder> MyBuilder;
-	Gtk::Window *MyWindow;
-	Gtk::Button *MyButton;
-	Gtk::Entry *MyInput;
-	Gtk::Label *MyOutput;
+	const std::string Source;
+	std::string::const_iterator Iterator;
 };
 
-#endif /* EVAL_WINDOW_HH */
+#endif // STRING_SOURCE_H

@@ -17,8 +17,8 @@
 
 #include <afxwin.h>
 
-#include "FunctionCaller.hh"
-#include "EvalWindow.hh"
+#include "FunctionCaller.h"
+#include "EvalWindow.h"
 
 class SilikegoApp : public CWinApp
 {

@@ -1,4 +1,4 @@
-/* FunctionCaller.hh: Function handling
+/* FunctionCaller.h: Function handling
  * Copyright 2012, 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,14 +15,14 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_FUNCTION_CALLER_HH
-#define SILIKEGO_FUNCTION_CALLER_HH
+#if !defined SILIKEGO_FUNCTION_CALLER_H
+#define SILIKEGO_FUNCTION_CALLER_H
 
 #include <string>
 #include <vector>
 
-#include "W32Dll.hh"
-#include "Value.hh"
+#include "W32Dll.h"
+#include "Value.h"
 
 
 namespace Silikego

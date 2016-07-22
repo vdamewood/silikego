@@ -16,7 +16,7 @@
 
 set(TARGET SilikegoCli)
 set(SOURCES Main.cc StringSource.cc)
-set(HEADERS StringSource.hh)
+set(HEADERS StringSource.h)
 set(DEPS ${LIB})
 
 message("-- Finding readline")

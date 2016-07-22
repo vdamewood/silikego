@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "Delegate.hh"
+#import "Delegate.h"
 
-#include "InfixParser.hh"
-#include "SyntaxTree.hh"
-#include "FunctionCaller.hh"
-#include "CStringSource.hh"
+#include "InfixParser.h"
+#include "SyntaxTree.h"
+#include "FunctionCaller.h"
+#include "CStringSource.h"
 
 #import <Cocoa/Cocoa.h>
 
