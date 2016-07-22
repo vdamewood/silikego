@@ -18,14 +18,8 @@
 #if !defined SILIKEGO_SYNTAX_TREE_HH
 #define SILIKEGO_SYNTAX_TREE_HH
 
-#include <list>
-
 #include "W32Dll.hh"
 #include "Value.hh"
-
-// Windows requires this trickery.
-namespace Silikego { class SyntaxTreeNode; };
-SILIKEGO_EXTERN template class SILIKEGO_API std::list<Silikego::SyntaxTreeNode *>;
 
 namespace Silikego
 {
@@ -57,6 +51,7 @@ namespace Silikego
 		float MyFloat;
 	};
 
+
 	class SILIKEGO_API BranchNode : public SyntaxTreeNode
 	{
 	public:
@@ -70,9 +65,8 @@ namespace Silikego
 		bool GraftLeft(SyntaxTreeNode *);
 		bool GraftRight(SyntaxTreeNode *);
 	private:
-		bool IsNegated;
-		char *MyId;
-		std::list<SyntaxTreeNode *> MyChildren;
+		class State;
+		State* MyState;
 	};
 
 	class SILIKEGO_API SyntaxErrorNode : public SyntaxTreeNode
