@@ -31,12 +31,18 @@ namespace Silikego
 	{
 	public:
 		State(const char* NewInput) : Input(NewInput) { }
+		State(const std::string &NewInput) : Input(NewInput) { }
 
 		std::string Input;
 		std::string::iterator Index = Input.begin();
 	};
 
 	CStringSource::CStringSource(const char *NewSource)
+		: S(new State(NewSource))
+	{
+	}
+
+	CStringSource::CStringSource(const std::string &NewSource)
 		: S(new State(NewSource))
 	{
 	}

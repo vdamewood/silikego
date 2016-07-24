@@ -18,6 +18,8 @@
 #if !defined SILIKEGO_CSTRING_SOURCE_H
 #define SILIKEGO_CSTRING_SOURCE_H
 
+#include <string>
+
 #include "W32Dll.h"
 #include "DataSource.h"
 
@@ -27,6 +29,7 @@ namespace Silikego
 	{
 	public:
 		CStringSource(const char *);
+		CStringSource(const std::string &);
 		virtual bool Advance();
 		virtual char GetCurrent();
 		virtual ~CStringSource();
