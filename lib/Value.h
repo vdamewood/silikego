@@ -49,7 +49,8 @@ namespace Silikego
 		Value();
 		Value(ValueStatus NewStatus);
 		Value(int NewIntegerValue);
-		Value(float NewFloatValue);
+		Value(double NewFloatValue);
+		~Value();
 
 		ValueStatus Status() const;
 		int Integer() const;
@@ -58,12 +59,8 @@ namespace Silikego
 		bool IsNumber() const;
 		char *ToCString() const;
 	private:
-		ValueStatus MyStatus;
-		union
-		{
-			int MyInteger;
-			float MyFloat;
-		};
+		class State;
+		State *S;
 	};
 }
 

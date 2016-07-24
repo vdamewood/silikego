@@ -26,54 +26,50 @@
 
 namespace Silikego
 {
-	Token::Token(TokenType NewType)
+	class Token::State
 	{
-		MyType = NewType;
-		MyInteger = 0;
-	}
+	public:
+		State(TokenType NewType) : Type(NewType) {}
+		State(int NewValue) : Type(INTEGER), Integer(NewValue) {}
+		State(double NewValue) : Type(FLOAT), Float(NewValue) {}
+		State(const char *NewId) : Type(ID), Id(NewId) {}
 
-	Token::Token(int NewIntegerValue)
-	{
-		MyType = INTEGER;
-		MyInteger = NewIntegerValue;
-	}
+		TokenType Type;
+		union
+		{
+			int Integer;
+			double Float;
+		};
+		std::string Id;
+	};
 
-	Token::Token(float NewFloatValue)
-	{
-		MyType = FLOAT;
-		MyFloat = NewFloatValue;
-	}
-
-	Token::Token(const char *NewIdValue)
-	{
-		MyType = ID;
-		MyId = new char[std::strlen(NewIdValue) + 1];
-		std::strcpy(MyId, NewIdValue);
-	}
+	Token::Token(TokenType NewType) : S(new State(NewType)) { }
+	Token::Token(int NewValue) : S(new State(NewValue)) { }
+	Token::Token(double NewValue) : S(new State(NewValue)) { }
+	Token::Token(const char *NewId) : S(new State(NewId)) { }
 
 	Token::~Token()
 	{
-		if (MyType == ID)
-			delete[] MyId;
+		delete S;
 	}
 
 	Token::TokenType Token::Type() const
 	{
-		return MyType;
+		return S->Type;
 	}
 
 	int Token::Integer() const
 	{
-		return MyInteger;
+		return S->Integer;
 	}
 
 	float Token::Float() const
 	{
-		return MyFloat;
+		return S->Float;
 	}
 
 	const char *Token::Id() const
 	{
-		return MyId;
+		return S->Id.c_str();
 	}
 }

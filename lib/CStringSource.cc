@@ -21,28 +21,36 @@
 #endif /* _WIN32 && defined _MSC_VER */
 
 #include <cstring>
+#include <string>
 
 #include "CStringSource.h"
 
 namespace Silikego
 {
-	CStringSource::CStringSource(const char *NewSource)
+	class CStringSource::State
 	{
-		Source = new char[std::strlen(NewSource) + 1];
-		std::strcpy(Source, NewSource);
-		Index = 0;
+	public:
+		State(const char* NewInput) : Input(NewInput) { }
+
+		std::string Input;
+		std::string::iterator Index = Input.begin();
+	};
+
+	CStringSource::CStringSource(const char *NewSource)
+		: S(new State(NewSource))
+	{
 	}
 
 	CStringSource::~CStringSource()
 	{
-		delete[] Source;
+		delete S;
 	}
 
 	bool CStringSource::Advance()
 	{
-		if (Source[Index] != '\0')
+		if (S->Index != S->Input.end())
 		{
-			Index++;
+			S->Index++;
 			return true;
 		}
 		else
@@ -53,6 +61,6 @@ namespace Silikego
 
 	char CStringSource::GetCurrent()
 	{
-		return Source[Index];
+		return *S->Index;
 	}
 }

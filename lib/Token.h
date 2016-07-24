@@ -48,7 +48,7 @@ namespace Silikego
 
 		Token(TokenType NewType);
 		Token(int NewInteger);
-		Token(float NewFloat);
+		Token(double NewFloat);
 		Token(const char *NewString);
 		~Token();
 
@@ -58,13 +58,8 @@ namespace Silikego
 		const char *Id() const;
 
 	private:
-		TokenType MyType;
-		union
-		{
-			int MyInteger;
-			float MyFloat;
-			char *MyId;
-		};
+		class State;
+		State *S;
 	};
 };
 

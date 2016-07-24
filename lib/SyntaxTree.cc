@@ -28,34 +28,54 @@
 
 namespace Silikego
 {
-	IntegerNode::IntegerNode(int NewValue)
+	SyntaxTreeNode::~SyntaxTreeNode() { }
+
+	class IntegerNode::State
 	{
-		MyInteger = NewValue;
+	public:
+		State(int NewValue) : IntegerValue(NewValue) { }
+		int IntegerValue;
+	};
+
+	IntegerNode::IntegerNode(int NewValue) : S(new State(NewValue)) { }
+
+	IntegerNode::~IntegerNode()
+	{
+		delete S;
 	}
 
 	Value IntegerNode::Evaluate()
 	{
-		return MyInteger;
+		return S->IntegerValue;
 	}
 
 	void IntegerNode::Negate()
 	{
-		MyInteger *= -1;
+		S->IntegerValue *= -1;
 	}
 
-	FloatNode::FloatNode(float NewValue)
+	class FloatNode::State
 	{
-		MyFloat = NewValue;
+	public:
+		State(double NewValue) : FloatValue(NewValue) { }
+		double FloatValue;
+	};
+
+	FloatNode::FloatNode(double NewValue) : S(new State(NewValue)) { }
+
+	FloatNode::~FloatNode()
+	{
+		delete S;
 	}
 
 	Value FloatNode::Evaluate()
 	{
-		return MyFloat;
+		return S->FloatValue;
 	}
 
 	void FloatNode::Negate()
 	{
-		MyFloat *= -1.0;
+		S->FloatValue *= -1.0;
 	}
 
 	class BranchNode::State
@@ -76,13 +96,13 @@ namespace Silikego
 		std::list<SyntaxTreeNode *> Children = std::list<SyntaxTreeNode *>();
 	};
 
-	BranchNode::BranchNode(const char *NewId) : MyState(new State(NewId))
+	BranchNode::BranchNode(const char *NewId) : S(new State(NewId))
 	{
 	}
 
 	BranchNode::~BranchNode()
 	{
-		delete MyState;
+		delete S;
 	}
 
 	Value BranchNode::Evaluate()
@@ -90,10 +110,10 @@ namespace Silikego
 		Value rVal;
 		std::vector<Value> Arguments;
 
-		if (MyState->Children.size())
+		if (S->Children.size())
 		{
 			std::list<SyntaxTreeNode *>::iterator i;
-			for (i = MyState->Children.begin(); i != MyState->Children.end(); i++)
+			for (i = S->Children.begin(); i != S->Children.end(); i++)
 			{
 				Value Current = (*i)->Evaluate();
 				if (!Current.IsNumber())
@@ -103,8 +123,8 @@ namespace Silikego
 			}
 		}
 
-		rVal = FunctionCaller::Call(MyState->Id.c_str(), Arguments);
-		if (MyState->IsNegated)
+		rVal = FunctionCaller::Call(S->Id.c_str(), Arguments);
+		if (S->IsNegated)
 		{
 			if (rVal.Status() == Value::INTEGER)
 				rVal = rVal.Integer() * -1;
@@ -117,33 +137,33 @@ namespace Silikego
 
 	void BranchNode::Negate()
 	{
-		MyState->IsNegated = !MyState->IsNegated;
+		S->IsNegated = !S->IsNegated;
 	}
 
 	void BranchNode::PushLeft(SyntaxTreeNode *NewChild)
 	{
-		MyState->Children.push_front(NewChild);
+		S->Children.push_front(NewChild);
 	}
 
 	void BranchNode::PushRight(SyntaxTreeNode *NewChild)
 	{
-		MyState->Children.push_back(NewChild);
+		S->Children.push_back(NewChild);
 	}
 
 	bool BranchNode::GraftLeft(SyntaxTreeNode *NewChild)
 	{
-		if (MyState->Children.size() == 0)
+		if (S->Children.size() == 0)
 		{
 			return false;
 		}
-		else if (MyState->Children.front() == 0)
+		else if (S->Children.front() == 0)
 		{
-			MyState->Children.front() = NewChild;
+			S->Children.front() = NewChild;
 			return true;
 		}
 		else
 		{
-			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(MyState->Children.front()))
+			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.front()))
 				return ChildBranch->GraftLeft(NewChild);
 			else
 				return false;
@@ -152,18 +172,18 @@ namespace Silikego
 
 	bool BranchNode::GraftRight(SyntaxTreeNode *NewChild)
 	{
-		if (MyState->Children.size() == 0)
+		if (S->Children.size() == 0)
 		{
 			return false;
 		}
-		else if (MyState->Children.back() == 0)
+		else if (S->Children.back() == 0)
 		{
-			MyState->Children.back() = NewChild;
+			S->Children.back() = NewChild;
 			return true;
 		}
 		else
 		{
-			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(MyState->Children.back()))
+			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.back()))
 				return ChildBranch->GraftRight(NewChild);
 			else
 				return false;

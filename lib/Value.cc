@@ -27,64 +27,64 @@
 
 namespace Silikego
 {
-	Value::Value()
+	class Value::State
 	{
-		MyStatus = INTEGER;
-		MyInteger = 0;
-	}
+	public:
+		State(Value::ValueStatus NewStatus) : Status(NewStatus), Integer(0) { }
+		State(int NewInteger) : Status(INTEGER), Integer(NewInteger) { }
+		State(double NewFloat) : Status(FLOAT), Float(NewFloat) { }
 
-	Value::Value(Value::ValueStatus NewStatus)
-	{
-		MyStatus = NewStatus;
-		MyInteger = 0;
-	}
+		ValueStatus Status;
+		union
+		{
+			int Integer;
+			float Float;
+		};
+	};
 
-	Value::Value(int NewValue)
+	Value::Value() : S(new State(0)) { }
+	Value::Value(Value::ValueStatus NewStatus) : S(new State(NewStatus)) { }
+	Value::Value(int NewValue) : S(new State(NewValue)) { }
+	Value::Value(double NewValue) : S(new State(NewValue)) { }
+	Value::~Value()
 	{
-		MyStatus = INTEGER;
-		MyInteger = NewValue;
-	}
-
-	Value::Value(float NewValue)
-	{
-		MyStatus = FLOAT;
-		MyFloat = NewValue;
+		delete S;
 	}
 
 	Value::ValueStatus Value::Status() const
 	{
-		return MyStatus;
+		return S->Status;
 	}
 
 	int Value::Integer() const
 	{
-		if (MyStatus == INTEGER)
-			return MyInteger;
-		else if (MyStatus == FLOAT)
-			return static_cast<int>(MyFloat);
+		if (S->Status == INTEGER)
+			return S->Integer;
+		else if (S->Status == FLOAT)
+			return static_cast<int>(S->Float);
 		else
 			return 0;
 	}
 
 	float Value::Float() const
 	{
-		if (MyStatus == INTEGER)
-			return static_cast<float>(MyInteger);
-		else if (MyStatus == FLOAT)
-			return MyFloat;
+		if (S->Status == INTEGER)
+			return static_cast<float>(S->Integer);
+		else if (S->Status == FLOAT)
+			return S->Float;
 		else
 			return std::numeric_limits<float>::quiet_NaN();
 	}
 
 	bool Value::IsNumber() const
 	{
-		return (MyStatus == INTEGER || MyStatus == FLOAT);
+		return (S->Status == INTEGER || S->Status == FLOAT);
 	}
 
 	char *Value::ToCString() const
 	{
 		std::ostringstream tmp;
-		switch (MyStatus)
+		switch (S->Status)
 		{
 		case INTEGER:
 			tmp << Integer();

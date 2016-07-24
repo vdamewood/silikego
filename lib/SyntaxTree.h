@@ -26,7 +26,7 @@ namespace Silikego
 	class SILIKEGO_API SyntaxTreeNode
 	{
 	public:
-		virtual ~SyntaxTreeNode() { };
+		virtual ~SyntaxTreeNode();
 		virtual Silikego::Value Evaluate() = 0;
 		virtual void Negate() = 0;
 	};
@@ -35,20 +35,24 @@ namespace Silikego
 	{
 	public:
 		IntegerNode(int NewValue);
+		virtual ~IntegerNode();
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
 	private:
-		int MyInteger;
+		class State;
+		State *S;
 	};
 
 	class SILIKEGO_API FloatNode : public SyntaxTreeNode
 	{
 	public:
-		FloatNode(float NewValue);
+		FloatNode(double NewValue);
+		virtual ~FloatNode();
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
 	private:
-		float MyFloat;
+		class State;
+		State *S;
 	};
 
 
@@ -66,7 +70,7 @@ namespace Silikego
 		bool GraftRight(SyntaxTreeNode *);
 	private:
 		class State;
-		State* MyState;
+		State *S;
 	};
 
 	class SILIKEGO_API SyntaxErrorNode : public SyntaxTreeNode

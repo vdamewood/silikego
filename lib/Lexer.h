@@ -34,9 +34,8 @@ namespace Silikego
 		void Next();
 
 	private:
-		void Load();
-		DataSource *MySource;
-		Silikego::Token *MyToken;
+		class State;
+		State *S;
 	};
 };
 

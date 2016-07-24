@@ -32,8 +32,8 @@ namespace Silikego
 		virtual ~CStringSource();
 
 	private:
-		char *Source;
-		int Index;
+		class State;
+		State* S;
 	};
 };
 
