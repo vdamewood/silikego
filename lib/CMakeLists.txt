@@ -23,7 +23,7 @@ set(PUB_HEADERS
   FunctionCaller.h
   SyntaxTree.h
   DataSource.h
-  CStringSource.h
+  StringSource.h
   Token.h
   Lexer.h
   InfixParser.h)
@@ -36,7 +36,7 @@ set(SOURCES
   FunctionCaller.cc
   SyntaxTree.cc
   DataSource.cc
-  CStringSource.cc
+  StringSource.cc
   Token.cc
   Lexer.cc
   InfixParser.cc)

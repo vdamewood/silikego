@@ -17,7 +17,7 @@
 
 #include <gtkmm.h>
 
-#include "CStringSource.h"
+#include "StringSource.h"
 #include "InfixParser.h"
 #include "Value.h"
 
@@ -31,7 +31,7 @@ void EvalWindow::Calculate()
 {
 	Silikego::SyntaxTreeNode *ResultTree =
 		Silikego::ParseInfix(
-		new Silikego::CStringSource(
+		new Silikego::StringSource(
 			MyInput->get_text().c_str()));
 	Silikego::Value Value = ResultTree->Evaluate();
 	delete ResultTree;

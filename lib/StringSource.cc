@@ -1,4 +1,4 @@
-/* CStringSource.h: Class to input data from a C-style string
+/* StringSource.cc: Class to input data from a string
  * Copyright 2014, 2015, 2016 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,29 +15,53 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_CSTRING_SOURCE_H
-#define SILIKEGO_CSTRING_SOURCE_H
 
 #include <string>
 
-#include "W32Dll.h"
-#include "DataSource.h"
+#include "StringSource.h"
 
 namespace Silikego
 {
-	class SILIKEGO_API CStringSource : public DataSource
+	class StringSource::State
 	{
 	public:
-		CStringSource(const char *);
-		CStringSource(const std::string &);
-		virtual bool Advance();
-		virtual char GetCurrent();
-		virtual ~CStringSource();
+		State(const char* NewInput) : Input(NewInput) { }
+		State(const std::string &NewInput) : Input(NewInput) { }
 
-	private:
-		class State;
-		State* S;
+		std::string Input;
+		std::string::iterator Index = Input.begin();
 	};
-};
 
-#endif // SILIKEGO_CSTRING_SOURCE_H
+	StringSource::StringSource(const char *NewSource)
+		: S(new State(NewSource))
+	{
+	}
+
+	StringSource::StringSource(const std::string &NewSource)
+		: S(new State(NewSource))
+	{
+	}
+
+	StringSource::~StringSource()
+	{
+		delete S;
+	}
+
+	bool StringSource::Advance()
+	{
+		if (S->Index != S->Input.end())
+		{
+			S->Index++;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	char StringSource::GetCurrent()
+	{
+		return *S->Index;
+	}
+}

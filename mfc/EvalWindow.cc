@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include <afxwin.h>
 
-#include "CStringSource.h"
+#include "StringSource.h"
 #include "InfixParser.h"
 #include "Value.h"
 
@@ -134,7 +134,7 @@ void EvalWindow::Calculate()
 	ExpressionString = (char*)GlobalAlloc(GPTR, ExpressionSize);
 	Input.GetWindowText(ExpressionString, ExpressionSize);
 
-	Node = Silikego::ParseInfix(new Silikego::CStringSource(ExpressionString));
+	Node = Silikego::ParseInfix(new Silikego::StringSource(ExpressionString));
 	Value = Node->Evaluate();
 	std::free(Node);
 	GlobalFree((HANDLE)ExpressionString);
