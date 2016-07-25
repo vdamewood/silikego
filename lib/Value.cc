@@ -19,7 +19,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <cstring>
+#include <string>
 #include <sstream>
 #include <limits>
 
@@ -81,7 +81,7 @@ namespace Silikego
 		return (S->Status == INTEGER || S->Status == FLOAT);
 	}
 
-	char *Value::ToCString() const
+	std::string Value::ToString() const
 	{
 		std::ostringstream tmp;
 		switch (S->Status)
@@ -114,9 +114,9 @@ namespace Silikego
 			tmp << "Error: Range error";
 		}
 
-		const std::string &tmpString = tmp.str();
-		char * rValue = new char[tmpString.size()+1];
-		std::strcpy(rValue, tmpString.c_str());
-		return rValue;
+		return tmp.str();
+		//char * rValue = new char[tmpString.size()+1];
+		//std::strcpy(rValue, tmpString.c_str());
+		//return rValue;
 	}
 }

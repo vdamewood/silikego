@@ -57,7 +57,7 @@ namespace Silikego
 		float Float() const;
 
 		bool IsNumber() const;
-		char *ToCString() const;
+		std::string ToString() const;
 	private:
 		class State;
 		State *S;

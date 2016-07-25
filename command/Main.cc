@@ -82,9 +82,8 @@ int main(int argc, char *argv[])
 		delete Tree;
 		Tree = 0;
 
-		char *ResultString = result.ToCString();
+		std::string ResultString = result.ToString();
 		std::cout << ResultString << std::endl;
-		delete[] ResultString;
 		old_expression = expression;
 	}
 

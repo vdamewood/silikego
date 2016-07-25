@@ -126,7 +126,6 @@ void EvalWindow::Calculate()
 {
 	int ExpressionSize;
 	char *ExpressionString;
-	char *ValueString;
 	Silikego::SyntaxTreeNode *Node;
 	Silikego::Value Value;
 
@@ -139,9 +138,8 @@ void EvalWindow::Calculate()
 	std::free(Node);
 	GlobalFree((HANDLE)ExpressionString);
 
-	ValueString = Value.ToCString();
-	Output.SetWindowText(ValueString);
-	std::free(ValueString);
+	std::string ValueString = Value.ToString();
+	Output.SetWindowText(ValueString.c_str());
 }
 
 void EvalWindow::CalculatorExit()
