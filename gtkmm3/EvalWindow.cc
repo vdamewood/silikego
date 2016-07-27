@@ -36,9 +36,8 @@ void EvalWindow::Calculate()
 	Silikego::Value Value = ResultTree->Evaluate();
 	delete ResultTree;
 
-	char *ResultString = Value.ToCString();
-	MyOutput->set_text(ResultString);
-	delete[] ResultString;
+	std::string ResultString = Value.ToString();
+	MyOutput->set_text(ResultString.c_str());
 }
 
 EvalWindow::EvalWindow()

@@ -20,7 +20,7 @@
 #include "InfixParser.h"
 #include "SyntaxTree.h"
 #include "FunctionCaller.h"
-#include "CStringSource.h"
+#include "StringSource.h"
 
 #import <Cocoa/Cocoa.h>
 
@@ -48,14 +48,13 @@
 	Silikego::Value Result;
 
 	Ast = Silikego::ParseInfix(
-		new Silikego::CStringSource(
+		new Silikego::StringSource(
 			[[self.input stringValue] UTF8String]));
 	Result = Ast->Evaluate();
 	delete Ast;
 
-	char *ResultCString = Result.ToCString();
-	NSString *ResultString = [[NSString alloc] initWithUTF8String: ResultCString];
-	delete[] ResultCString;
-	[self.output setStringValue: ResultString];
+	std::string ResultString = Result.ToString();
+	NSString *ResultNSString = [[NSString alloc] initWithUTF8String: ResultString.c_str()];
+	[self.output setStringValue: ResultNSString];
 }
 @end

@@ -18,6 +18,8 @@
 #if !defined SILIKEGO_VALUE_H
 #define SILIKEGO_VALUE_H
 
+#include <string>
+
 #include "W32Dll.h"
 
 namespace Silikego
