@@ -38,7 +38,7 @@ namespace Silikego
 		union
 		{
 			int Integer;
-			float Float;
+			double Float;
 		};
 	};
 
@@ -66,14 +66,14 @@ namespace Silikego
 			return 0;
 	}
 
-	float Value::Float() const
+	double Value::Float() const
 	{
 		if (S->Status == INTEGER)
-			return static_cast<float>(S->Integer);
+			return static_cast<double>(S->Integer);
 		else if (S->Status == FLOAT)
 			return S->Float;
 		else
-			return std::numeric_limits<float>::quiet_NaN();
+			return std::numeric_limits<double>::quiet_NaN();
 	}
 
 	bool Value::IsNumber() const
@@ -115,8 +115,5 @@ namespace Silikego
 		}
 
 		return tmp.str();
-		//char * rValue = new char[tmpString.size()+1];
-		//std::strcpy(rValue, tmpString.c_str());
-		//return rValue;
 	}
 }

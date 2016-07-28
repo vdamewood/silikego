@@ -124,7 +124,7 @@ namespace Silikego
 			if (rVal.Status() == Value::INTEGER)
 				rVal = rVal.Integer() * -1;
 			else if (rVal.Status() == Value::FLOAT)
-				rVal = rVal.Float() * (float)-1.0;
+				rVal = rVal.Float() * -1.0;
 		}
 
 		return rVal;

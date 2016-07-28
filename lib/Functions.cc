@@ -107,7 +107,7 @@ namespace Silikego
 
 	Value Functions::power(std::vector<Value> Args)
 	{
-		float runningValue;
+		double runningValue;
 
 		runningValue = Args[0].Float();
 
@@ -186,7 +186,7 @@ namespace Silikego
 
 	Value Functions::ceil(std::vector<Value> Args)
 	{
-		float result;
+		double result;
 
 		if (Args.size() != 1)
 			return Value::BAD_ARGUMENTS;
@@ -225,7 +225,7 @@ namespace Silikego
 
 	Value Functions::floor(std::vector<Value> Args)
 	{
-		float result;
+		double result;
 
 		if (Args.size() != 1)
 			return Value::BAD_ARGUMENTS;
@@ -283,9 +283,6 @@ namespace Silikego
 
 	Value Functions::tan(std::vector<Value> Args)
 	{
-		// For some reason the C version of tan() doesn't throw an error for
-		// input of pi/2 or 3*pi/2. Probably due to the imprecision of
-		// floating point numbers.
 		if (Args.size() != 1)
 			return Value::BAD_ARGUMENTS;
 

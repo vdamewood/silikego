@@ -54,7 +54,7 @@ namespace Silikego
 
 		TokenType   Type() const;
 		int         Integer() const;
-		float       Float() const;
+		double      Float() const;
 		const char *Id() const;
 
 	private:

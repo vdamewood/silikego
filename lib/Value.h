@@ -30,7 +30,7 @@ namespace Silikego
 		enum SILIKEGO_API ValueStatus
 		{
 			INTEGER,       /* Success: The value is an integer. */
-			FLOAT,         /* Success: The valis is a float. */
+			FLOAT,         /* Success: The valis is a double. */
 			MEMORY_ERR,    /* Error: An attempt to allocate memory
 			                    failed. */
 			SYNTAX_ERR,    /* Error: A syntax error was
@@ -56,7 +56,7 @@ namespace Silikego
 
 		ValueStatus Status() const;
 		int Integer() const;
-		float Float() const;
+		double Float() const;
 
 		bool IsNumber() const;
 		std::string ToString() const;

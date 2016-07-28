@@ -58,7 +58,7 @@ namespace Silikego
 		return S->Integer;
 	}
 
-	float Token::Float() const
+	double Token::Float() const
 	{
 		return S->Float;
 	}
