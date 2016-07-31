@@ -50,7 +50,10 @@ namespace Silikego
 		Token(int NewInteger);
 		Token(double NewFloat);
 		Token(const char *NewString);
+		Token(const Token&);
 		~Token();
+
+		const Token& operator=(const Token&);
 
 		TokenType   Type() const;
 		int         Integer() const;

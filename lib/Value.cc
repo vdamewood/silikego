@@ -33,6 +33,37 @@ namespace Silikego
 		State(Value::ValueStatus NewStatus) : Status(NewStatus), Integer(0) { }
 		State(int NewInteger) : Status(INTEGER), Integer(NewInteger) { }
 		State(double NewFloat) : Status(FLOAT), Float(NewFloat) { }
+		State(const State &RightSide) : Status(RightSide.Status)
+		{
+			switch (Status)
+			{
+			case INTEGER:
+				Integer = RightSide.Integer;
+				break;
+			case FLOAT:
+				Float = RightSide.Float;
+				break;
+			default:
+				; // Do nothing. Silence warning.
+			}
+		}
+
+		State& operator=(const State &RightSide)
+		{
+			Status = RightSide.Status;
+			switch (Status)
+			{
+			case INTEGER:
+				Integer = RightSide.Integer;
+				break;
+			case FLOAT:
+				Float = RightSide.Float;
+				break;
+			default:
+				; // Do nothing. Silence warning.
+			}
+			return *this;
+		}
 
 		ValueStatus Status;
 		union
@@ -46,9 +77,16 @@ namespace Silikego
 	Value::Value(Value::ValueStatus NewStatus) : S(new State(NewStatus)) { }
 	Value::Value(int NewValue) : S(new State(NewValue)) { }
 	Value::Value(double NewValue) : S(new State(NewValue)) { }
+	Value::Value(const Value& RightSide) : S(new State(*RightSide.S)) { }
 	Value::~Value()
 	{
 		delete S;
+	}
+
+	const Value& Value::operator=(const Value& RightSide)
+	{
+		*S = *RightSide.S;
+		return *this;
 	}
 
 	Value::ValueStatus Value::Status() const

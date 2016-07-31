@@ -52,7 +52,10 @@ namespace Silikego
 		Value(ValueStatus NewStatus);
 		Value(int NewIntegerValue);
 		Value(double NewFloatValue);
+		Value(const Value&);
 		~Value();
+
+		const Value& operator=(const Value& other);
 
 		ValueStatus Status() const;
 		int Integer() const;
