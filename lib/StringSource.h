@@ -36,6 +36,8 @@ namespace Silikego
 		virtual char GetCurrent();
 
 	private:
+		StringSource(const StringSource&) = delete;
+		const StringSource& operator=(const StringSource&) = delete;
 		class State;
 		State* S;
 	};

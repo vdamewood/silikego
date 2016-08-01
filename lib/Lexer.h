@@ -34,6 +34,8 @@ namespace Silikego
 		void Next();
 
 	private:
+		Lexer(const Lexer&) = delete;
+		const Lexer& operator=(const Lexer&) = delete;
 		class State;
 		State *S;
 	};
