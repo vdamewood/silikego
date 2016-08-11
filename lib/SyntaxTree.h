@@ -31,11 +31,15 @@ namespace Silikego
 		virtual void Negate() = 0;
 	};
 
-	class IntegerNode : public SyntaxTreeNode
+	class SILIKEGO_API IntegerNode : public SyntaxTreeNode
 	{
 	public:
 		IntegerNode(int NewValue);
+		IntegerNode(const IntegerNode&);
 		virtual ~IntegerNode();
+
+		const IntegerNode& operator=(const IntegerNode&);
+
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
 	private:
@@ -47,7 +51,11 @@ namespace Silikego
 	{
 	public:
 		FloatNode(double NewValue);
+		FloatNode(const FloatNode&);
 		virtual ~FloatNode();
+
+		const FloatNode& operator=(const FloatNode&);
+
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
 	private:
@@ -61,6 +69,7 @@ namespace Silikego
 	public:
 		BranchNode(const char *NewFunctionId);
 		virtual ~BranchNode();
+
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
 
@@ -69,6 +78,8 @@ namespace Silikego
 		bool GraftLeft(SyntaxTreeNode *);
 		bool GraftRight(SyntaxTreeNode *);
 	private:
+		BranchNode(const BranchNode&);
+		const BranchNode& operator=(const BranchNode&);
 		class State;
 		State *S;
 	};

@@ -29,15 +29,33 @@ namespace Silikego
 	{
 	public:
 		State(int NewValue) : IntegerValue(NewValue) { }
+		State(const State& RightSide) : IntegerValue(RightSide.IntegerValue) { }
+		State& operator=(const State& RightSide)
+		{
+			IntegerValue = RightSide.IntegerValue;
+			return *this;
+		}
 		int IntegerValue;
 	};
 
 	IntegerNode::IntegerNode(int NewValue) : S(new State(NewValue)) { }
 
+	IntegerNode::IntegerNode(const IntegerNode& RightSide)
+	{
+		S = new State(*RightSide.S);
+	}
+
 	IntegerNode::~IntegerNode()
 	{
 		delete S;
 	}
+
+	const IntegerNode& IntegerNode::operator=(const IntegerNode& RightSide)
+	{
+		*S = *RightSide.S;
+		return *this;
+	}
+
 
 	Value IntegerNode::Evaluate()
 	{
@@ -53,14 +71,31 @@ namespace Silikego
 	{
 	public:
 		State(double NewValue) : FloatValue(NewValue) { }
+		State(const State& RightSide) : FloatValue(RightSide.FloatValue) { }
+		State& operator=(const State& RightSide)
+		{
+			FloatValue = RightSide.FloatValue;
+			return *this;
+		}
 		double FloatValue;
 	};
 
 	FloatNode::FloatNode(double NewValue) : S(new State(NewValue)) { }
 
+	FloatNode::FloatNode(const FloatNode& RightSide)
+	{
+		S = new State(*RightSide.S);
+	}
+
 	FloatNode::~FloatNode()
 	{
 		delete S;
+	}
+
+	const FloatNode& FloatNode::operator=(const FloatNode& RightSide)
+	{
+		*S = *RightSide.S;
+		return *this;
 	}
 
 	Value FloatNode::Evaluate()
@@ -77,6 +112,7 @@ namespace Silikego
 	{
 	public:
 		State(const char* newName) : Id(newName) {}
+
 		~State()
 		{
 			for
