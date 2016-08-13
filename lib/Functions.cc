@@ -131,7 +131,7 @@ namespace Silikego
 			std::srand((unsigned int)std::time(NULL));
 		}
 
-		int runningTotal = 0;
+		long long int runningTotal = 0;
 		for (int i = 1; i <= Args[0].Integer(); i++)
 			runningTotal += (std::rand() % Args[1].Integer()) + 1;
 
@@ -194,7 +194,7 @@ namespace Silikego
 		result = std::ceil(Args[0].Float());
 
 		if (result <= std::numeric_limits<int>::max() && result >= std::numeric_limits<int>::min())
-			return static_cast<int>(result);
+			return static_cast<long long int>(result);
 		else
 			return result;
 	}
@@ -233,7 +233,7 @@ namespace Silikego
 		result = std::floor(Args[0].Float());
 
 		if (result <= std::numeric_limits<int>::max() && result >= std::numeric_limits<int>::min())
-			return static_cast<int>(result);
+			return static_cast<long long int>(result);
 		else
 			return result;
 	}

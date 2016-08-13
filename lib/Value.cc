@@ -30,9 +30,9 @@ namespace Silikego
 	class Value::State
 	{
 	public:
-		State(Value::ValueStatus NewStatus) : Status(NewStatus), Integer(0) { }
-		State(int NewInteger) : Status(INTEGER), Integer(NewInteger) { }
+		State(long long int NewInteger) : Status(INTEGER), Integer(NewInteger) { }
 		State(double NewFloat) : Status(FLOAT), Float(NewFloat) { }
+		State(ValueStatus NewStatus) : Status(NewStatus) { }
 		State(const State &RightSide) : Status(RightSide.Status)
 		{
 			switch (Status)
@@ -68,14 +68,17 @@ namespace Silikego
 		ValueStatus Status;
 		union
 		{
-			int Integer;
+			long long int Integer;
 			double Float;
 		};
 	};
 
-	Value::Value() : S(new State(0)) { }
 	Value::Value(Value::ValueStatus NewStatus) : S(new State(NewStatus)) { }
-	Value::Value(int NewValue) : S(new State(NewValue)) { }
+	Value::Value(short NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	Value::Value(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	Value::Value(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	Value::Value(long long int NewValue) : S(new State(NewValue)) { }
+	Value::Value(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
 	Value::Value(double NewValue) : S(new State(NewValue)) { }
 	Value::Value(const Value& RightSide) : S(new State(*RightSide.S)) { }
 	Value::~Value()
@@ -94,7 +97,7 @@ namespace Silikego
 		return S->Status;
 	}
 
-	int Value::Integer() const
+	long long int Value::Integer() const
 	{
 		if (S->Status == INTEGER)
 			return S->Integer;

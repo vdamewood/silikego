@@ -25,7 +25,7 @@ namespace Silikego
 	{
 	public:
 		State(TokenType NewType) : Type(NewType) {}
-		State(int NewValue) : Type(INTEGER), Integer(NewValue) {}
+		State(long long int NewValue) : Type(INTEGER), Integer(NewValue) {}
 		State(double NewValue) : Type(FLOAT), Float(NewValue) {}
 		State(const char* NewId) : Type(ID), Id(NewId) {}
 		State(const State& RightSide) : Type(RightSide.Type)
@@ -69,14 +69,18 @@ namespace Silikego
 		TokenType Type;
 		union
 		{
-			int Integer;
+			long long int Integer;
 			double Float;
 		};
 		std::string Id;
 	};
 
 	Token::Token(TokenType NewType) : S(new State(NewType)) { }
-	Token::Token(int NewValue) : S(new State(NewValue)) { }
+	Token::Token(short NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	Token::Token(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	Token::Token(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	Token::Token(long long int NewValue) : S(new State(NewValue)) { }
+	Token::Token(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
 	Token::Token(double NewValue) : S(new State(NewValue)) { }
 	Token::Token(const char *NewId) : S(new State(NewId)) { }
 	Token::Token(const Token& RightSide) : S(new State(*RightSide.S)) { }
@@ -97,7 +101,7 @@ namespace Silikego
 		return S->Type;
 	}
 
-	int Token::Integer() const
+	long long int Token::Integer() const
 	{
 		return S->Integer;
 	}

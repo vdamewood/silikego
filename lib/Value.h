@@ -50,15 +50,19 @@ namespace Silikego
 
 		Value();
 		Value(ValueStatus NewStatus);
-		Value(int NewIntegerValue);
-		Value(double NewFloatValue);
+		Value(short int newValue);
+		Value(int NewValue);
+		Value(long int NewValue);
+		Value(long long int NewValue);
+		Value(float NewValue);
+		Value(double NewValue);
 		Value(const Value&);
 		~Value();
 
 		const Value& operator=(const Value& other);
 
 		ValueStatus Status() const;
-		int Integer() const;
+		long long int Integer() const;
 		double Float() const;
 
 		bool IsNumber() const;

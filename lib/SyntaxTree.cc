@@ -28,17 +28,20 @@ namespace Silikego
 	class IntegerNode::State
 	{
 	public:
-		State(int NewValue) : IntegerValue(NewValue) { }
+		State(long long int NewValue) : IntegerValue(NewValue) { }
 		State(const State& RightSide) : IntegerValue(RightSide.IntegerValue) { }
 		State& operator=(const State& RightSide)
 		{
 			IntegerValue = RightSide.IntegerValue;
 			return *this;
 		}
-		int IntegerValue;
+		long long int IntegerValue;
 	};
 
-	IntegerNode::IntegerNode(int NewValue) : S(new State(NewValue)) { }
+	IntegerNode::IntegerNode(short int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	IntegerNode::IntegerNode(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	IntegerNode::IntegerNode(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	IntegerNode::IntegerNode(long long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
 
 	IntegerNode::IntegerNode(const IntegerNode& RightSide)
 	{
@@ -80,6 +83,7 @@ namespace Silikego
 		double FloatValue;
 	};
 
+	FloatNode::FloatNode(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
 	FloatNode::FloatNode(double NewValue) : S(new State(NewValue)) { }
 
 	FloatNode::FloatNode(const FloatNode& RightSide)
@@ -138,7 +142,7 @@ namespace Silikego
 
 	Value BranchNode::Evaluate()
 	{
-		Value rVal;
+		//Value rVal;
 		std::vector<Value> Arguments;
 
 		if (S->Children.size())
@@ -154,7 +158,7 @@ namespace Silikego
 			}
 		}
 
-		rVal = FunctionCaller::Call(S->Id.c_str(), Arguments);
+		Value rVal(FunctionCaller::Call(S->Id.c_str(), Arguments));
 		if (S->IsNegated)
 		{
 			if (rVal.Status() == Value::INTEGER)

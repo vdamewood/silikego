@@ -47,7 +47,11 @@ namespace Silikego
 		};
 
 		Token(TokenType NewType);
+		Token(short int NewInteger);
 		Token(int NewInteger);
+		Token(long int NewInteger);
+		Token(long long int NewInteger);
+		Token(float NewFloat);
 		Token(double NewFloat);
 		Token(const char *NewString);
 		Token(const Token&);
@@ -55,10 +59,10 @@ namespace Silikego
 
 		const Token& operator=(const Token&);
 
-		TokenType   Type() const;
-		int         Integer() const;
-		double      Float() const;
-		const char *Id() const;
+		TokenType     Type() const;
+		long long int Integer() const;
+		double        Float() const;
+		const char*   Id() const;
 
 	private:
 		class State;

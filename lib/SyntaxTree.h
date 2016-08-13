@@ -34,7 +34,10 @@ namespace Silikego
 	class SILIKEGO_API IntegerNode : public SyntaxTreeNode
 	{
 	public:
+		IntegerNode(short int NewValue);
 		IntegerNode(int NewValue);
+		IntegerNode(long int NewValue);
+		IntegerNode(long long int NewValue);
 		IntegerNode(const IntegerNode&);
 		virtual ~IntegerNode();
 
@@ -50,6 +53,7 @@ namespace Silikego
 	class SILIKEGO_API FloatNode : public SyntaxTreeNode
 	{
 	public:
+		FloatNode(float NewValue);
 		FloatNode(double NewValue);
 		FloatNode(const FloatNode&);
 		virtual ~FloatNode();
