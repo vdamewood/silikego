@@ -47,7 +47,11 @@ namespace Silikego
 		};
 
 		Token(TokenType NewType);
+		Token(short int NewInteger);
 		Token(int NewInteger);
+		Token(long int NewInteger);
+		Token(long long int NewInteger);
+		Token(float NewFloat);
 		Token(double NewFloat);
 		Token(const char *NewString);
 		Token(const Token&);

@@ -44,13 +44,10 @@
 
 - (IBAction) Calculate:(id)sender
 {
-	Silikego::SyntaxTreeNode *Ast;
-	Silikego::Value Result;
-
-	Ast = Silikego::ParseInfix(
+	Silikego::SyntaxTreeNode *Ast = Silikego::ParseInfix(
 		new Silikego::StringSource(
 			[[self.input stringValue] UTF8String]));
-	Result = Ast->Evaluate();
+	Silikego::Value Result = Ast->Evaluate();
 	delete Ast;
 
 	std::string ResultString = Result.ToString();

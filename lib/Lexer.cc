@@ -253,7 +253,7 @@ namespace Silikego
 			}
 			break;
 		case DFA_TERM_INTEGER:
-			S->Token = Token(std::atoi(lexeme.c_str()));
+			S->Token = Token(std::strtoll(lexeme.c_str(), 0, 10));
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_FLOAT:
