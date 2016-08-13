@@ -29,12 +29,13 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
-		Value rVal = Args[0];
-		for(int i = 1; i < Args.size(); i++)
+		Value rVal = 0;
+		for (auto const& i : Args)
+		//for (int i = 1; i < Args.size(); i++)
 			if (rVal.Status() == Value::INTEGER)
-				rVal = rVal.Integer() + Args[i].Integer();
+				rVal = rVal.Integer() + i.Integer();
 			else
-				rVal = rVal.Float() + Args[i].Float();
+				rVal = rVal.Float() + i.Float();
 
 		return rVal;
 	}
@@ -45,11 +46,11 @@ namespace Silikego
 			return 0;
 
 		Value rVal = Args[0];
-		for(int i = 1; i < Args.size(); i++)
+		for (auto i = Args.begin()+1; i != Args.end(); i++)
 			if (rVal.Status() == Value::INTEGER)
-				rVal = rVal.Integer() - Args[i].Integer();
+				rVal = rVal.Integer() - i->Integer();
 			else
-				rVal = rVal.Float() - Args[i].Float();
+				rVal = rVal.Float() - i->Float();
 
 			return rVal;
 	}
@@ -59,12 +60,12 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
-		Value rVal = Args[0];
-		for(int i = 1; i < Args.size(); i++)
+		Value rVal = 1;
+		for (auto const& i : Args)
 			if (rVal.Status() == Value::INTEGER)
-				rVal = rVal.Integer() * Args[i].Integer();
+				rVal = rVal.Integer() * i.Integer();
 			else
-				rVal = rVal.Float() * Args[i].Float();
+				rVal = rVal.Float() * i.Float();
 
 			return rVal;
 	}
@@ -75,30 +76,29 @@ namespace Silikego
 			return Value::BAD_ARGUMENTS;
 
 		Value rVal = Args[0];
-
-		for (int i = 1; i < Args.size(); i++)
+		for (auto i = Args.begin()+1; i != Args.end(); i++)
 		{
 			/* Division-by-Zero Error */
-			if ((Args[i].Status() == Value::FLOAT && Args[i].Float() == 0.0)
-				|| (Args[i].Status() == Value::INTEGER && Args[i].Integer() == 0))
+			if ((i->Status() == Value::FLOAT && i->Float() == 0.0)
+				|| (i->Status() == Value::INTEGER && i->Integer() == 0))
 			{
 				return Value::ZERO_DIV_ERR;
 			}
 
 			if (rVal.Status() == Value::FLOAT)
 			{
-				rVal = rVal.Float() / Args[i].Float();
+				rVal = rVal.Float() / i->Float();
 			}
 			else
 			{
-				if (Args[i].Status() == Value::FLOAT
-					|| rVal.Integer() % Args[i].Integer() != 0)
+				if (i->Status() == Value::FLOAT
+					|| rVal.Integer() % i->Integer() != 0)
 				{
-					rVal = rVal.Float() / Args[i].Float();
+					rVal = rVal.Float() / i->Float();
 				}
 				else
 				{
-					rVal = rVal.Integer() / Args[i].Integer();
+					rVal = rVal.Integer() / i->Integer();
 				}
 			}
 		}
@@ -109,9 +109,8 @@ namespace Silikego
 	{
 		double runningValue;
 
-		runningValue = Args[0].Float();
-
-		for (std::vector<Value>::iterator i = Args.begin(); i != Args.end(); i++)
+		Value rVal = Args[0];
+		for (auto i = Args.begin()+1; i != Args.end(); i++)
 			runningValue = std::pow(runningValue, i->Float());
 		return runningValue;
 	}

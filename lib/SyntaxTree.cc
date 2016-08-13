@@ -119,11 +119,8 @@ namespace Silikego
 
 		~State()
 		{
-			for
-				(std::list<SyntaxTreeNode*>::iterator i = Children.begin();
-				i != Children.end();
-				i++)
-				delete *i;
+			for (auto &i : Children)
+				delete i;
 
 		}
 		bool IsNegated = false;
@@ -142,21 +139,17 @@ namespace Silikego
 
 	Value BranchNode::Evaluate()
 	{
-		//Value rVal;
 		std::vector<Value> Arguments;
 
 		if (S->Children.size())
-		{
-			std::list<SyntaxTreeNode *>::iterator i;
-			for (i = S->Children.begin(); i != S->Children.end(); i++)
+			for (auto &i : S->Children)
 			{
-				Value Current = (*i)->Evaluate();
+				Value Current = i->Evaluate();
 				if (!Current.IsNumber())
 					return Current;
 
 				Arguments.push_back(Current);
 			}
-		}
 
 		Value rVal(FunctionCaller::Call(S->Id.c_str(), Arguments));
 		if (S->IsNegated)
