@@ -62,6 +62,9 @@ namespace Silikego
 
 	char StringSource::GetCurrent()
 	{
-		return *S->Index;
+		if (S->Index != S->Input.end())
+			return *S->Index;
+		else
+			return '\0';
 	}
 }
