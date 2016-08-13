@@ -124,17 +124,12 @@ BOOL EvalWindow::PreTranslateMessage(MSG *Message)
 
 void EvalWindow::Calculate()
 {
-	int ExpressionSize;
-	char *ExpressionString;
-	Silikego::SyntaxTreeNode *Node;
-	Silikego::Value Value;
-
-	ExpressionSize = Input.GetWindowTextLength() + 1;
-	ExpressionString = (char*)GlobalAlloc(GPTR, ExpressionSize);
+	int ExpressionSize = Input.GetWindowTextLength() + 1;
+	char* ExpressionString = (char*)GlobalAlloc(GPTR, ExpressionSize);
 	Input.GetWindowText(ExpressionString, ExpressionSize);
 
-	Node = Silikego::ParseInfix(new Silikego::StringSource(ExpressionString));
-	Value = Node->Evaluate();
+	Silikego::SyntaxTreeNode* Node = Silikego::ParseInfix(new Silikego::StringSource(ExpressionString));
+	Silikego::Value Value = Node->Evaluate();
 	std::free(Node);
 	GlobalFree((HANDLE)ExpressionString);
 

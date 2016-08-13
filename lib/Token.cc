@@ -69,7 +69,7 @@ namespace Silikego
 		TokenType Type;
 		union
 		{
-			int Integer;
+			long long int Integer;
 			double Float;
 		};
 		std::string Id;
@@ -101,7 +101,7 @@ namespace Silikego
 		return S->Type;
 	}
 
-	int Token::Integer() const
+	long long int Token::Integer() const
 	{
 		return S->Integer;
 	}

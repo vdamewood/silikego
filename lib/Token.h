@@ -59,10 +59,10 @@ namespace Silikego
 
 		const Token& operator=(const Token&);
 
-		TokenType   Type() const;
-		int         Integer() const;
-		double      Float() const;
-		const char *Id() const;
+		TokenType     Type() const;
+		long long int Integer() const;
+		double        Float() const;
+		const char*   Id() const;
 
 	private:
 		class State;
