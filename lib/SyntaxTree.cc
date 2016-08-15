@@ -17,6 +17,7 @@
 
 #include <cstring>
 #include <list>
+#include <memory>
 
 #include "SyntaxTree.h"
 #include "FunctionCaller.h"
@@ -117,18 +118,18 @@ namespace Silikego
 	public:
 		State(const char* newName) : Id(newName) {}
 
-		~State()
-		{
-			for
-				(std::list<SyntaxTreeNode*>::iterator i = Children.begin();
-				i != Children.end();
-				i++)
-				delete *i;
+		//~State()
+		//{
+		//	for
+		//		(std::list<SyntaxTreeNode*>::iterator i = Children.begin();
+		//		i != Children.end();
+		//		i++)
+		//		delete *i;
 
-		}
+		//}
 		bool IsNegated = false;
 		std::string Id;
-		std::list<SyntaxTreeNode *> Children = std::list<SyntaxTreeNode *>();
+		std::list< std::unique_ptr<SyntaxTreeNode> > Children;
 	};
 
 	BranchNode::BranchNode(const char *NewId) : S(new State(NewId))
@@ -142,15 +143,14 @@ namespace Silikego
 
 	Value BranchNode::Evaluate()
 	{
-		//Value rVal;
 		std::vector<Value> Arguments;
 
 		if (S->Children.size())
 		{
 			std::list<SyntaxTreeNode *>::iterator i;
-			for (i = S->Children.begin(); i != S->Children.end(); i++)
+			for (auto& i: S->Children)
 			{
-				Value Current = (*i)->Evaluate();
+				Value Current = i->Evaluate();
 				if (!Current.IsNumber())
 					return Current;
 
@@ -177,12 +177,12 @@ namespace Silikego
 
 	void BranchNode::PushLeft(SyntaxTreeNode *NewChild)
 	{
-		S->Children.push_front(NewChild);
+		S->Children.push_front(std::unique_ptr<SyntaxTreeNode>(NewChild));
 	}
 
 	void BranchNode::PushRight(SyntaxTreeNode *NewChild)
 	{
-		S->Children.push_back(NewChild);
+		S->Children.push_back(std::unique_ptr<SyntaxTreeNode>(NewChild));
 	}
 
 	bool BranchNode::GraftLeft(SyntaxTreeNode *NewChild)
@@ -191,14 +191,14 @@ namespace Silikego
 		{
 			return false;
 		}
-		else if (S->Children.front() == 0)
+		else if (S->Children.front() == nullptr)
 		{
-			S->Children.front() = NewChild;
+			S->Children.front() = std::unique_ptr<SyntaxTreeNode>(NewChild);
 			return true;
 		}
 		else
 		{
-			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.front()))
+			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.front().get()))
 				return ChildBranch->GraftLeft(NewChild);
 			else
 				return false;
@@ -211,14 +211,14 @@ namespace Silikego
 		{
 			return false;
 		}
-		else if (S->Children.back() == 0)
+		else if (S->Children.back() == nullptr)
 		{
-			S->Children.back() = NewChild;
+			S->Children.back() = std::unique_ptr<SyntaxTreeNode>(NewChild);
 			return true;
 		}
 		else
 		{
-			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.back()))
+			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.back().get()))
 				return ChildBranch->GraftRight(NewChild);
 			else
 				return false;
