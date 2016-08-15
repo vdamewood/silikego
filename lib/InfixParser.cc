@@ -71,7 +71,7 @@ namespace Silikego
 			return Left;
 		}
 
-		if (reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Left))
+		if (dynamic_cast<BranchNode*>(Rest)->GraftLeft(Left))
 			return Rest;
 
 		delete Rest;
@@ -108,7 +108,7 @@ namespace Silikego
 		}
 		else
 		{
-			reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Branch);
+			dynamic_cast<BranchNode*>(Rest)->GraftLeft(Branch);
 			return Rest;
 		}
 	}
@@ -124,7 +124,7 @@ namespace Silikego
 			return Left;
 		}
 
-		if (reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Left))
+		if (dynamic_cast<BranchNode*>(Rest)->GraftLeft(Left))
 			return Rest;
 
 		delete Rest;
@@ -161,7 +161,7 @@ namespace Silikego
 		}
 		else
 		{
-			reinterpret_cast<BranchNode*>(Rest)->GraftLeft(Branch);
+			dynamic_cast<BranchNode*>(Rest)->GraftLeft(Branch);
 			return Rest;
 		}
 	}
