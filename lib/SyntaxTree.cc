@@ -118,15 +118,6 @@ namespace Silikego
 	public:
 		State(const char* newName) : Id(newName) {}
 
-		//~State()
-		//{
-		//	for
-		//		(std::list<SyntaxTreeNode*>::iterator i = Children.begin();
-		//		i != Children.end();
-		//		i++)
-		//		delete *i;
-
-		//}
 		bool IsNegated = false;
 		std::string Id;
 		std::list< std::unique_ptr<SyntaxTreeNode> > Children;
@@ -146,9 +137,7 @@ namespace Silikego
 		std::vector<Value> Arguments;
 
 		if (S->Children.size())
-		{
-			std::list<SyntaxTreeNode *>::iterator i;
-			for (auto& i: S->Children)
+			for (auto& i : S->Children)
 			{
 				Value Current = i->Evaluate();
 				if (!Current.IsNumber())
@@ -156,7 +145,6 @@ namespace Silikego
 
 				Arguments.push_back(Current);
 			}
-		}
 
 		Value rVal(FunctionCaller::Call(S->Id.c_str(), Arguments));
 		if (S->IsNegated)
