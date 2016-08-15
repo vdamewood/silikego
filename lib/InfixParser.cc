@@ -22,19 +22,19 @@
 
 namespace Silikego
 {
-	static SyntaxTreeNode *GetExpr0(Lexer&);
-	static SyntaxTreeNode *GetExpr0r(Lexer&);
-	static SyntaxTreeNode *GetExpr1(Lexer&);
-	static SyntaxTreeNode *GetExpr1r(Lexer&);
-	static SyntaxTreeNode *GetExpr2(Lexer&);
-	static SyntaxTreeNode *GetExpr2lf(Lexer&);
-	static SyntaxTreeNode *GetExpr3(Lexer&);
-	static SyntaxTreeNode *GetExpr3lf(Lexer&);
+	static SyntaxTreeNode *GetExprAddSub(Lexer&);
+	static SyntaxTreeNode *GetExprAddSubRest(Lexer&);
+	static SyntaxTreeNode *GetExprMulDiv(Lexer&);
+	static SyntaxTreeNode *GetExprMulDivRest(Lexer&);
+	static SyntaxTreeNode *GetExprExp(Lexer&);
+	static SyntaxTreeNode *GetExprExpLeftFactor(Lexer&);
+	static SyntaxTreeNode *GetExprDice(Lexer&);
+	static SyntaxTreeNode *GetExprDiceLeftFactor(Lexer&);
 	static SyntaxTreeNode *GetAtom(Lexer&);
 	static SyntaxTreeNode *GetNumber(Lexer&);
 	static SyntaxTreeNode *GetUNumber(Lexer&);
 	static SyntaxTreeNode *GetFCall(Lexer&);
-	static void                  GetArguments(Lexer&, BranchNode&);
+	static void            GetArguments(Lexer&, BranchNode&);
 
 
 	SyntaxTreeNode* ParseInfix(DataSource* NewSource)
@@ -48,7 +48,7 @@ namespace Silikego
 		}
 		else
 		{
-			rVal = GetExpr0(MyLexer);
+			rVal = GetExprAddSub(MyLexer);
 			if (MyLexer.GetToken().Type() != Token::EOL
 				&& typeid(rVal) != typeid(SyntaxErrorNode))
 			{
@@ -60,10 +60,10 @@ namespace Silikego
 		return rVal;
 	}
 
-	static SyntaxTreeNode *GetExpr0(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprAddSub(Lexer& MyLexer)
 	{
-		SyntaxTreeNode *Left = GetExpr1(MyLexer);
-		SyntaxTreeNode *Rest = GetExpr0r(MyLexer);
+		SyntaxTreeNode *Left = GetExprMulDiv(MyLexer);
+		SyntaxTreeNode *Rest = GetExprAddSubRest(MyLexer);
 
 		if (typeid(*Rest) == typeid(NothingNode))
 		{
@@ -79,7 +79,7 @@ namespace Silikego
 		return new SyntaxErrorNode();
 	}
 
-	static SyntaxTreeNode *GetExpr0r(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprAddSubRest(Lexer& MyLexer)
 	{
 		const char *FunctionId;
 		switch (MyLexer.GetToken().Type())
@@ -98,8 +98,8 @@ namespace Silikego
 
 		BranchNode *Branch = new BranchNode(FunctionId);
 		Branch->PushRight(0);
-		Branch->PushRight(GetExpr1(MyLexer));
-		SyntaxTreeNode *Rest = GetExpr0r(MyLexer);
+		Branch->PushRight(GetExprMulDiv(MyLexer));
+		SyntaxTreeNode *Rest = GetExprAddSubRest(MyLexer);
 
 		if (typeid(*Rest) == typeid(NothingNode))
 		{
@@ -113,10 +113,10 @@ namespace Silikego
 		}
 	}
 
-	static SyntaxTreeNode *GetExpr1(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprMulDiv(Lexer& MyLexer)
 	{
-		SyntaxTreeNode *Left = GetExpr2(MyLexer);
-		SyntaxTreeNode *Rest = GetExpr1r(MyLexer);
+		SyntaxTreeNode *Left = GetExprExp(MyLexer);
+		SyntaxTreeNode *Rest = GetExprMulDivRest(MyLexer);
 
 		if (typeid(*Rest) == typeid(NothingNode))
 		{
@@ -132,7 +132,7 @@ namespace Silikego
 		return new SyntaxErrorNode();
 	}
 
-	static SyntaxTreeNode *GetExpr1r(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprMulDivRest(Lexer& MyLexer)
 	{
 		const char *FunctionId;
 		switch (MyLexer.GetToken().Type())
@@ -151,8 +151,8 @@ namespace Silikego
 
 		BranchNode *Branch = new BranchNode(FunctionId);
 		Branch->PushRight(0);
-		Branch->PushRight(GetExpr2(MyLexer));
-		SyntaxTreeNode *Rest = GetExpr1r(MyLexer);
+		Branch->PushRight(GetExprExp(MyLexer));
+		SyntaxTreeNode *Rest = GetExprMulDivRest(MyLexer);
 
 		if (typeid(*Rest) == typeid(NothingNode))
 		{
@@ -167,10 +167,10 @@ namespace Silikego
 	}
 
 
-	static SyntaxTreeNode *GetExpr2(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprExp(Lexer& MyLexer)
 	{
-		SyntaxTreeNode *leftValue = GetExpr3(MyLexer);
-		SyntaxTreeNode *Rest = GetExpr2lf(MyLexer);
+		SyntaxTreeNode *leftValue = GetExprDice(MyLexer);
+		SyntaxTreeNode *Rest = GetExprExpLeftFactor(MyLexer);
 
 		if (typeid(*Rest) == typeid(NothingNode))
 		{
@@ -184,7 +184,7 @@ namespace Silikego
 		return rVal;
 	}
 
-	static SyntaxTreeNode *GetExpr2lf(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprExpLeftFactor(Lexer& MyLexer)
 	{
 		if (MyLexer.GetToken().Type() != '^')
 			return new NothingNode();
@@ -198,16 +198,16 @@ namespace Silikego
 		case '-':
 		case Token::ID:
 		case '(':
-			return GetExpr2(MyLexer);
+			return GetExprExp(MyLexer);
 		default:
 			return new SyntaxErrorNode();
 		}
 	}
 
-	static SyntaxTreeNode *GetExpr3(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprDice(Lexer& MyLexer)
 	{
 		SyntaxTreeNode *leftValue = GetAtom(MyLexer);
-		SyntaxTreeNode *Rest = GetExpr3lf(MyLexer);
+		SyntaxTreeNode *Rest = GetExprDiceLeftFactor(MyLexer);
 
 		if (typeid(*Rest) == typeid(NothingNode))
 		{
@@ -221,7 +221,7 @@ namespace Silikego
 		return rVal;
 	}
 
-	static SyntaxTreeNode *GetExpr3lf(Lexer& MyLexer)
+	static SyntaxTreeNode *GetExprDiceLeftFactor(Lexer& MyLexer)
 	{
 		if(MyLexer.GetToken().Type() != 'd')
 			return new NothingNode();
@@ -252,7 +252,7 @@ namespace Silikego
 			return GetNumber(MyLexer);
 		case '(':
 			MyLexer.Next();
-			value = GetExpr0(MyLexer);
+			value = GetExprAddSub(MyLexer);
 
 			if (MyLexer.GetToken().Type() != ')')
 			{
@@ -338,7 +338,7 @@ namespace Silikego
 	{
 		while(true)
 		{
-			SyntaxTreeNode *Expression = GetExpr0(MyLexer);
+			SyntaxTreeNode *Expression = GetExprAddSub(MyLexer);
 			rVal.PushRight(Expression);
 
 			if (typeid(*Expression) == typeid(SyntaxErrorNode)
