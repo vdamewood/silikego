@@ -163,17 +163,17 @@ namespace Silikego
 		S->IsNegated = !S->IsNegated;
 	}
 
-	void BranchNode::PushLeft(SyntaxTreeNode *NewChild)
+	void BranchNode::PushLeft(std::unique_ptr<SyntaxTreeNode> NewChild)
 	{
-		S->Children.push_front(std::unique_ptr<SyntaxTreeNode>(NewChild));
+		S->Children.push_front(std::unique_ptr<SyntaxTreeNode>(NewChild.release()));
 	}
 
-	void BranchNode::PushRight(SyntaxTreeNode *NewChild)
+	void BranchNode::PushRight(std::unique_ptr<SyntaxTreeNode> NewChild)
 	{
-		S->Children.push_back(std::unique_ptr<SyntaxTreeNode>(NewChild));
+		S->Children.push_back(std::unique_ptr<SyntaxTreeNode>(NewChild.release()));
 	}
 
-	bool BranchNode::GraftLeft(SyntaxTreeNode *NewChild)
+	bool BranchNode::GraftLeft(std::unique_ptr<SyntaxTreeNode> NewChild)
 	{
 		if (S->Children.size() == 0)
 		{
@@ -181,19 +181,19 @@ namespace Silikego
 		}
 		else if (S->Children.front() == nullptr)
 		{
-			S->Children.front() = std::unique_ptr<SyntaxTreeNode>(NewChild);
+            S->Children.front() = std::move(NewChild);
 			return true;
 		}
 		else
 		{
 			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.front().get()))
-				return ChildBranch->GraftLeft(NewChild);
+                return ChildBranch->GraftLeft(std::move(NewChild));
 			else
 				return false;
 		}
 	}
 
-	bool BranchNode::GraftRight(SyntaxTreeNode *NewChild)
+	bool BranchNode::GraftRight(std::unique_ptr<SyntaxTreeNode> NewChild)
 	{
 		if (S->Children.size() == 0)
 		{
@@ -201,13 +201,13 @@ namespace Silikego
 		}
 		else if (S->Children.back() == nullptr)
 		{
-			S->Children.back() = std::unique_ptr<SyntaxTreeNode>(NewChild);
+			S->Children.back() = std::unique_ptr<SyntaxTreeNode>(NewChild.release());
 			return true;
 		}
 		else
 		{
 			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.back().get()))
-				return ChildBranch->GraftRight(NewChild);
+				return ChildBranch->GraftRight(std::unique_ptr<SyntaxTreeNode>(NewChild.release()));
 			else
 				return false;
 		}

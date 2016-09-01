@@ -18,6 +18,8 @@
 #if !defined SILIKEGO_SYNTAX_TREE_H
 #define SILIKEGO_SYNTAX_TREE_H
 
+#include <memory>
+
 #include "W32Dll.h"
 #include "Value.h"
 
@@ -77,10 +79,10 @@ namespace Silikego
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
 
-		void PushLeft(SyntaxTreeNode *);
-		void PushRight(SyntaxTreeNode *);
-		bool GraftLeft(SyntaxTreeNode *);
-		bool GraftRight(SyntaxTreeNode *);
+		void PushLeft(std::unique_ptr<SyntaxTreeNode>);
+		void PushRight(std::unique_ptr<SyntaxTreeNode>);
+		bool GraftLeft(std::unique_ptr<SyntaxTreeNode>);
+		bool GraftRight(std::unique_ptr<SyntaxTreeNode>);
 	private:
 		BranchNode(const BranchNode&);
 		const BranchNode& operator=(const BranchNode&);
