@@ -50,11 +50,9 @@ namespace Silikego
 		else
 		{
 			std::unique_ptr<SyntaxTreeNode> rVal = GetExprAddSub(MyLexer);
-			if (MyLexer.GetToken().Type() != Token::EOL
-				&& typeid(rVal) != typeid(SyntaxErrorNode))
-			{
+			if (MyLexer.GetToken().Type() != Token::EOL)
 				return std::unique_ptr<SyntaxTreeNode>(new SyntaxErrorNode()).release();
-			}
+
 			return rVal.release();
 		}
 	}
@@ -64,11 +62,8 @@ namespace Silikego
 		std::unique_ptr<SyntaxTreeNode> Left = GetExprMulDiv(MyLexer);
 		std::unique_ptr<SyntaxTreeNode> Rest = GetExprAddSubRest(MyLexer);
 
-        SyntaxTreeNode *tmp = Rest.get();
-		if (typeid(*tmp) == typeid(NothingNode))
-		{
+		if (Rest.get() == nullptr)
 			return Left;
-		}
 
 		if (dynamic_cast<BranchNode*>(Rest.get())->GraftLeft(std::move(Left)))
 			return Rest;
@@ -88,7 +83,7 @@ namespace Silikego
 			FunctionId = "subtract";
 			break;
 		default:
-			return std::unique_ptr<SyntaxTreeNode>(new NothingNode());
+			return std::unique_ptr<SyntaxTreeNode>(nullptr);
 		}
 
 		MyLexer.Next();
@@ -98,10 +93,9 @@ namespace Silikego
 		Branch->PushRight(GetExprMulDiv(MyLexer));
 		std::unique_ptr<SyntaxTreeNode> Rest = GetExprAddSubRest(MyLexer);
 
-        SyntaxTreeNode *tmp = Rest.get();
-		if (typeid(*tmp) == typeid(NothingNode))
+		if (Rest.get() == nullptr)
 		{
-			return std::unique_ptr<SyntaxTreeNode>(Branch.release());
+			return std::move(Branch);
 		}
 		else
 		{
@@ -115,11 +109,8 @@ namespace Silikego
 		std::unique_ptr<SyntaxTreeNode> Left = GetExprExp(MyLexer);
 		std::unique_ptr<SyntaxTreeNode> Rest = GetExprMulDivRest(MyLexer);
 
-        SyntaxTreeNode *tmp = Rest.get();
-		if (typeid(*tmp) == typeid(NothingNode))
-		{
+		if (Rest.get() == nullptr)
 			return Left;
-		}
 
         if (dynamic_cast<BranchNode*>(Rest.get())->GraftLeft(std::move(Left)))
 			return Rest;
@@ -139,7 +130,7 @@ namespace Silikego
 				FunctionId = "divide";
 				break;
 			default:
-				return std::unique_ptr<SyntaxTreeNode>(new NothingNode());
+				return std::unique_ptr<SyntaxTreeNode>(nullptr);
 		}
 
 		MyLexer.Next();
@@ -149,8 +140,7 @@ namespace Silikego
         Branch->PushRight(GetExprExp(MyLexer));
 		std::unique_ptr<SyntaxTreeNode> Rest = GetExprMulDivRest(MyLexer);
 
-        SyntaxTreeNode *tmp = Rest.get();
-		if (typeid(*tmp) == typeid(NothingNode))
+		if (Rest.get() == nullptr)
 		{
             return std::move(Branch);
 		}
@@ -167,11 +157,8 @@ namespace Silikego
 		std::unique_ptr<SyntaxTreeNode> leftValue = GetExprDice(MyLexer);
 		std::unique_ptr<SyntaxTreeNode> Rest = GetExprExpLeftFactor(MyLexer);
 
-        SyntaxTreeNode *tmp = Rest.get();
-		if (typeid(*tmp) == typeid(NothingNode))
-		{
+		if (Rest.get() == nullptr)
 			return leftValue;
-		}
 
         std::unique_ptr<BranchNode> rVal(new BranchNode("power"));
 		rVal->PushRight(std::move(leftValue));
@@ -182,7 +169,7 @@ namespace Silikego
 	static std::unique_ptr<SyntaxTreeNode> GetExprExpLeftFactor(Lexer& MyLexer)
 	{
 		if (MyLexer.GetToken().Type() != '^')
-			return std::unique_ptr<SyntaxTreeNode>(new NothingNode());
+			return std::unique_ptr<SyntaxTreeNode>(nullptr);
 
 		MyLexer.Next();
 
@@ -204,11 +191,8 @@ namespace Silikego
 		std::unique_ptr<SyntaxTreeNode> leftValue = GetAtom(MyLexer);
 		std::unique_ptr<SyntaxTreeNode> Rest = GetExprDiceLeftFactor(MyLexer);
 
-        SyntaxTreeNode *tmp = Rest.get();
-		if (typeid(*tmp) == typeid(NothingNode))
-		{
+		if (Rest.get() == nullptr)
 			return leftValue;
-		}
 
         std::unique_ptr<BranchNode> rVal(new BranchNode("dice"));
 		rVal->PushRight(std::move(leftValue));
@@ -219,7 +203,7 @@ namespace Silikego
 	static std::unique_ptr<SyntaxTreeNode> GetExprDiceLeftFactor(Lexer& MyLexer)
 	{
 		if(MyLexer.GetToken().Type() != 'd')
-			return std::unique_ptr<SyntaxTreeNode>(new NothingNode());
+			return std::unique_ptr<SyntaxTreeNode>(nullptr);
 
 		MyLexer.Next();
 

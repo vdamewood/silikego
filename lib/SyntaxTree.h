@@ -97,14 +97,6 @@ namespace Silikego
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
 	};
-
-	class SILIKEGO_API NothingNode : public SyntaxTreeNode
-	{
-	public:
-		virtual ~NothingNode();
-		virtual Silikego::Value Evaluate();
-		virtual void Negate();
-	};
 };
 
 #endif // SILIKEGO_SYNTAX_TREE_H
