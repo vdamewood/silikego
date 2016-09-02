@@ -15,7 +15,6 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <typeinfo>
 #include <memory>
 
 #include "Lexer.h"
@@ -50,7 +49,8 @@ namespace Silikego
 		else
 		{
 			std::unique_ptr<SyntaxTreeNode> rVal = GetExprAddSub(MyLexer);
-			if (MyLexer.GetToken().Type() != Token::EOL)
+			if (MyLexer.GetToken().Type() != Token::EOL
+				&& !rVal->IsError())
 				return std::unique_ptr<SyntaxTreeNode>(new SyntaxErrorNode()).release();
 
 			return rVal.release();
@@ -313,9 +313,10 @@ namespace Silikego
 		while(true)
 		{
 			std::unique_ptr<SyntaxTreeNode> Expression = GetExprAddSub(MyLexer);
+            bool IsError = Expression->IsError();
             rVal->PushRight(std::move(Expression));
 
-			if (typeid(Expression.get()) == typeid(SyntaxErrorNode)
+			if (IsError
 				|| MyLexer.GetToken().Type() == ')')
 			{
 				break;

@@ -31,6 +31,7 @@ namespace Silikego
 		virtual ~SyntaxTreeNode();
 		virtual Silikego::Value Evaluate() = 0;
 		virtual void Negate() = 0;
+		virtual bool IsError() = 0;
 	};
 
 	class SILIKEGO_API IntegerNode : public SyntaxTreeNode
@@ -47,6 +48,7 @@ namespace Silikego
 
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
+		virtual bool IsError();
 	private:
 		class State;
 		State *S;
@@ -64,6 +66,7 @@ namespace Silikego
 
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
+		virtual bool IsError();
 	private:
 		class State;
 		State *S;
@@ -78,6 +81,7 @@ namespace Silikego
 
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
+		virtual bool IsError();
 
 		void PushLeft(std::unique_ptr<SyntaxTreeNode>);
 		void PushRight(std::unique_ptr<SyntaxTreeNode>);
@@ -96,6 +100,7 @@ namespace Silikego
 		virtual ~SyntaxErrorNode();
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
+		virtual bool IsError();
 	};
 };
 

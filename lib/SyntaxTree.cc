@@ -71,6 +71,11 @@ namespace Silikego
 		S->IntegerValue *= -1;
 	}
 
+	bool IntegerNode::IsError()
+	{
+		return false;
+	}
+
 	class FloatNode::State
 	{
 	public:
@@ -111,6 +116,11 @@ namespace Silikego
 	void FloatNode::Negate()
 	{
 		S->FloatValue *= -1.0;
+	}
+
+	bool FloatNode::IsError()
+	{
+		return false;
 	}
 
 	class BranchNode::State
@@ -161,6 +171,11 @@ namespace Silikego
 	void BranchNode::Negate()
 	{
 		S->IsNegated = !S->IsNegated;
+	}
+
+	bool BranchNode::IsError()
+	{
+		return false;
 	}
 
 	void BranchNode::PushLeft(std::unique_ptr<SyntaxTreeNode> NewChild)
@@ -224,5 +239,12 @@ namespace Silikego
 
 	void SyntaxErrorNode::Negate()
 	{
+		// Do nothing
 	}
+
+	bool SyntaxErrorNode::IsError()
+	{
+		return true;
+	}
+
 }
