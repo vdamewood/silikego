@@ -18,6 +18,7 @@
 #include <cstdlib>
 #include <cctype>
 #include <cstring>
+#include <memory>
 
 #include "Lexer.h"
 
@@ -75,12 +76,7 @@ namespace Silikego
 		{
 		}
 
-		~State()
-		{
-			delete Source;
-		}
-
-		DataSource* Source;
+		std::unique_ptr<DataSource> Source;
 		Silikego::Token Token = Token::UNSET;
 	};
 
