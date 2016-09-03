@@ -15,8 +15,6 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <memory>
-
 #include "Lexer.h"
 #include "InfixParser.h"
 
@@ -37,23 +35,22 @@ namespace Silikego
 	static std::unique_ptr<SyntaxTreeNode> GetArguments(Lexer&, const std::string&);
 
 
-	SyntaxTreeNode* ParseInfix(DataSource* NewSource)
+	std::unique_ptr<SyntaxTreeNode> ParseInfix(std::unique_ptr<DataSource> NewSource)
 	{
-		// FIXME: Return a unique_ptr, get rid of release()
-		Lexer MyLexer(NewSource);
+		Lexer MyLexer(std::move(NewSource));
 
 		if (MyLexer.GetToken().Type() == Token::EOL)
 		{
-			return std::unique_ptr<SyntaxTreeNode>(new IntegerNode(0)).release();
+			return std::unique_ptr<SyntaxTreeNode>(new IntegerNode(0));
 		}
 		else
 		{
 			std::unique_ptr<SyntaxTreeNode> rVal = GetExprAddSub(MyLexer);
 			if (MyLexer.GetToken().Type() != Token::EOL
 				&& !rVal->IsError())
-				return std::unique_ptr<SyntaxTreeNode>(new SyntaxErrorNode()).release();
+				return std::unique_ptr<SyntaxTreeNode>(new SyntaxErrorNode());
 
-			return rVal.release();
+			return rVal;
 		}
 	}
 
@@ -309,7 +306,7 @@ namespace Silikego
 
 	static std::unique_ptr<SyntaxTreeNode> GetArguments(Lexer& MyLexer, const std::string& FName)
 	{
-		std::unique_ptr<BranchNode> rVal(new BranchNode(FName.c_str()));
+		std::unique_ptr<BranchNode> rVal(new BranchNode(FName));
 		while(true)
 		{
 			std::unique_ptr<SyntaxTreeNode> Expression = GetExprAddSub(MyLexer);

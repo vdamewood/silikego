@@ -126,14 +126,14 @@ namespace Silikego
 	class BranchNode::State
 	{
 	public:
-		State(const char* newName) : Id(newName) {}
+		State(const std::string& newName) : Id(newName) {}
 
 		bool IsNegated = false;
 		std::string Id;
 		std::list< std::unique_ptr<SyntaxTreeNode> > Children;
 	};
 
-	BranchNode::BranchNode(const char *NewId) : S(new State(NewId))
+	BranchNode::BranchNode(const std::string& NewId) : S(new State(NewId))
 	{
 	}
 

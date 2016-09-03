@@ -76,7 +76,7 @@ namespace Silikego
 	class SILIKEGO_API BranchNode : public SyntaxTreeNode
 	{
 	public:
-		BranchNode(const char *NewFunctionId);
+		BranchNode(const std::string& NewFunctionId);
 		virtual ~BranchNode();
 
 		virtual Silikego::Value Evaluate();

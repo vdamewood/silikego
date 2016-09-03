@@ -71,8 +71,8 @@ namespace Silikego
 	class Lexer::State
 	{
 	public:
-		State(DataSource* NewSource)
-			: Source(NewSource)
+		State(std::unique_ptr<DataSource> NewSource)
+			: Source(std::move(NewSource))
 		{
 		}
 
@@ -80,7 +80,7 @@ namespace Silikego
 		Silikego::Token Token = Token::UNSET;
 	};
 
-	Lexer::Lexer(DataSource* InputSource) : S(new State(InputSource))
+	Lexer::Lexer(std::unique_ptr<DataSource> InputSource) : S(new State(std::move(InputSource)))
 	{
 		Next();
 	}
@@ -269,7 +269,7 @@ namespace Silikego
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_STRING:
-			S->Token = lexeme.c_str();
+			S->Token = lexeme;
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_EOI:

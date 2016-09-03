@@ -18,13 +18,15 @@
 #if !defined SILIKEGO_INFIX_PARSER_H
 #define SILIKEGO_INFIX_PARSER_H
 
+#include <memory>
+
 #include "W32Dll.h"
 #include "DataSource.h"
 #include "SyntaxTree.h"
 
 namespace Silikego
 {
-	SILIKEGO_API SyntaxTreeNode *ParseInfix(DataSource *Input);
+	SILIKEGO_API std::unique_ptr<SyntaxTreeNode> ParseInfix(std::unique_ptr<DataSource> Input);
 };
 
 #endif // SILIKEGO_INFIX_PARSER_H

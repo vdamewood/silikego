@@ -15,14 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "Delegate.h"
+#include <memory>
+#import <Cocoa/Cocoa.h>
 
 #include "InfixParser.h"
 #include "SyntaxTree.h"
 #include "FunctionCaller.h"
 #include "StringSource.h"
 
-#import <Cocoa/Cocoa.h>
+#import "Delegate.h"
 
 @implementation SilikegoDelegate
 
@@ -44,11 +45,10 @@
 
 - (IBAction) Calculate:(id)sender
 {
-	Silikego::SyntaxTreeNode *Ast = Silikego::ParseInfix(
-		new Silikego::StringSource(
-			[[self.input stringValue] UTF8String]));
+	std::unique_ptr<Silikego::SyntaxTreeNode> Ast = Silikego::ParseInfix(
+		std::unique_ptr<Silikego::DataSource>(new Silikego::StringSource(
+			[[self.input stringValue] UTF8String])));
 	Silikego::Value Result = Ast->Evaluate();
-	delete Ast;
 
 	std::string ResultString = Result.ToString();
 	NSString *ResultNSString = [[NSString alloc] initWithUTF8String: ResultString.c_str()];
