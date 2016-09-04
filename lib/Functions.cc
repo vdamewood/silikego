@@ -107,9 +107,7 @@ namespace Silikego
 
 	Value Functions::power(std::vector<Value> Args)
 	{
-		double runningValue;
-
-		Value rVal = Args[0];
+		double runningValue = Args[0].Float();
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
 			runningValue = std::pow(runningValue, i->Float());
 		return runningValue;
