@@ -18,6 +18,8 @@
 #if !defined SILIKEGO_SYNTAX_TREE_H
 #define SILIKEGO_SYNTAX_TREE_H
 
+#include <memory>
+
 #include "W32Dll.h"
 #include "Value.h"
 
@@ -29,6 +31,7 @@ namespace Silikego
 		virtual ~SyntaxTreeNode();
 		virtual Silikego::Value Evaluate() = 0;
 		virtual void Negate() = 0;
+		virtual bool IsError() = 0;
 	};
 
 	class SILIKEGO_API IntegerNode : public SyntaxTreeNode
@@ -45,6 +48,7 @@ namespace Silikego
 
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
+		virtual bool IsError();
 	private:
 		class State;
 		State *S;
@@ -62,6 +66,7 @@ namespace Silikego
 
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
+		virtual bool IsError();
 	private:
 		class State;
 		State *S;
@@ -71,16 +76,17 @@ namespace Silikego
 	class SILIKEGO_API BranchNode : public SyntaxTreeNode
 	{
 	public:
-		BranchNode(const char *NewFunctionId);
+		BranchNode(const std::string& NewFunctionId);
 		virtual ~BranchNode();
 
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
+		virtual bool IsError();
 
-		void PushLeft(SyntaxTreeNode *);
-		void PushRight(SyntaxTreeNode *);
-		bool GraftLeft(SyntaxTreeNode *);
-		bool GraftRight(SyntaxTreeNode *);
+		void PushLeft(std::unique_ptr<SyntaxTreeNode>);
+		void PushRight(std::unique_ptr<SyntaxTreeNode>);
+		bool GraftLeft(std::unique_ptr<SyntaxTreeNode>);
+		bool GraftRight(std::unique_ptr<SyntaxTreeNode>);
 	private:
 		BranchNode(const BranchNode&);
 		const BranchNode& operator=(const BranchNode&);
@@ -94,14 +100,7 @@ namespace Silikego
 		virtual ~SyntaxErrorNode();
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
-	};
-
-	class SILIKEGO_API NothingNode : public SyntaxTreeNode
-	{
-	public:
-		virtual ~NothingNode();
-		virtual Silikego::Value Evaluate();
-		virtual void Negate();
+		virtual bool IsError();
 	};
 };
 

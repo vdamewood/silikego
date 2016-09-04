@@ -75,12 +75,9 @@ int main(int argc, char *argv[])
 		std::free(static_cast<void*>(old_expression));
 		old_expression = NULL;
 
-		Silikego::SyntaxTreeNode *Tree
-			= Silikego::ParseInfix(new StringSource(expression));
-
+		std::unique_ptr<Silikego::SyntaxTreeNode> Tree
+			= Silikego::ParseInfix(std::unique_ptr<Silikego::DataSource>(new StringSource(expression)));
 		Silikego::Value result = Tree->Evaluate();
-		delete Tree;
-		Tree = 0;
 
 		std::string ResultString = result.ToString();
 		std::cout << ResultString << std::endl;

@@ -29,12 +29,11 @@
 
 void EvalWindow::Calculate()
 {
-	Silikego::SyntaxTreeNode *ResultTree =
+	std::unique_ptr<Silikego::SyntaxTreeNode> ResultTree =
 		Silikego::ParseInfix(
-		new Silikego::StringSource(
-			MyInput->get_text().c_str()));
+		std::unique_ptr<Silikego::DataSource>(new Silikego::StringSource(
+			MyInput->get_text().c_str())));
 	Silikego::Value Value = ResultTree->Evaluate();
-	delete ResultTree;
 
 	std::string ResultString = Value.ToString();
 	MyOutput->set_text(ResultString.c_str());

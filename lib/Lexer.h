@@ -18,6 +18,8 @@
 #if !defined SILIKEGO_LEXER_H
 #define SILIKEGO_LEXER_H
 
+#include <memory>
+
 #include "W32Dll.h"
 #include "DataSource.h"
 #include "Token.h"
@@ -27,7 +29,7 @@ namespace Silikego
 	class SILIKEGO_API Lexer
 	{
 	public:
-		Lexer(DataSource *InputSource);
+		Lexer(std::unique_ptr<DataSource> InputSource);
 		~Lexer();
 
 		Silikego::Token &GetToken();

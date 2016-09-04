@@ -128,10 +128,12 @@ void EvalWindow::Calculate()
 	char* ExpressionString = (char*)GlobalAlloc(GPTR, ExpressionSize);
 	Input.GetWindowText(ExpressionString, ExpressionSize);
 
-	Silikego::SyntaxTreeNode* Node = Silikego::ParseInfix(new Silikego::StringSource(ExpressionString));
-	Silikego::Value Value = Node->Evaluate();
-	std::free(Node);
+	std::unique_ptr<Silikego::SyntaxTreeNode> Node =
+		Silikego::ParseInfix(
+			std::unique_ptr<Silikego::DataSource>(
+				new Silikego::StringSource(ExpressionString)));
 	GlobalFree((HANDLE)ExpressionString);
+	Silikego::Value Value = Node->Evaluate();
 
 	std::string ValueString = Value.ToString();
 	Output.SetWindowText(ValueString.c_str());

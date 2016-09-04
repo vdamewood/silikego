@@ -53,7 +53,7 @@ namespace Silikego
 		Token(long long int NewInteger);
 		Token(float NewFloat);
 		Token(double NewFloat);
-		Token(const char *NewString);
+		Token(const std::string& NewString);
 		Token(const Token&);
 		~Token();
 
