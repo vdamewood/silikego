@@ -1,4 +1,4 @@
-/* EvalWindow.rc: Expression evaluation window
+/* Menu.rc: Menus for calculator window
  * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 
 #include "Id.h"
 
-SILIKEGO_MENU MENU
+EVAL_WINDOW_MENU MENU
 BEGIN
     POPUP "&Calculator"
     BEGIN

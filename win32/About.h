@@ -1,4 +1,4 @@
-/* About.cc: About dialog window
+/* About.h: About dialog window
  * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,11 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "About.h"
-#include "Id.h"
+#if !defined ABOUT_H
+#define ABOUT_H
 
-AboutDialog::AboutDialog()
-	: CDialogEx(ABOUT_DIALOG)
-{
-	// Do Nothing
-}
+BOOL CALLBACK AboutDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+#endif /* ABOUT_H */
