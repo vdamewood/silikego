@@ -31,7 +31,6 @@ namespace Silikego
 
 		Value rVal = 0;
 		for (auto const& i : Args)
-		//for (int i = 1; i < Args.size(); i++)
 			if (rVal.Status() == Value::INTEGER)
 				rVal = rVal.Integer() + i.Integer();
 			else
@@ -116,7 +115,6 @@ namespace Silikego
 
 	Value Functions::dice(std::vector<Value> Args)
 	{
-		/* TODO: Make this function handle fractional dice. */
 		static int hasSeeded = 0;
 
 		if(Args.size() != 2)
