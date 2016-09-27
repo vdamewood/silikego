@@ -29,13 +29,39 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
-		Value rVal = 0;
-		for (auto const& i : Args)
-			if (rVal.Status() == Value::INTEGER)
-				rVal = rVal.Integer() + i.Integer();
-			else
-				rVal = rVal.Float() + i.Float();
-
+		Value rVal = Args[0];
+		for (auto i = Args.begin()+1; i != Args.end(); i++)
+			switch (rVal.Status())
+			{
+			case Value::INTEGER:
+				switch(i->Status())
+				{
+				case Value::INTEGER:
+					rVal = rVal.Integer() + i->Integer();
+					break;
+				case Value::FLOAT:
+					rVal = rVal.Integer() + i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
+				}
+				break;
+			case Value::FLOAT:
+				switch(i->Status())
+				{
+				case Value::INTEGER:
+					rVal = rVal.Float() + i->Integer();
+					break;
+				case Value::FLOAT:
+					rVal = rVal.Float() + i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
+				}
+				break;
+			default:
+				return Value::BAD_ARGUMENTS;
+			}
 		return rVal;
 	}
 
@@ -46,12 +72,38 @@ namespace Silikego
 
 		Value rVal = Args[0];
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
-			if (rVal.Status() == Value::INTEGER)
-				rVal = rVal.Integer() - i->Integer();
-			else
-				rVal = rVal.Float() - i->Float();
-
-			return rVal;
+			switch (rVal.Status())
+			{
+			case Value::INTEGER:
+				switch(i->Status())
+				{
+				case Value::INTEGER:
+					rVal = rVal.Integer() - i->Integer();
+					break;
+				case Value::FLOAT:
+					rVal = rVal.Integer() - i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
+				}
+				break;
+			case Value::FLOAT:
+				switch(i->Status())
+				{
+				case Value::INTEGER:
+					rVal = rVal.Float() - i->Integer();
+					break;
+				case Value::FLOAT:
+					rVal = rVal.Float() - i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
+				}
+				break;
+			default:
+				return Value::BAD_ARGUMENTS;
+			}
+		return rVal;
 	}
 
 	Value Functions::multiply(std::vector<Value> Args)
@@ -59,15 +111,40 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
-		Value rVal = 1;
-		for (auto const& i : Args)
-			if (rVal.Status() == Value::INTEGER)
-				rVal = rVal.Integer() * i.Integer();
-			else
-				rVal = rVal.Float() * i.Float();
-
-			return rVal;
-	}
+		Value rVal = Args[0];
+		for (auto i = Args.begin()+1; i != Args.end(); i++)
+			switch (rVal.Status())
+			{
+			case Value::INTEGER:
+				switch(i->Status())
+				{
+				case Value::INTEGER:
+					rVal = rVal.Integer() * i->Integer();
+					break;
+				case Value::FLOAT:
+					rVal = rVal.Integer() * i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
+				}
+				break;
+			case Value::FLOAT:
+				switch(i->Status())
+				{
+				case Value::INTEGER:
+					rVal = rVal.Float() * i->Integer();
+					break;
+				case Value::FLOAT:
+					rVal = rVal.Float() * i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
+				}
+				break;
+			default:
+				return Value::BAD_ARGUMENTS;
+			}
+		return rVal;	}
 
 	Value Functions::divide(std::vector<Value> Args)
 	{
@@ -84,21 +161,40 @@ namespace Silikego
 				return Value::ZERO_DIV_ERR;
 			}
 
-			if (rVal.Status() == Value::FLOAT)
+			switch (rVal.Status())
 			{
-				rVal = rVal.Float() / i->Float();
-			}
-			else
-			{
-				if (i->Status() == Value::FLOAT
-					|| rVal.Integer() % i->Integer() != 0)
+			case Value::INTEGER:
+				switch(i->Status())
 				{
+				case Value::INTEGER:
+					if (rVal.Integer() % i->Integer() == 0)
+						rVal = rVal.Integer() / i->Integer();
+					else
+						rVal = static_cast<double>(rVal.Integer())
+							/ static_cast<double>(i->Integer());
+					break;
+				case Value::FLOAT:
+					rVal = rVal.Integer() / i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
+				}
+				break;
+			case Value::FLOAT:
+				switch(i->Status())
+				{
+				case Value::INTEGER:
+					rVal = rVal.Float() / i->Integer();
+					break;
+				case Value::FLOAT:
 					rVal = rVal.Float() / i->Float();
+					break;
+				default:
+					return Value::BAD_ARGUMENTS;
 				}
-				else
-				{
-					rVal = rVal.Integer() / i->Integer();
-				}
+				break;
+			default:
+				return Value::BAD_ARGUMENTS;
 			}
 		}
 		return rVal;
