@@ -31,6 +31,8 @@ set(COPYRIGHT_STATEMENT "Copyright 2012, 2014, 2015, 2016 Vincent Damewood.\
  Silikego library licensed under the terms of the GNU Lesser General Public\
  License, version 3 or later. Silikego interface programs licensed under the\
  terms of the GNU General Public License, version 3 or later.")
+set(MSVC_UPGRADE_GUID  "EF846633-A991-4F3A-9159-CFA02E512366")
+set(MINGW_UPGRADE_GUID "B7BB17E2-6300-4668-9F1F-0AAB2581225E")
 
 #########################
 # Configuration Options #
@@ -200,6 +202,14 @@ set(CPACK_SOURCE_STRIP_FILES Off)
 set(CPACK_SOURCE_GENERATOR TXZ ZIP)
 #set(CPACK_SOURCE_OUTPUT_CONFIG_FILE)
 set(CPACK_SOURCE_IGNORE_FILES "/\.git/" "/\.gitignore" "/[Bb]uild/")
+
+if(WIN32)
+  if(MSVC)
+    set(CPACK_WIX_UPGRADE_GUID ${MSVC_UPGRADE_GUID})
+  elseif(MINGW)
+    set(CPACK_WIX_UPGRADE_GUID ${MINGW_UPGRADE_GUID})
+  endif()
+endif()
 
 set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
 set(CPACK_DMG_FORMAT UDZO)
