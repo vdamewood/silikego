@@ -19,6 +19,7 @@ set(HEADERS EvalWindow.h)
 set(SOURCES Main.cc EvalWindow.cc)
 set(LAYOUTS EvalWindow.glade)
 set(DEPS ${LIB})
+set(APPFILES silikego.desktop)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM3 REQUIRED gtkmm-3.0)
@@ -40,3 +41,14 @@ install(TARGETS ${TARGET}
 install(
   FILES ${LAYOUTS}
   DESTINATION ${INSTDAT})
+
+install(
+  FILES ${APPFILES}
+  DESTINATION "${INSTSHR}/applications"
+)
+
+install(
+	FILES ${CMAKE_SOURCE_DIR}/icon/silikego-48.png
+	DESTINATION "${INSTSHR}/icons/hicolor/48x48"
+	RENAME silikego.png
+)

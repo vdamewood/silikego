@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Silikego
+Comment=Math parser and calculator
+Type=Application
+Exec=silikego-gui
+Icon=silikego
+Terminal=false
+Categories=GTK;Utility
