@@ -38,5 +38,16 @@ set_target_properties(${TARGET} PROPERTIES
 	OUTPUT_NAME ${ONAMEGUI})
 target_link_libraries(${TARGET} ${DEPS})
 
+add_custom_command(
+  TARGET ${TARGET} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  $<TARGET_FILE:SilikegoDLib>
+  ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(
+  TARGET ${TARGET} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  $<TARGET_PDB_FILE:SilikegoDLib>
+  ${CMAKE_CURRENT_BINARY_DIR})
+
 install(TARGETS ${TARGET}
   RUNTIME DESTINATION ${INSTBIN})
