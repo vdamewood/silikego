@@ -1,4 +1,4 @@
-/* WinMain.c: Entry point for GUI Program
+/* App.c: App instance using MFC Framework
  * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,43 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <windows.h>
+#include <afxwin.h>
 
 #include "FunctionCaller.h"
 #include "EvalWindow.h"
 
-int WINAPI WinMain(
-	HINSTANCE hInstance,
-	HINSTANCE hPrevInstance,
-	LPSTR lpCmdLine,
-	int nCmdShow)
+class SilikegoApp : public CWinApp
 {
-	HWND Handle;
-	MSG Message;
+public:
+	BOOL InitInstance();
+	int ExitInstance();
+};
+
+BOOL SilikegoApp::InitInstance()
+{
+	CWinApp::InitInstance();
 
 	Silikego::FunctionCaller::SetUp();
 
-	if(!EvalWindowRegister(hInstance)
-		|| !(Handle = EvalWindowCreate(hInstance)))
-	{
-		MessageBox(NULL, "Silikego failed to initialize the evaluation window.", "Startup Error", MB_ICONEXCLAMATION | MB_OK);
-		return 1;
-	}
+	if (!(m_pMainWnd = new EvalWindow))
+		return FALSE;
 
-
-	ShowWindow(Handle, nCmdShow);
-	PostMessage(Handle, WM_SIZE, 0, 0);
-	UpdateWindow(Handle);
-
-	while(GetMessage(&Message, NULL, 0, 0) > 0)
-	{
-		if(!EvalWindowPretranslateMessage(Handle, &Message))
-		{
-			TranslateMessage(&Message);
-			DispatchMessage(&Message);
-		}
-	}
-
-	Silikego::FunctionCaller::TearDown();
-	return (int) Message.wParam;
+	m_pMainWnd->ShowWindow(SW_SHOW);
+	m_pMainWnd->UpdateWindow();
+	return TRUE;
 }
+
+int SilikegoApp::ExitInstance()
+{
+	Silikego::FunctionCaller::TearDown();
+
+	return CWinApp::ExitInstance();
+}
+
+SilikegoApp theApp;

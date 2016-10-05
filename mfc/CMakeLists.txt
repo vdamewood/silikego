@@ -16,21 +16,20 @@
 
 set(TARGET SilikegoGui)
 set(HEADERS EvalWindow.h About.h Id.h)
-set(SOURCES WinMain.cc EvalWindow.cc EvalWindow.rc About.cc About.rc Icon.rc)
+set(SOURCES App.cc EvalWindow.cc EvalWindow.rc About.cc About.rc Icon.rc)
 set(DEPS ${LIB})
 
-message("-- Finding User32.dll")
-find_library(USER32 User32)
-if (NOT ${USER32} STREQUAL "USER32-NOTFOUND")
-  message("-- Finding User32.dll - found")
-  list(APPEND DEPS ${USER32})
-  set(USER32_FOUND Yes)
+message("-- Finding MFC Framework")
+find_package(MFC QUIET)
+if(MFC_FOUND)
+  message("-- Finding MFC Framework - found")
+  ADD_DEFINITIONS(-D_AFXDLL -D_WIN32_WINNT=NTDDI_WIN7)
+  SET(CMAKE_MFC_FLAG 2)
 else()
-  message("-- Finding User32.dll - not found")
-  set(USER32_FOUND No)
+  message("-- Finding MFC Framework - not found")
 endif()
 
-if (NOT USER32_FOUND)
+if(NOT MFC_FOUND)
   message(FATAL_ERROR "Can't build GUI. Quitting.")
 endif()
 
@@ -38,6 +37,17 @@ add_executable(${TARGET} WIN32 ${HEADERS} ${SOURCES})
 set_target_properties(${TARGET} PROPERTIES
 	OUTPUT_NAME ${ONAMEGUI})
 target_link_libraries(${TARGET} ${DEPS})
+
+add_custom_command(
+  TARGET ${TARGET} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  $<TARGET_FILE:SilikegoDLib>
+  ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(
+  TARGET ${TARGET} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  $<TARGET_PDB_FILE:SilikegoDLib>
+  ${CMAKE_CURRENT_BINARY_DIR})
 
 install(TARGETS ${TARGET}
   RUNTIME DESTINATION ${INSTBIN})

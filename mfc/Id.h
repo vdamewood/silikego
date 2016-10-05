@@ -1,4 +1,4 @@
-/* About.c: About dialog window
+/* Id.h: ID Numbers
  * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,24 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <windows.h>
+#if !defined ID_H
+#define ID_H
 
-#include "About.h"
+#define ABOUT_DIALOG      0xB0
+#define CALCULATOR_INPUT  0x91
+#define CALCULATOR_OUTPUT 0x92
+#define CALCULATOR_BUTTON 0x93
+#define SILIKEGO_MENU     0xA0
+#define CALCULATOR_EXIT   0xA1
+#define HELP_ABOUT        0xA2
 
-BOOL CALLBACK AboutDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch(uMsg)
-	{
-	case WM_CLOSE:
-		EndDialog(hwndDlg, IDOK);
-		return TRUE;
-	case WM_COMMAND:
-		switch(LOWORD(wParam))
-		{
-		case IDOK:
-			EndDialog(hwndDlg, IDOK);
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
+#endif /* ID_H */

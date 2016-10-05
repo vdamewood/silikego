@@ -1,4 +1,4 @@
-/* EvalWindow.c: Expression evaluation window
+/* About.h: About dialog window
  * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,13 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined EVAL_WINDOW_H
-#define EVAL_WINDOW_H
+#if !defined ABOUT_H
+#define ABOUT_H
 
-#include <windows.h>
+#include <afxdialogex.h>
 
-ATOM EvalWindowRegister(HINSTANCE hInstance);
-HWND EvalWindowCreate(HINSTANCE hInstance);
-BOOL EvalWindowPretranslateMessage(HWND Handle, MSG *Message);
+class AboutDialog : public CDialogEx
+{
+	public:
+		AboutDialog();
+};
 
-#endif /* EVAL_WINDOW_H */
+#endif /* ABOUT_H */

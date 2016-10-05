@@ -1,4 +1,4 @@
-/* Id.h: ID Numbers used by controls, etc.
+/* EvalWindow.h: Expression evaluation window
  * Copyright 2015, 2016 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,15 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined ID_H
-#define ID_H
+#if !defined EVAL_WINDOW_H
+#define EVAL_WINDOW_H
 
-#define CALCULATOR_INPUT  0x91
-#define CALCULATOR_OUTPUT 0x92
-#define CALCULATOR_BUTTON 0x93
-#define ABOUT_DIALOG      0xB0
-#define EVAL_WINDOW_MENU  0xA0
-#define CALCULATOR_EXIT   0xA1
-#define HELP_ABOUT        0xA2
+#include <afxwin.h>
 
-#endif /* ID_H */
+class EvalWindow : public CFrameWnd
+{
+public:
+	EvalWindow();
+	BOOL PreTranslateMessage(MSG *Message);
+
+protected:
+	void OnGetMinMaxInfo(MINMAXINFO* pMMI);
+	void OnSize(UINT nType, int cx, int cy);
+	void Calculate();
+	void CalculatorExit();
+	void HelpAbout();
+	DECLARE_MESSAGE_MAP();
+
+private:
+	CStatic Output;
+	CEdit Input;
+	CButton Button;
+};
+
+#endif /* EVAL_WINDOW_H */
