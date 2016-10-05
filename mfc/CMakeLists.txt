@@ -16,7 +16,7 @@
 
 set(TARGET SilikegoGui)
 set(HEADERS EvalWindow.h About.h Id.h)
-set(SOURCES App.cc EvalWindow.cc EvalWindow.rc About.cc About.rc)
+set(SOURCES App.cc EvalWindow.cc EvalWindow.rc About.cc About.rc Icon.rc)
 set(DEPS ${LIB})
 
 message("-- Finding MFC Framework")
