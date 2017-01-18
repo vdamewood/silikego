@@ -52,3 +52,7 @@ install(
 	DESTINATION "${INSTSHR}/icons/hicolor/48x48/apps"
 	RENAME silikego.png
 )
+
+install(CODE
+  "execute_process(COMMAND gtk-update-icon-cache -f ${INSTSHR}/icons/hicolor)"
+)
