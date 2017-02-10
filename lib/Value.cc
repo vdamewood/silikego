@@ -1,5 +1,5 @@
 /* Value.cc: Data structure to represent a single value
- * Copyright 2014, 2015, 2016 Vincent Damewood
+ * Copyright 2014, 2015, 2016, 2017 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -89,6 +89,20 @@ namespace Silikego
 	const Value& Value::operator=(const Value& RightSide)
 	{
 		*S = *RightSide.S;
+		return *this;
+	}
+
+	const Value& Value::Negate()
+	{
+		switch (S->Status)
+		{
+			case (INTEGER):
+				S->Integer *= -1;
+			case (FLOAT):
+				S->Float *= -1.0;
+			default:
+				; // Do nothing. Silence warning.
+		}
 		return *this;
 	}
 

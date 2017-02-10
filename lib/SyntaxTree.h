@@ -1,5 +1,5 @@
 /* SyntaxTree.h: Abstract syntax tree classes
- * Copyright 2012, 2014, 2015, 2016 Vincent Damewood
+ * Copyright 2012, 2014, 2015, 2016, 2017 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,17 +34,19 @@ namespace Silikego
 		virtual bool IsError() = 0;
 	};
 
-	class SILIKEGO_API IntegerNode : public SyntaxTreeNode
+	class SILIKEGO_API LeafNode : public SyntaxTreeNode
 	{
 	public:
-		IntegerNode(short int NewValue);
-		IntegerNode(int NewValue);
-		IntegerNode(long int NewValue);
-		IntegerNode(long long int NewValue);
-		IntegerNode(const IntegerNode&);
-		virtual ~IntegerNode();
+		LeafNode(short int NewValue);
+		LeafNode(int NewValue);
+		LeafNode(long int NewValue);
+		LeafNode(long long int NewValue);
+		LeafNode(float NewValue);
+		LeafNode(double NewValue);
+		LeafNode(const LeafNode&);
+		virtual ~LeafNode();
 
-		const IntegerNode& operator=(const IntegerNode&);
+		const LeafNode& operator=(const LeafNode&);
 
 		virtual Silikego::Value Evaluate();
 		virtual void Negate();
@@ -53,25 +55,6 @@ namespace Silikego
 		class State;
 		State *S;
 	};
-
-	class SILIKEGO_API FloatNode : public SyntaxTreeNode
-	{
-	public:
-		FloatNode(float NewValue);
-		FloatNode(double NewValue);
-		FloatNode(const FloatNode&);
-		virtual ~FloatNode();
-
-		const FloatNode& operator=(const FloatNode&);
-
-		virtual Silikego::Value Evaluate();
-		virtual void Negate();
-		virtual bool IsError();
-	private:
-		class State;
-		State *S;
-	};
-
 
 	class SILIKEGO_API BranchNode : public SyntaxTreeNode
 	{

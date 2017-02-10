@@ -1,5 +1,5 @@
 /* SyntaxTree.cc: Abstract syntax tree classes
- * Copyright 2012, 2014, 2015, 2016 Vincent Damewood
+ * Copyright 2012, 2014, 2015, 2016, 2017 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,99 +26,55 @@ namespace Silikego
 {
 	SyntaxTreeNode::~SyntaxTreeNode() { }
 
-	class IntegerNode::State
+	class LeafNode::State
 	{
 	public:
-		State(long long int NewValue) : IntegerValue(NewValue) { }
-		State(const State& RightSide) : IntegerValue(RightSide.IntegerValue) { }
+		State(long long int NewValue): MyValue(NewValue) { }
+		State(double NewValue) : MyValue(NewValue) { }
+		State(const State& RightSide) : MyValue(RightSide.MyValue) { }
 		State& operator=(const State& RightSide)
 		{
-			IntegerValue = RightSide.IntegerValue;
+			MyValue = RightSide.MyValue;
 			return *this;
 		}
-		long long int IntegerValue;
+		Value MyValue;
 	};
 
-	IntegerNode::IntegerNode(short int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	IntegerNode::IntegerNode(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	IntegerNode::IntegerNode(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	IntegerNode::IntegerNode(long long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	LeafNode::LeafNode(short int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	LeafNode::LeafNode(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	LeafNode::LeafNode(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	LeafNode::LeafNode(long long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
+	LeafNode::LeafNode(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
+	LeafNode::LeafNode(double NewValue) : S(new State(NewValue)) { }
 
-	IntegerNode::IntegerNode(const IntegerNode& RightSide)
+	LeafNode::LeafNode(const LeafNode& RightSide)
 	{
 		S = new State(*RightSide.S);
 	}
 
-	IntegerNode::~IntegerNode()
+	LeafNode::~LeafNode()
 	{
 		delete S;
 	}
 
-	const IntegerNode& IntegerNode::operator=(const IntegerNode& RightSide)
+	const LeafNode& LeafNode::operator=(const LeafNode& RightSide)
 	{
 		*S = *RightSide.S;
 		return *this;
 	}
 
 
-	Value IntegerNode::Evaluate()
+	Value LeafNode::Evaluate()
 	{
-		return S->IntegerValue;
+		return S->MyValue;
 	}
 
-	void IntegerNode::Negate()
+	void LeafNode::Negate()
 	{
-		S->IntegerValue *= -1;
+		S->MyValue.Negate();
 	}
 
-	bool IntegerNode::IsError()
-	{
-		return false;
-	}
-
-	class FloatNode::State
-	{
-	public:
-		State(double NewValue) : FloatValue(NewValue) { }
-		State(const State& RightSide) : FloatValue(RightSide.FloatValue) { }
-		State& operator=(const State& RightSide)
-		{
-			FloatValue = RightSide.FloatValue;
-			return *this;
-		}
-		double FloatValue;
-	};
-
-	FloatNode::FloatNode(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
-	FloatNode::FloatNode(double NewValue) : S(new State(NewValue)) { }
-
-	FloatNode::FloatNode(const FloatNode& RightSide)
-	{
-		S = new State(*RightSide.S);
-	}
-
-	FloatNode::~FloatNode()
-	{
-		delete S;
-	}
-
-	const FloatNode& FloatNode::operator=(const FloatNode& RightSide)
-	{
-		*S = *RightSide.S;
-		return *this;
-	}
-
-	Value FloatNode::Evaluate()
-	{
-		return S->FloatValue;
-	}
-
-	void FloatNode::Negate()
-	{
-		S->FloatValue *= -1.0;
-	}
-
-	bool FloatNode::IsError()
+	bool LeafNode::IsError()
 	{
 		return false;
 	}

@@ -1,5 +1,5 @@
 /* InfixParser.cc: Recursive-descent infix parser
- * Copyright 2014, 2015, 2016 Vincent Damewood
+ * Copyright 2014, 2015, 2016, 2017 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,7 +41,7 @@ namespace Silikego
 
 		if (MyLexer.GetToken().Type() == Token::EOL)
 		{
-			return std::unique_ptr<SyntaxTreeNode>(new IntegerNode(0));
+			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(0));
 		}
 		else
 		{
@@ -206,7 +206,7 @@ namespace Silikego
 
 		if (MyLexer.GetToken().Type() == Token::INTEGER)
 		{
-			std::unique_ptr<SyntaxTreeNode> rVal(new IntegerNode(MyLexer.GetToken().Integer()));
+			std::unique_ptr<SyntaxTreeNode> rVal(new LeafNode(MyLexer.GetToken().Integer()));
 			MyLexer.Next();
 			return rVal;
 		}
@@ -270,11 +270,11 @@ namespace Silikego
 		switch (MyLexer.GetToken().Type())
 		{
 		case Token::INTEGER:
-            rVal = std::unique_ptr<SyntaxTreeNode>(new IntegerNode(MyLexer.GetToken().Integer()));
+            rVal = std::unique_ptr<SyntaxTreeNode>(new LeafNode(MyLexer.GetToken().Integer()));
 			MyLexer.Next();
 			return rVal;
 		case Token::FLOAT:
-            rVal = std::unique_ptr<SyntaxTreeNode>(new FloatNode(MyLexer.GetToken().Float()));
+            rVal = std::unique_ptr<SyntaxTreeNode>(new LeafNode(MyLexer.GetToken().Float()));
 			MyLexer.Next();
 			return rVal;
 		default:
