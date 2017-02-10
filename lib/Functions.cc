@@ -1,5 +1,5 @@
 /* Functions.cc: Built-in functions
- * Copyright 2012, 2014, 2015, 2016 Vincent Damewood
+ * Copyright 2012, 2014, 2015, 2016, 2017 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -33,34 +33,34 @@ namespace Silikego
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
 			switch (rVal.Status())
 			{
-			case Value::INTEGER:
+			case ValueStatus::INTEGER:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					rVal = rVal.Integer() + i->Integer();
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Integer() + i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
-			case Value::FLOAT:
+			case ValueStatus::FLOAT:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					rVal = rVal.Float() + i->Integer();
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Float() + i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
 			default:
-				return Value::BAD_ARGUMENTS;
+				return ValueStatus::BAD_ARGUMENTS;
 			}
 		return rVal;
 	}
@@ -74,34 +74,34 @@ namespace Silikego
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
 			switch (rVal.Status())
 			{
-			case Value::INTEGER:
+			case ValueStatus::INTEGER:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					rVal = rVal.Integer() - i->Integer();
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Integer() - i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
-			case Value::FLOAT:
+			case ValueStatus::FLOAT:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					rVal = rVal.Float() - i->Integer();
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Float() - i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
 			default:
-				return Value::BAD_ARGUMENTS;
+				return ValueStatus::BAD_ARGUMENTS;
 			}
 		return rVal;
 	}
@@ -115,86 +115,86 @@ namespace Silikego
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
 			switch (rVal.Status())
 			{
-			case Value::INTEGER:
+			case ValueStatus::INTEGER:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					rVal = rVal.Integer() * i->Integer();
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Integer() * i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
-			case Value::FLOAT:
+			case ValueStatus::FLOAT:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					rVal = rVal.Float() * i->Integer();
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Float() * i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
 			default:
-				return Value::BAD_ARGUMENTS;
+				return ValueStatus::BAD_ARGUMENTS;
 			}
 		return rVal;	}
 
 	Value Functions::divide(std::vector<Value> Args)
 	{
 		if (Args.size() < 2)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		Value rVal = Args[0];
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
 		{
 			/* Division-by-Zero Error */
-			if ((i->Status() == Value::FLOAT && i->Float() == 0.0)
-				|| (i->Status() == Value::INTEGER && i->Integer() == 0))
+			if ((i->Status() == ValueStatus::FLOAT && i->Float() == 0.0)
+				|| (i->Status() == ValueStatus::INTEGER && i->Integer() == 0))
 			{
-				return Value::ZERO_DIV_ERR;
+				return ValueStatus::ZERO_DIV_ERR;
 			}
 
 			switch (rVal.Status())
 			{
-			case Value::INTEGER:
+			case ValueStatus::INTEGER:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					if (rVal.Integer() % i->Integer() == 0)
 						rVal = rVal.Integer() / i->Integer();
 					else
 						rVal = static_cast<double>(rVal.Integer())
 							/ static_cast<double>(i->Integer());
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Integer() / i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
-			case Value::FLOAT:
+			case ValueStatus::FLOAT:
 				switch(i->Status())
 				{
-				case Value::INTEGER:
+				case ValueStatus::INTEGER:
 					rVal = rVal.Float() / i->Integer();
 					break;
-				case Value::FLOAT:
+				case ValueStatus::FLOAT:
 					rVal = rVal.Float() / i->Float();
 					break;
 				default:
-					return Value::BAD_ARGUMENTS;
+					return ValueStatus::BAD_ARGUMENTS;
 				}
 				break;
 			default:
-				return Value::BAD_ARGUMENTS;
+				return ValueStatus::BAD_ARGUMENTS;
 			}
 		}
 		return rVal;
@@ -214,7 +214,7 @@ namespace Silikego
 		static int hasSeeded = 0;
 
 		if(Args.size() != 2)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		if (!hasSeeded)
 		{
@@ -232,13 +232,13 @@ namespace Silikego
 	Value Functions::abs(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		switch (Args[0].Status())
 		{
-		case Value::FLOAT:
+		case ValueStatus::FLOAT:
 			return std::abs(Args[0].Float());
-		case Value::INTEGER:
+		case ValueStatus::INTEGER:
 			return std::abs(Args[0].Integer());
 		default:
 			return Args[0];
@@ -248,10 +248,10 @@ namespace Silikego
 	Value Functions::acos(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		if (Args[0].Float() < -1 || Args[0].Float() > 1)
-			return Value::DOMAIN_ERR;
+			return ValueStatus::DOMAIN_ERR;
 
 		return std::acos(Args[0].Float());
 	}
@@ -259,10 +259,10 @@ namespace Silikego
 	Value Functions::asin(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		if (Args[0].Float() < -1 || Args[0].Float() > 1)
-			return Value::DOMAIN_ERR;
+			return ValueStatus::DOMAIN_ERR;
 
 		return std::asin(Args[0].Float());
 	}
@@ -270,7 +270,7 @@ namespace Silikego
 	Value Functions::atan(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::atan(Args[0].Float());
 	}
@@ -280,7 +280,7 @@ namespace Silikego
 		double result;
 
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		result = std::ceil(Args[0].Float());
 
@@ -293,7 +293,7 @@ namespace Silikego
 	Value Functions::cos(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::cos(Args[0].Float());
 	}
@@ -301,7 +301,7 @@ namespace Silikego
 	Value Functions::cosh(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::cosh(Args[0].Float());
 	}
@@ -309,7 +309,7 @@ namespace Silikego
 	Value Functions::exp(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::exp(Args[0].Float());
 	}
@@ -319,7 +319,7 @@ namespace Silikego
 		double result;
 
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		result = std::floor(Args[0].Float());
 
@@ -332,7 +332,7 @@ namespace Silikego
 	Value Functions::log(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::log(Args[0].Float());
 	}
@@ -340,7 +340,7 @@ namespace Silikego
 	Value Functions::log10(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::log10(Args[0].Float());
 	}
@@ -348,7 +348,7 @@ namespace Silikego
 	Value Functions::sin(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::sin(Args[0].Float());
 	}
@@ -356,7 +356,7 @@ namespace Silikego
 	Value Functions::sinh(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::sinh(Args[0].Float());
 	}
@@ -364,10 +364,10 @@ namespace Silikego
 	Value Functions::sqrt(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		if (Args[0].Float() < 0.0)
-			return Value::DOMAIN_ERR;
+			return ValueStatus::DOMAIN_ERR;
 
 		return std::sqrt(Args[0].Float());
 	}
@@ -375,7 +375,7 @@ namespace Silikego
 	Value Functions::tan(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::tan(Args[0].Float());
 	}
@@ -383,7 +383,7 @@ namespace Silikego
 	Value Functions::tanh(std::vector<Value> Args)
 	{
 		if (Args.size() != 1)
-			return Value::BAD_ARGUMENTS;
+			return ValueStatus::BAD_ARGUMENTS;
 
 		return std::tanh(Args[0].Float());
 	}

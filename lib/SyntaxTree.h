@@ -37,13 +37,8 @@ namespace Silikego
 	class SILIKEGO_API LeafNode : public SyntaxTreeNode
 	{
 	public:
-		LeafNode(short int NewValue);
-		LeafNode(int NewValue);
-		LeafNode(long int NewValue);
-		LeafNode(long long int NewValue);
-		LeafNode(float NewValue);
-		LeafNode(double NewValue);
 		LeafNode(const LeafNode&);
+		LeafNode(Value NewValue);
 		virtual ~LeafNode();
 
 		const LeafNode& operator=(const LeafNode&);
@@ -75,15 +70,6 @@ namespace Silikego
 		const BranchNode& operator=(const BranchNode&);
 		class State;
 		State *S;
-	};
-
-	class SILIKEGO_API SyntaxErrorNode : public SyntaxTreeNode
-	{
-	public:
-		virtual ~SyntaxErrorNode();
-		virtual Silikego::Value Evaluate();
-		virtual void Negate();
-		virtual bool IsError();
 	};
 };
 

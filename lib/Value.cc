@@ -30,17 +30,17 @@ namespace Silikego
 	class Value::State
 	{
 	public:
-		State(long long int NewInteger) : Status(INTEGER), Integer(NewInteger) { }
-		State(double NewFloat) : Status(FLOAT), Float(NewFloat) { }
+		State(long long int NewInteger) : Status(ValueStatus::INTEGER), Integer(NewInteger) { }
+		State(double NewFloat) : Status(ValueStatus::FLOAT), Float(NewFloat) { }
 		State(ValueStatus NewStatus) : Status(NewStatus) { }
 		State(const State &RightSide) : Status(RightSide.Status)
 		{
 			switch (Status)
 			{
-			case INTEGER:
+			case ValueStatus::INTEGER:
 				Integer = RightSide.Integer;
 				break;
-			case FLOAT:
+			case ValueStatus::FLOAT:
 				Float = RightSide.Float;
 				break;
 			default:
@@ -53,10 +53,10 @@ namespace Silikego
 			Status = RightSide.Status;
 			switch (Status)
 			{
-			case INTEGER:
+			case ValueStatus::INTEGER:
 				Integer = RightSide.Integer;
 				break;
-			case FLOAT:
+			case ValueStatus::FLOAT:
 				Float = RightSide.Float;
 				break;
 			default:
@@ -73,7 +73,7 @@ namespace Silikego
 		};
 	};
 
-	Value::Value(Value::ValueStatus NewStatus) : S(new State(NewStatus)) { }
+	Value::Value(ValueStatus NewStatus) : S(new State(NewStatus)) { }
 	Value::Value(short NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
 	Value::Value(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
 	Value::Value(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
@@ -96,9 +96,9 @@ namespace Silikego
 	{
 		switch (S->Status)
 		{
-			case (INTEGER):
+			case (ValueStatus::INTEGER):
 				S->Integer *= -1;
-			case (FLOAT):
+			case (ValueStatus::FLOAT):
 				S->Float *= -1.0;
 			default:
 				; // Do nothing. Silence warning.
@@ -106,16 +106,16 @@ namespace Silikego
 		return *this;
 	}
 
-	Value::ValueStatus Value::Status() const
+	ValueStatus Value::Status() const
 	{
 		return S->Status;
 	}
 
 	long long int Value::Integer() const
 	{
-		if (S->Status == INTEGER)
+		if (S->Status == ValueStatus::INTEGER)
 			return S->Integer;
-		else if (S->Status == FLOAT)
+		else if (S->Status == ValueStatus::FLOAT)
 			return static_cast<int>(S->Float);
 		else
 			return 0;
@@ -123,9 +123,9 @@ namespace Silikego
 
 	double Value::Float() const
 	{
-		if (S->Status == INTEGER)
+		if (S->Status == ValueStatus::INTEGER)
 			return static_cast<double>(S->Integer);
-		else if (S->Status == FLOAT)
+		else if (S->Status == ValueStatus::FLOAT)
 			return S->Float;
 		else
 			return std::numeric_limits<double>::quiet_NaN();
@@ -133,7 +133,7 @@ namespace Silikego
 
 	bool Value::IsNumber() const
 	{
-		return (S->Status == INTEGER || S->Status == FLOAT);
+		return (S->Status == ValueStatus::INTEGER || S->Status == ValueStatus::FLOAT);
 	}
 
 	std::string Value::ToString() const
@@ -141,31 +141,31 @@ namespace Silikego
 		std::ostringstream tmp;
 		switch (S->Status)
 		{
-		case INTEGER:
+		case ValueStatus::INTEGER:
 			tmp << Integer();
 			break;
-		case FLOAT:
+		case ValueStatus::FLOAT:
 			tmp << Float();
 			break;
-		case MEMORY_ERR:
+		case ValueStatus::MEMORY_ERR:
 			tmp << "Error: Out of memory";
 			break;
-		case SYNTAX_ERR:
+		case ValueStatus::SYNTAX_ERR:
 			tmp << "Error: Syntax error";
 			break;
-		case ZERO_DIV_ERR:
+		case ValueStatus::ZERO_DIV_ERR:
 			tmp << "Error: Division by zero";
 			break;
-		case BAD_FUNCTION:
+		case ValueStatus::BAD_FUNCTION:
 			tmp << "Error: Function not found";
 			break;
-		case BAD_ARGUMENTS:
+		case ValueStatus::BAD_ARGUMENTS:
 			tmp << "Error: Bad argument count";
 			break;
-		case DOMAIN_ERR:
+		case ValueStatus::DOMAIN_ERR:
 			tmp << "Error: Domain error";
 			break;
-		case RANGE_ERR:
+		case ValueStatus::RANGE_ERR:
 			tmp << "Error: Range error";
 		}
 

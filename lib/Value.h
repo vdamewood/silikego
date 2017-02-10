@@ -24,29 +24,30 @@
 
 namespace Silikego
 {
+	enum class SILIKEGO_API ValueStatus
+	{
+		INTEGER,       /* Success: The value is an integer. */
+		FLOAT,         /* Success: The valis is a double. */
+		MEMORY_ERR,    /* Error: An attempt to allocate memory
+		                    failed. */
+		SYNTAX_ERR,    /* Error: A syntax error was
+		                    encountered. */
+		ZERO_DIV_ERR,  /* Error: Division by zero was
+		                    attempted. */
+		BAD_FUNCTION,  /* Error: A function call could not be
+		                    resolved to a valid function. */
+		BAD_ARGUMENTS, /* Error: A function call was made with
+		                    a number of arguments that the
+		                    function can't accept. */
+		DOMAIN_ERR,    /* Error: A function call resulted in a
+		                    domain error. */
+		RANGE_ERR      /* Error: A function call resulted in a
+		                    range error. */
+	};
+
 	class SILIKEGO_API Value
 	{
 	public:
-		enum SILIKEGO_API ValueStatus
-		{
-			INTEGER,       /* Success: The value is an integer. */
-			FLOAT,         /* Success: The valis is a double. */
-			MEMORY_ERR,    /* Error: An attempt to allocate memory
-			                    failed. */
-			SYNTAX_ERR,    /* Error: A syntax error was
-			                    encountered. */
-			ZERO_DIV_ERR,  /* Error: Division by zero was
-			                    attempted. */
-			BAD_FUNCTION,  /* Error: A function call could not be
-			                    resolved to a valid function. */
-			BAD_ARGUMENTS, /* Error: A function call was made with
-			                    a number of arguments that the
-			                    function can't accept. */
-			DOMAIN_ERR,    /* Error: A function call resulted in a
-			                    domain error. */
-			RANGE_ERR      /* Error: A function call resulted in a
-			                    range error. */
-		};
 
 		Value();
 		Value(ValueStatus NewStatus);

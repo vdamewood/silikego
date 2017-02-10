@@ -31,6 +31,7 @@ namespace Silikego
 	public:
 		State(long long int NewValue): MyValue(NewValue) { }
 		State(double NewValue) : MyValue(NewValue) { }
+		State(Value NewValue) : MyValue(NewValue) { }
 		State(const State& RightSide) : MyValue(RightSide.MyValue) { }
 		State& operator=(const State& RightSide)
 		{
@@ -40,12 +41,7 @@ namespace Silikego
 		Value MyValue;
 	};
 
-	LeafNode::LeafNode(short int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	LeafNode::LeafNode(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	LeafNode::LeafNode(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	LeafNode::LeafNode(long long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	LeafNode::LeafNode(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
-	LeafNode::LeafNode(double NewValue) : S(new State(NewValue)) { }
+	LeafNode::LeafNode(Value NewValue) : S(new State(NewValue)) { }
 
 	LeafNode::LeafNode(const LeafNode& RightSide)
 	{
@@ -76,7 +72,7 @@ namespace Silikego
 
 	bool LeafNode::IsError()
 	{
-		return false;
+		return !S->MyValue.IsNumber();
 	}
 
 	class BranchNode::State
@@ -115,9 +111,9 @@ namespace Silikego
 		Value rVal(FunctionCaller::Call(S->Id.c_str(), Arguments));
 		if (S->IsNegated)
 		{
-			if (rVal.Status() == Value::INTEGER)
+			if (rVal.Status() == ValueStatus::INTEGER)
 				rVal = rVal.Integer() * -1;
-			else if (rVal.Status() == Value::FLOAT)
+			else if (rVal.Status() == ValueStatus::FLOAT)
 				rVal = rVal.Float() * -1.0;
 		}
 
@@ -183,24 +179,4 @@ namespace Silikego
 				return false;
 		}
 	}
-
-	SyntaxErrorNode::~SyntaxErrorNode()
-	{
-	}
-
-	Value SyntaxErrorNode::Evaluate()
-	{
-		return Value::SYNTAX_ERR;
-	}
-
-	void SyntaxErrorNode::Negate()
-	{
-		// Do nothing
-	}
-
-	bool SyntaxErrorNode::IsError()
-	{
-		return true;
-	}
-
 }
