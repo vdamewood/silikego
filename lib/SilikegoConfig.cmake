@@ -1,5 +1,5 @@
 # SilikegoConfig.cmake: Find Silikego library
-# Copyright 2016 Vincent Damewood
+# Copyright 2016, 2017 Vincent Damewood
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -16,20 +16,20 @@
 
 include(FindPackageHandleStandardArgs)
 
-find_path(SILIKEGO_INC
+find_path(Silikego_INC
   NAMES Silikego/Value.h
   DOC "Silikego Include Files")
 
-find_library(SILIKEGO_LIB
+find_library(Silikego_LIB
   NAMES Silikego
   DOC "Silikego Library")
 
-find_package_handle_standard_args(Silikego DEFAULT_MSG SILIKEGO_INC SILIKEGO_LIB)
+find_package_handle_standard_args(Silikego DEFAULT_MSG Silikego_INC Silikego_LIB)
 
 if(Silikego_FOUND)
-    set(SILIKEGO_LIBRARIES    ${SILIKEGO_LIB})
-    set(SILIKEGO_INCLUDE_DIRS ${SILIKEGO_INC})
-    set(SILIKEGO_DEFINITIONS  )
+    set(Silikego_LIBRARIES    ${Silikego_LIB})
+    set(Silikego_INCLUDE_DIRS ${Silikego_INC})
+    set(Silikego_DEFINITIONS  )
 endif()
 
-mark_as_advanced(SILIKEGO_INC SILIKEGO_LIB)
+mark_as_advanced(Silikego_INC Silikego_LIB)
