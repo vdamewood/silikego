@@ -33,6 +33,7 @@
 
 #if HAVE_READLINE
 #include <readline/readline.h>
+#include <readline/history.h>
 #else
 extern "C" char *readline(const char *);
 extern "C" void add_history(char *);
