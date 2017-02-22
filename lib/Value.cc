@@ -96,12 +96,14 @@ namespace Silikego
 	{
 		switch (S->Status)
 		{
-			case (ValueStatus::INTEGER):
-				S->Integer *= -1;
-			case (ValueStatus::FLOAT):
-				S->Float *= -1.0;
-			default:
-				; // Do nothing. Silence warning.
+		case (ValueStatus::INTEGER):
+			S->Integer *= -1;
+			break;
+		case (ValueStatus::FLOAT):
+			S->Float *= -1.0;
+			break;
+		default:
+			; // Do nothing. Silence warning.
 		}
 		return *this;
 	}
