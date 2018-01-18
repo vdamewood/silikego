@@ -1,5 +1,5 @@
 /* EvalWindow.cc: Expression evaluation window
- * Copyright 2015, 2016 Vincent Damewood
+ * Copyright 2015, 2016, 2018 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,10 +23,6 @@
 
 #include "EvalWindow.h"
 
-#if !defined GLADEDIR
-#error "You must define GLADEDIR to build this file."
-#endif
-
 void EvalWindow::Calculate()
 {
 	std::unique_ptr<Silikego::SyntaxTreeNode> ResultTree =
@@ -46,7 +42,7 @@ EvalWindow::EvalWindow()
 	MyInput(0),
 	MyOutput(0)
 {
-	MyBuilder = Gtk::Builder::create_from_file(GLADEDIR "/EvalWindow.glade");
+	MyBuilder = Gtk::Builder::create_from_resource("/com/vdamewood/Silikego/EvalWindow.glade");
 	MyBuilder->get_widget("EvalWindow", MyWindow);
 	MyBuilder->get_widget("CalculateButton", MyButton);
 	MyBuilder->get_widget("Input", MyInput);

@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012, 2014, 2015, 2016, 2017 Vincent Damewood
+# Copyright 2012, 2014, 2015, 2016, 2017, 2018 Vincent Damewood
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,20 +15,39 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 set(TARGET SilikegoGui)
-set(HEADERS EvalWindow.h)
-set(SOURCES Main.cc EvalWindow.cc)
-set(LAYOUTS EvalWindow.glade)
+set(HEADERS EvalWindow.h gresource.h)
+set(SOURCES Main.cc EvalWindow.cc gresource.cc)
 set(DEPS ${LIB})
 set(APPFILES silikego.desktop)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM3 REQUIRED gtkmm-3.0)
+find_program(RESOURCE_COMPILER glib-compile-resources)
+if(NOT RESOURCE_COMPILER)
+  message(FATAL_ERROR "Can't find glib-compile-resources.")
+endif()
 list(APPEND DEPS ${GTKMM3_LIBRARIES})
-include_directories(${GTKMM3_INCLUDE_DIRS})
+include_directories(${GTKMM3_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
 link_directories(${GTKMM3_LIBRARY_DIRS})
 add_definitions(${GTKMM3_CFLAGS_OTHER})
 
-add_definitions("-DGLADEDIR=\"${CMAKE_INSTALL_PREFIX}/${INSTDAT}\"")
+add_custom_command(
+  OUTPUT gresource.h
+  COMMAND glib-compile-resources
+    --generate-header
+    --target=${CMAKE_CURRENT_BINARY_DIR}/gresource.h
+    silikego.gresource.xml
+  DEPENDS silikego.gresource.xml
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_custom_command(
+  OUTPUT gresource.cc
+  COMMAND glib-compile-resources
+    --generate-source
+    --target=${CMAKE_CURRENT_BINARY_DIR}/gresource.cc
+    silikego.gresource.xml
+  DEPENDS silikego.gresource.xml
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(${TARGET} ${SOURCES} ${HEADERS})
 set_target_properties(${TARGET} PROPERTIES
@@ -37,10 +56,6 @@ target_link_libraries(${TARGET} ${DEPS})
 
 install(TARGETS ${TARGET}
   RUNTIME    DESTINATION ${INSTBIN})
-
-install(
-  FILES ${LAYOUTS}
-  DESTINATION ${INSTDAT})
 
 install(
   FILES ${APPFILES}
