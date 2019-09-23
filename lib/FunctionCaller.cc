@@ -16,6 +16,7 @@
  */
 
 #include <unordered_map>
+#include <stdexcept>
 
 #include "FunctionCaller.h"
 #include "Functions.h"
