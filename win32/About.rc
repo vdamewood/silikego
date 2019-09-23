@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "afxres.h"
+#include "windows.h"
 #include "Id.h"
 
 ABOUT_DIALOG DIALOG DISCARDABLE  0, 0, 240, 110
