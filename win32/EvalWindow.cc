@@ -98,7 +98,6 @@ void OnSize(HWND hwnd)
 
 void OnCalculate(HWND hwnd)
 {
-	// FIXME: Get Input from CALCULATOR_INPUT as usable input
 	int ExpressionSize = GetWindowTextLength(GetDlgItem(hwnd, CALCULATOR_INPUT)) + 1;
 	char *inBuffer = static_cast<char*>(GlobalAlloc(GPTR, ExpressionSize));
 	GetDlgItemText(hwnd, CALCULATOR_INPUT, inBuffer, ExpressionSize);
