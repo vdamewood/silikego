@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012, 2014, 2015, 2016, 2018 Vincent Damewood
+# Copyright 2012, 2014, 2015, 2016, 2018, 2019 Vincent Damewood
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,43 +14,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(TARGET SilikegoGui)
-set(HEADERS EvalWindow.h About.h Id.h)
-set(SOURCES WinMain.cc EvalWindow.cc EvalWindow.rc About.cc About.rc Icon.rc)
-set(DEPS ${LIB})
-
-message("-- Finding User32.dll")
-find_library(USER32 User32)
-if (NOT ${USER32} STREQUAL "USER32-NOTFOUND")
-  message("-- Finding User32.dll - found")
-  list(APPEND DEPS ${USER32})
-  set(USER32_FOUND Yes)
-else()
-  message("-- Finding User32.dll - not found")
-  set(USER32_FOUND No)
-endif()
-
-if (NOT USER32_FOUND)
-  message(FATAL_ERROR "Can't build GUI. Quitting.")
-endif()
-
-add_executable(${TARGET} WIN32 ${HEADERS} ${SOURCES})
-set_target_properties(${TARGET} PROPERTIES
+add_executable(SilikegoGui WIN32
+	EvalWindow.h
+	About.h Id.h
+	WinMain.cc
+	EvalWindow.cc
+	EvalWindow.rc
+	About.cc
+	About.rc
+	Icon.rc
+)
+target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+set_target_properties(SilikegoGui PROPERTIES
 	OUTPUT_NAME ${ONAMEGUI})
-target_link_libraries(${TARGET} ${DEPS})
+target_link_libraries(SilikegoGui PRIVATE Silikego::Core)
 
 add_custom_command(
-  TARGET ${TARGET} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  $<TARGET_FILE:SilikegoDLib>
-  ${CMAKE_CURRENT_BINARY_DIR})
-if(DEBUG)
-  add_custom_command(
-    TARGET ${TARGET} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_PDB_FILE:SilikegoDLib>
-    ${CMAKE_CURRENT_BINARY_DIR})
-endif()
+	TARGET SilikegoGui POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	$<TARGET_FILE:Silikego::Core>
+	$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Core>>
+	${CMAKE_CURRENT_BINARY_DIR})
 
-install(TARGETS ${TARGET}
-  RUNTIME DESTINATION ${INSTBIN})
+install(TARGETS SilikegoGui
+	RUNTIME DESTINATION ${INSTBIN})

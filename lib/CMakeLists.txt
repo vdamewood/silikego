@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012, 2014, 2015, 2016 Vincent Damewood
+# Copyright 2012, 2014, 2015, 2016, 2019 Vincent Damewood
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -14,82 +14,59 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-set(DTARGET SilikegoDLib)
-set(STARGET SilikegoSLib)
+add_library(SilikegoCore SHARED
+	W32Dll.h
+	Value.h
+	FunctionCaller.h
+	SyntaxTree.h
+	DataSource.h
+	StringSource.h
+	Token.h
+	Lexer.h
+	InfixParser.h
+	Functions.h
+	Value.cc
+	Functions.cc
+	FunctionCaller.cc
+	SyntaxTree.cc
+	DataSource.cc
+	StringSource.cc
+	Token.cc
+	Lexer.cc
+	InfixParser.cc
+	SilikegoConfig.cmake
+)
+add_library(Silikego::Core ALIAS SilikegoCore)
+target_include_directories(SilikegoCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+set_target_properties(SilikegoCore PROPERTIES
+		PUBLIC_HEADER
+			W32Dll.h
+			Value.h
+			FunctionCaller.h
+			SyntaxTree.h
+			DataSource.h
+			StringSource.h
+			Token.h
+			Lexer.h
+			InfixParser.h
+		RESOURCE
+			SilikegoConfig.cmake
+		OUTPUT_NAME       ${ONAMEDLIB}
+		FRAMEWORK         ${BUILD_MACOS}
+		FRAMEWORK_VERSION ${PROJECT_VERSION}
+		VERSION           ${PROJECT_VERSION}
+		SOVERSION         ${PROJECT_VERSION_MAJOR})
 
-set(PUB_HEADERS
-  W32Dll.h
-  Value.h
-  FunctionCaller.h
-  SyntaxTree.h
-  DataSource.h
-  StringSource.h
-  Token.h
-  Lexer.h
-  InfixParser.h)
-set(HEADERS
-  ${PUB_HEADERS}
-  Functions.h)
-set(SOURCES
-  Value.cc
-  Functions.cc
-  FunctionCaller.cc
-  SyntaxTree.cc
-  DataSource.cc
-  StringSource.cc
-  Token.cc
-  Lexer.cc
-  InfixParser.cc)
-set(RESOURCES
-  SilikegoConfig.cmake)
-
-if(BUILD_DLIB)
-  add_library(${DTARGET} SHARED ${HEADERS} ${SOURCES} ${RESOURCES})
-  set_target_properties(${DTARGET} PROPERTIES
-      OUTPUT_NAME   ${ONAMEDLIB}
-      FRAMEWORK     ${BUILD_MACOSX}
-      PUBLIC_HEADER "${PUB_HEADERS}"
-      RESOURCE      "${RESOURCES}"
-      VERSION       ${PROJECT_VERSION}
-      SOVERSION     ${PROJECT_VERSION_MAJOR})
-
-  install(TARGETS ${DTARGET}
-    RUNTIME       DESTINATION ${INSTBIN}
-    ARCHIVE       DESTINATION ${INSTLIB}
-    LIBRARY       DESTINATION ${INSTLIB}
-    FRAMEWORK     DESTINATION .
-    RESOURCE      DESTINATION ${INSTDAT}
-    PUBLIC_HEADER DESTINATION ${INSTINC}/Silikego)
-endif()
-
-if(BUILD_SLIB)
-  add_library(${STARGET} STATIC ${HEADERS} ${SOURCES} ${RESOURCES})
-  target_compile_definitions(${STARGET}
-      PUBLIC        SILIKEGO_STATIC=1)
-  set_target_properties(${STARGET} PROPERTIES
-      OUTPUT_NAME   ${ONAMESLIB}
-      RESOURCE      ${RESOURCES}
-      VERSION       ${PROJECT_VERSION}
-      SOVERSION     ${PROJECT_VERSION_MAJOR})
-
-  install(TARGETS ${STARGET}
-    ARCHIVE       DESTINATION ${INSTLIB}
-    RESOURCE      DESTINATION ${INSTDAT}
-    PUBLIC_HEADER DESTINATION ${INSTINC}/Silikego)
-  install(FILES ${PUB_HEADERS}
-    DESTINATION ${INSTINC}/Silikego)
-endif()
+install(TARGETS SilikegoCore
+	RUNTIME       DESTINATION ${INSTBIN}
+	ARCHIVE       DESTINATION ${INSTLIB}
+	LIBRARY       DESTINATION ${INSTLIB}
+	FRAMEWORK     DESTINATION .
+	RESOURCE      DESTINATION ${INSTDAT}
+	PUBLIC_HEADER DESTINATION ${INSTINC}/Silikego)
 
 if(BUILD_UNIX)
-  configure_file(Silikego.pc.in Silikego.pc @ONLY)
-  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Silikego.pc" DESTINATION "${INSTLIB}/pkgconfig")
+	configure_file(Silikego.pc.in Silikego.pc @ONLY)
+	install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Silikego.pc" DESTINATION "${INSTLIB}/pkgconfig")
 endif()
-
-
-if(BUILD_DLIB)
-  set(LIB "${DTARGET}" PARENT_SCOPE)
-else()
-  set(LIB "${STARGET}" PARENT_SCOPE)
-endif()
-
-set(LIB_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)

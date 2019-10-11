@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012, 2014, 2015, 2016 Vincent Damewood
+# Copyright 2012, 2014, 2015, 2016, 2019 Vincent Damewood
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -18,66 +18,60 @@
 # Preamble (Semi-Required) #
 ############################
 
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.14)
 
 project(Silikego
-  LANGUAGES CXX
-  VERSION   0.0.0)
+	LANGUAGES CXX
+	VERSION   0.0.0)
+
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(DESCRIPTION "Mathematical expression parser written in C++")
 set(VENDOR      "Vincent Damewood")
 set(URL         "http://vdamewood.com/projects/siliko")
-set(COPYRIGHT_STATEMENT "Copyright 2012, 2014, 2015, 2016 Vincent Damewood.\
+set(COPYRIGHT_STATEMENT "Copyright 2012, 2014, 2015, 2016, 2019 Vincent Damewood.\
  Silikego library licensed under the terms of the GNU Lesser General Public\
  License, version 3 or later. Silikego interface programs licensed under the\
  terms of the GNU General Public License, version 3 or later.")
 set(UPGRADE_GUID "EF846633-A991-4F3A-9159-CFA02E512366")
+
 #########################
 # Configuration Options #
 #########################
 
 if(APPLE)
-  include(CMakeDependentOption)
-  option(FORCE_UNIX "Force Unix-style installation" Off)
-  cmake_dependent_option(BUILD_SLIB "Build static library" On "FORCE_UNIX" Off)
-else()
-  option(BUILD_SLIB "Build static library" On)
+	option(FORCE_UNIX "Force Unix-style installation" Off)
 endif()
 
-option(BUILD_DLIB "Build shared library" On)
 option(BUILD_CLI "Build command-line program" On)
 option(BUILD_GUI "Build GUI Program" On)
-
-if(NOT BUILD_DLIB AND NOT BUILD_SLIB)
-  message(FATAL_ERROR "You must build at least one library configuration.")
-endif()
 
 ###############
 # Build Style #
 ###############
 
 if(APPLE)
-  if(FORCE_UNIX)
-    set(BUILD_UNIX On)
-    set(BUILD_WINDOWS Off)
-    set(BUILD_MACOSX Off)
-  else()
-    set(BUILD_UNIX Off)
-    set(BUILD_WINDOWS Off)
-    set(BUILD_MACOSX On)
-  endif()
+	if(FORCE_UNIX)
+		set(BUILD_UNIX On)
+		set(BUILD_WINDOWS Off)
+		set(BUILD_MACOS Off)
+	else()
+		set(BUILD_UNIX Off)
+		set(BUILD_WINDOWS Off)
+		set(BUILD_MACOS On)
+	endif()
 elseif(UNIX)
-    set(BUILD_UNIX On)
-    set(BUILD_WINDOWS Off)
-    set(BUILD_MACOSX Off)
+		set(BUILD_UNIX On)
+		set(BUILD_WINDOWS Off)
+		set(BUILD_MACOS Off)
 elseif(WIN32)
-    set(BUILD_UNIX Off)
-    set(BUILD_WINDOWS On)
-    set(BUILD_MACOSX Off)
+		set(BUILD_UNIX Off)
+		set(BUILD_WINDOWS On)
+		set(BUILD_MACOS Off)
 else()
-    set(BUILD_UNIX Off)
-    set(BUILD_WINDOWS Off)
-    set(BUILD_MACOSX Off)
+		set(BUILD_UNIX Off)
+		set(BUILD_WINDOWS Off)
+		set(BUILD_MACOS Off)
 endif()
 
 
@@ -85,47 +79,41 @@ endif()
 # Build-Based Values #
 ######################
 
-if(BUILD_MACOSX)
-  set(INSTBIN bin)
-  set(INSTLIB err)
-  set(INSTINC err)
-  set(INSTSHR err)
-  set(INSTDAT err)
-  set(INSTDOC .)
-  set(ONAMEDLIB Silikego)
-  set(ONAMESLIB SilikegoStatic) # This will be ignored.
-  set(ONAMECLI  silikego)
-  set(ONAMEGUI  "Silikego GUI")
+if(BUILD_MACOS)
+	set(INSTBIN bin)
+	set(INSTLIB err)
+	set(INSTINC err)
+	set(INSTSHR err)
+	set(INSTDAT err)
+	set(INSTDOC .)
+	set(ONAMEDLIB Silikego)
+	set(ONAMESLIB SilikegoStatic) # This will be ignored.
+	set(ONAMECLI  silikego)
+	set(ONAMEGUI  "Silikego GUI")
 elseif(BUILD_WINDOWS)
-  set(INSTBIN .)
-  set(INSTLIB .)
-  set(INSTINC include)
-  set(INSTSHR .)
-  set(INSTDAT .)
-  set(INSTDOC .)
-  set(ONAMEDLIB silikego)
-  set(ONAMESLIB silikego-static)
-  set(ONAMECLI  silikego-cli)
-  set(ONAMEGUI  silikego-gui)
+	set(INSTBIN .)
+	set(INSTLIB .)
+	set(INSTINC include)
+	set(INSTSHR .)
+	set(INSTDAT .)
+	set(INSTDOC .)
+	set(ONAMEDLIB silikego)
+	set(ONAMESLIB silikego-static)
+	set(ONAMECLI  silikego-cli)
+	set(ONAMEGUI  silikego-gui)
 else()
-  include(GNUInstallDirs)
-  set(INSTBIN ${CMAKE_INSTALL_BINDIR})
-  set(INSTLIB ${CMAKE_INSTALL_LIBDIR})
-  set(INSTINC ${CMAKE_INSTALL_INCLUDEDIR})
-  set(INSTSHR ${CMAKE_INSTALL_DATADIR})
-  set(INSTDAT "${INSTSHR}/${PROJECT_NAME}")
-  set(INSTDOC ${CMAKE_INSTALL_DOCDIR})
-  set(ONAMEDLIB silikego)
-  set(ONAMESLIB silikego)
-  set(ONAMECLI  silikego)
-  set(ONAMEGUI  silikego-gui)
+	include(GNUInstallDirs)
+	set(INSTBIN ${CMAKE_INSTALL_BINDIR})
+	set(INSTLIB ${CMAKE_INSTALL_LIBDIR})
+	set(INSTINC ${CMAKE_INSTALL_INCLUDEDIR})
+	set(INSTSHR ${CMAKE_INSTALL_DATADIR})
+	set(INSTDAT "${INSTSHR}/${PROJECT_NAME}")
+	set(INSTDOC ${CMAKE_INSTALL_DOCDIR})
+	set(ONAMEDLIB silikego)
+	set(ONAMESLIB silikego)
+	set(ONAMECLI  silikego)
+	set(ONAMEGUI  silikego-gui)
 endif()
-
-#############################
-# Compiler-dependent values #
-#############################
-
-set(CMAKE_CXX_STANDARD 11)
 
 ###########################
 # Subdirectory Inclusions #
@@ -133,26 +121,19 @@ set(CMAKE_CXX_STANDARD 11)
 
 # Libraries
 add_subdirectory(lib)
-
-# Allow executable builds to include library headers.
-include_directories(${Silikego_SOURCE_DIR}/lib)
-
-# Command-line Programs
 if(BUILD_CLI)
-  add_subdirectory(command)
+	add_subdirectory(command)
 endif()
-
-# GUI Programs
 if(BUILD_GUI)
-  if(BUILD_MACOSX)
-    add_subdirectory(cocoa)
-  elseif(BUILD_UNIX)
-    add_subdirectory(gtkmm3)
-  elseif(BUILD_WINDOWS)
-    add_subdirectory(win32)
-  else()
-    message(FATAL_ERROR "A GUI program is not available for this system.")
-  endif()
+	if(BUILD_MACOS)
+		add_subdirectory(cocoa)
+	elseif(BUILD_UNIX)
+		add_subdirectory(gtkmm3)
+	elseif(BUILD_WINDOWS)
+		add_subdirectory(win32)
+	else()
+		message(FATAL_ERROR "A GUI program is not available for this system.")
+	endif()
 endif()
 
 ##################################
@@ -160,8 +141,8 @@ endif()
 ##################################
 
 install(
-  FILES Readme.md Authors.txt License.txt License.Gpl.txt
-  DESTINATION ${INSTDOC})
+	FILES Readme.md Authors.txt License.txt License.Gpl.txt
+	DESTINATION ${INSTDOC})
 
 #############################
 # Package-creation Settings #
@@ -182,27 +163,27 @@ set(CPACK_SOURCE_GENERATOR TXZ ZIP)
 set(CPACK_SOURCE_IGNORE_FILES "/\.git/" "/\.gitignore" "/[Bb]uild/")
 
 if(BUILD_GUI)
-  list(APPEND CPACK_PACKAGE_EXECUTABLES ${ONAMEGUI} ${PROJECT_NAME})
+	list(APPEND CPACK_PACKAGE_EXECUTABLES ${ONAMEGUI} ${PROJECT_NAME})
 endif()
 
-if(BUILD_MACOSX)
-  set(CPACK_GENERATOR DragNDrop)
-  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-macOS")
-  set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
-  set(CPACK_DMG_FORMAT UDZO)
-  set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK On)
+if(BUILD_MACOS)
+	set(CPACK_GENERATOR DragNDrop)
+	set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-macOS")
+	set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
+	set(CPACK_DMG_FORMAT UDZO)
+	set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK On)
 elseif(BUILD_WINDOWS)
-  if(MSVC)
-    set(CPACK_GENERATOR ZIP WIX)
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/cpack/WixLicense.txt")
-    set(CPACK_WIX_UPGRADE_GUID ${UPGRADE_GUID})
-  else()
-    set(CPACK_GENERATOR ZIP)
-  endif()
-  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-Windows")
+	if(MSVC)
+		set(CPACK_GENERATOR ZIP WIX)
+		set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/cpack/WixLicense.txt")
+		set(CPACK_WIX_UPGRADE_GUID ${UPGRADE_GUID})
+	else()
+		set(CPACK_GENERATOR ZIP)
+	endif()
+	set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-Windows")
 else()
-  set(CPACK_GENERATOR TXZ)
-  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
+	set(CPACK_GENERATOR TXZ)
+	set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}")
 endif()
 set(BIN_PACKAGE "${CPACK_PACKAGE_FILE_NAME}" CACHE STRING "Filename for package" INTERNAL)
 set(SRC_PACKAGE "${PROJECT_NAME}-${PROJECT_VERSION}" CACHE STRING "Filename for source package" INTERNAL)

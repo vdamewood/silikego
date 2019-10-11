@@ -14,60 +14,54 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set(TARGET SilikegoGui)
-set(HEADERS EvalWindow.h gresource.h)
-set(SOURCES Main.cc EvalWindow.cc gresource.cc)
-set(DEPS ${LIB})
-set(APPFILES silikego.desktop)
-
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTKMM3 REQUIRED gtkmm-3.0)
-find_program(RESOURCE_COMPILER glib-compile-resources)
-if(NOT RESOURCE_COMPILER)
-  message(FATAL_ERROR "Can't find glib-compile-resources.")
+pkg_check_modules(Gtkmm3 REQUIRED gtkmm-3.0 IMPORTED_TARGET)
+
+find_program(GRESOURCE glib-compile-resources)
+if(NOT GRESOURCE)
+	message(FATAL_ERROR "Can't find glib-compile-resources.")
 endif()
-list(APPEND DEPS ${GTKMM3_LIBRARIES})
-include_directories(${GTKMM3_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
-link_directories(${GTKMM3_LIBRARY_DIRS})
-add_definitions(${GTKMM3_CFLAGS_OTHER})
 
 add_custom_command(
-  OUTPUT gresource.h
-  COMMAND glib-compile-resources
-    --generate-header
-    --target=${CMAKE_CURRENT_BINARY_DIR}/gresource.h
-    silikego.gresource.xml
-  DEPENDS silikego.gresource.xml
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+	OUTPUT gresource.h
+	COMMAND "${GRESOURCE}"
+		--generate-header
+		--target=${CMAKE_CURRENT_BINARY_DIR}/gresource.h
+		silikego.gresource.xml
+	DEPENDS silikego.gresource.xml
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_command(
-  OUTPUT gresource.cc
-  COMMAND glib-compile-resources
-    --generate-source
-    --target=${CMAKE_CURRENT_BINARY_DIR}/gresource.cc
-    silikego.gresource.xml
-  DEPENDS silikego.gresource.xml
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+	OUTPUT gresource.cc
+	COMMAND "${GRESOURCE}"
+		--generate-source
+		--target=${CMAKE_CURRENT_BINARY_DIR}/gresource.cc
+		silikego.gresource.xml
+	DEPENDS silikego.gresource.xml
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(${TARGET} ${SOURCES} ${HEADERS})
-set_target_properties(${TARGET} PROPERTIES
+add_executable(SilikegoGui
+	Main.cc
+	EvalWindow.cc
+	gresource.cc
+	EvalWindow.h
+	gresource.h
+)
+target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+set_target_properties(SilikegoGui PROPERTIES
 	OUTPUT_NAME ${ONAMEGUI})
-target_link_libraries(${TARGET} ${DEPS})
+target_link_libraries(SilikegoGui PRIVATE Silikego::Core PkgConfig::Gtkmm3)
 
-install(TARGETS ${TARGET}
-  RUNTIME    DESTINATION ${INSTBIN})
+install(TARGETS SilikegoGui
+	RUNTIME    DESTINATION ${INSTBIN})
 
 install(
-  FILES ${APPFILES}
-  DESTINATION "${INSTSHR}/applications"
+	FILES silikego.desktop
+	DESTINATION "${INSTSHR}/applications"
 )
 
 install(
 	FILES ${CMAKE_SOURCE_DIR}/icon/silikego-48.png
 	DESTINATION "${INSTSHR}/icons/hicolor/48x48/apps"
 	RENAME silikego.png
-)
-
-install(CODE
-  "execute_process(COMMAND gtk-update-icon-cache -f ${CMAKE_INSTALL_PREFIX}/${INSTSHR}/icons/hicolor)"
 )
