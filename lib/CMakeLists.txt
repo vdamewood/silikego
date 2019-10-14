@@ -39,17 +39,20 @@ add_library(SilikegoCore SHARED
 add_library(Silikego::Core ALIAS SilikegoCore)
 target_include_directories(SilikegoCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+
+set(PUBLIC_HEADERS)
+	W32Dll.h
+	Value.h
+	FunctionCaller.h
+	SyntaxTree.h
+	DataSource.h
+	StringSource.h
+	Token.h
+	Lexer.h
+	InfixParser.h
+)
 set_target_properties(SilikegoCore PROPERTIES
-		PUBLIC_HEADER
-			W32Dll.h
-			Value.h
-			FunctionCaller.h
-			SyntaxTree.h
-			DataSource.h
-			StringSource.h
-			Token.h
-			Lexer.h
-			InfixParser.h
+		PUBLIC_HEADER     "${PUBLIC_HEADERS}"
 		RESOURCE
 			SilikegoConfig.cmake
 		OUTPUT_NAME       ${ONAMEDLIB}
