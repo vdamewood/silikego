@@ -40,12 +40,14 @@ add_custom_command(
 	DEPENDS silikego.gresource.xml
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(SilikegoGui
-	Main.cc
-	EvalWindow.cc
-	gresource.cc
-	EvalWindow.h
-	gresource.h
+add_executable(SilikegoGui)
+target_sources(SilikegoGui
+	PRIVATE
+		Main.cc
+		EvalWindow.cc
+		gresource.cc
+		EvalWindow.h
+		gresource.h
 )
 target_compile_features(SilikegoCore PRIVATE cxx_std_11)
 set_target_properties(SilikegoGui PROPERTIES

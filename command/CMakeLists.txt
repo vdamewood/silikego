@@ -17,8 +17,13 @@
 find_package(Readline)
 
 add_executable(SilikegoCli)
-target_sources(SilikegoCli PRIVATE StringSource.h Main.cc StringSource.cc)
-target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+target_sources(SilikegoCli
+	PRIVATE
+		StringSource.h
+		Main.cc
+		StringSource.cc
+)
+target_compile_features(SilikegoCli PRIVATE cxx_std_11)
 target_link_libraries(SilikegoCli PRIVATE Silikego::Core)
 set_target_properties(SilikegoCli PROPERTIES
 	OUTPUT_NAME ${ONAMECLI})

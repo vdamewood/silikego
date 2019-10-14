@@ -14,33 +14,35 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-add_library(SilikegoCore SHARED
-	W32Dll.h
-	Value.h
-	FunctionCaller.h
-	SyntaxTree.h
-	DataSource.h
-	StringSource.h
-	Token.h
-	Lexer.h
-	InfixParser.h
-	Functions.h
-	Value.cc
-	Functions.cc
-	FunctionCaller.cc
-	SyntaxTree.cc
-	DataSource.cc
-	StringSource.cc
-	Token.cc
-	Lexer.cc
-	InfixParser.cc
-	SilikegoConfig.cmake
+add_library(SilikegoCore SHARED)
+target_sources(SilikegoCore
+	PRIVATE
+		W32Dll.h
+		Value.h
+		FunctionCaller.h
+		SyntaxTree.h
+		DataSource.h
+		StringSource.h
+		Token.h
+		Lexer.h
+		InfixParser.h
+		Functions.h
+		Value.cc
+		Functions.cc
+		FunctionCaller.cc
+		SyntaxTree.cc
+		DataSource.cc
+		StringSource.cc
+		Token.cc
+		Lexer.cc
+		InfixParser.cc
+		SilikegoConfig.cmake
 )
 add_library(Silikego::Core ALIAS SilikegoCore)
 target_include_directories(SilikegoCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(SilikegoCore PRIVATE cxx_std_11)
 
-set(PUBLIC_HEADERS)
+set(PUBLIC_HEADERS
 	W32Dll.h
 	Value.h
 	FunctionCaller.h

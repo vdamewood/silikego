@@ -39,14 +39,17 @@ add_custom_command(OUTPUT "${XIB}.nib"
 set_source_files_properties("${XIB}.nib" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 set_source_files_properties(silikego.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-add_executable(SilikegoGui MACOSX_BUNDLE
-	Delegate.h
-	Delegate.mm
-	Main.mm
-	"${XIB}.nib"
-	silikego.icns)
+add_executable(SilikegoGui MACOSX_BUNDLE)
+target_sources(SilikegoGui
+	PRIVATE
+		Delegate.h
+		Delegate.mm
+		Main.mm
+		"${XIB}.nib"
+		silikego.icns
+)
 target_compile_options(SilikegoGui PRIVATE "-fobjc-arc")
-target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+target_compile_features(SilikegoGui PRIVATE cxx_std_11)
 target_link_libraries(SilikegoGui PRIVATE Silikego::Core "-framework Cocoa")
 set_target_properties(SilikegoGui PROPERTIES
 	OUTPUT_NAME "${ONAMEGUI}"
