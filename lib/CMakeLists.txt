@@ -58,7 +58,7 @@ set_target_properties(SilikegoCore PROPERTIES
 		RESOURCE
 			SilikegoConfig.cmake
 		OUTPUT_NAME       ${ONAMEDLIB}
-		FRAMEWORK         ${BUILD_MACOS}
+		FRAMEWORK         TRUE
 		FRAMEWORK_VERSION ${PROJECT_VERSION}
 		VERSION           ${PROJECT_VERSION}
 		SOVERSION         ${PROJECT_VERSION_MAJOR})
@@ -71,7 +71,7 @@ install(TARGETS SilikegoCore
 	RESOURCE      DESTINATION ${INSTDAT}
 	PUBLIC_HEADER DESTINATION ${INSTINC}/Silikego)
 
-if(BUILD_UNIX)
+if(UNIX AND NOT APPLE)
 	configure_file(Silikego.pc.in Silikego.pc @ONLY)
 	install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Silikego.pc" DESTINATION "${INSTLIB}/pkgconfig")
 endif()

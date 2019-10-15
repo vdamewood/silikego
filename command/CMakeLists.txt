@@ -26,7 +26,8 @@ target_sources(SilikegoCli
 target_compile_features(SilikegoCli PRIVATE cxx_std_11)
 target_link_libraries(SilikegoCli PRIVATE Silikego::Core)
 set_target_properties(SilikegoCli PROPERTIES
-	OUTPUT_NAME ${ONAMECLI})
+	OUTPUT_NAME ${ONAMECLI}
+)
 
 if (UNIX)
 	target_compile_definitions(SilikegoCli PRIVATE USE_UNIX=1)
