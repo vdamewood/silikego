@@ -23,7 +23,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(Silikego
 	VERSION       0.0.0
-	DESCRIPTION   "Mathematical expression parser written in C++")
+	DESCRIPTION   "Mathematical expression parser written in C++"
 	HOMEPAGE_URL  "https://vdamewood.com/software/projects/silikego"
 	LANGUAGES     CXX
 )
@@ -63,9 +63,6 @@ if(APPLE)
 	set(INSTSHR err)
 	set(INSTDAT err)
 	set(INSTDOC .)
-	set(ONAMEDLIB Silikego)
-	set(ONAMECLI  silikego)
-	set(ONAMEGUI  "Silikego GUI")
 elseif(WIN32)
 	set(INSTBIN .)
 	set(INSTLIB .)
@@ -73,9 +70,6 @@ elseif(WIN32)
 	set(INSTSHR .)
 	set(INSTDAT .)
 	set(INSTDOC .)
-	set(ONAMEDLIB silikego)
-	set(ONAMECLI  silikego-cli)
-	set(ONAMEGUI  silikego-gui)
 else()
 	include(GNUInstallDirs)
 	set(INSTBIN ${CMAKE_INSTALL_BINDIR})
@@ -84,9 +78,6 @@ else()
 	set(INSTSHR ${CMAKE_INSTALL_DATADIR})
 	set(INSTDAT "${INSTSHR}/${PROJECT_NAME}")
 	set(INSTDOC ${CMAKE_INSTALL_DOCDIR})
-	set(ONAMEDLIB silikego)
-	set(ONAMECLI  silikego)
-	set(ONAMEGUI  silikego-gui)
 endif()
 
 
@@ -152,7 +143,7 @@ else()
 endif()
 
 if(BUILD_GUI)
-	list(APPEND CPACK_PACKAGE_EXECUTABLES ${ONAMEGUI} ${PROJECT_NAME})
+	list(APPEND CPACK_PACKAGE_EXECUTABLES Silikegujo Silikegujo)
 endif()
 
 if(PACK_DND)

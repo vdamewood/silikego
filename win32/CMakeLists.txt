@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-add_executable(SilikegoGui WIN32
+add_executable(SilikegujoForWindows WIN32
 	EvalWindow.h
 	About.h Id.h
 	WinMain.cc
@@ -24,17 +24,18 @@ add_executable(SilikegoGui WIN32
 	About.rc
 	Icon.rc
 )
-target_compile_features(SilikegoCore PRIVATE cxx_std_11)
-set_target_properties(SilikegoGui PROPERTIES
-	OUTPUT_NAME ${ONAMEGUI})
-target_link_libraries(SilikegoGui PRIVATE Silikego::Core)
+target_compile_features(SilikegujoForWindows PRIVATE cxx_std_11)
+set_target_properties(SilikegujoForWindows PROPERTIES
+	OUTPUT_NAME Silikegujo
+)
+target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Core)
 
 add_custom_command(
-	TARGET SilikegoGui POST_BUILD
+	TARGET SilikegujoForWindows POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
 	$<TARGET_FILE:Silikego::Core>
 	$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Core>>
 	${CMAKE_CURRENT_BINARY_DIR})
 
-install(TARGETS SilikegoGui
+install(TARGETS SilikegujoForWindows
 	RUNTIME DESTINATION ${INSTBIN})

@@ -26,8 +26,8 @@ add_custom_command(OUTPUT MainMenu.nib
 set_source_files_properties(MainMenu.nib PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 set_source_files_properties(silikego.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-add_executable(SilikegoGui MACOSX_BUNDLE)
-target_sources(SilikegoGui
+add_executable(SilikegujoForMacOS MACOSX_BUNDLE)
+target_sources(SilikegujoForMacOS
 	PRIVATE
 		Delegate.h
 		Delegate.mm
@@ -35,11 +35,11 @@ target_sources(SilikegoGui
 		MainMenu.nib
 		silikego.icns
 )
-target_compile_options(SilikegoGui PRIVATE "-fobjc-arc")
-target_compile_features(SilikegoGui PRIVATE cxx_std_11)
-target_link_libraries(SilikegoGui PRIVATE Silikego::Core "-framework Cocoa")
-set_target_properties(SilikegoGui PROPERTIES
-	OUTPUT_NAME                         "${ONAMEGUI}"
+target_compile_options(SilikegujoForMacOS PRIVATE "-fobjc-arc")
+target_compile_features(SilikegujoForMacOS PRIVATE cxx_std_11)
+target_link_libraries(SilikegujoForMacOS PRIVATE Silikego::Core "-framework Cocoa")
+set_target_properties(SilikegujoForMacOS PROPERTIES
+	OUTPUT_NAME                         Silikegujo
 	MACOSX_BUNDLE_GUI_IDENTIFIER        "com.vdamewood.SilikegoGui"
 	MACOSX_BUNDLE_BUNDLE_NAME           "Silikego"
 	MACOSX_BUNDLE_SHORT_VERSION_STRING  ${PROJECT_VERSION}
@@ -48,9 +48,9 @@ set_target_properties(SilikegoGui PROPERTIES
 	MACOSX_BUNDLE_ICON_FILE             silikego.icns
 	MACOSX_BUNDLE_INFO_PLIST            "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
 )
-install(TARGETS SilikegoGui
+install(TARGETS SilikegujoForMacOS
 	RUNTIME DESTINATION ${INSTBIN}
 	BUNDLE  DESTINATION .)
 
 install(CODE "include(BundleUtilities)")
-install(CODE "fixup_bundle(\"$<TARGET_FILE:SilikegoGui>\" \"\" \"$<TARGET_FILE_DIR:Silikego::Core>\")")
+install(CODE "fixup_bundle(\"$<TARGET_FILE:SilikegujoForMacOS>\" \"\" \"$<TARGET_FILE_DIR:Silikego::Core>\")")

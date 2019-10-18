@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-add_library(SilikegoCore SHARED)
-target_sources(SilikegoCore
+add_library(Silikego SHARED)
+target_sources(Silikego
 	PRIVATE
 		W32Dll.h
 		Value.h
@@ -38,9 +38,9 @@ target_sources(SilikegoCore
 		InfixParser.cc
 		SilikegoConfig.cmake
 )
-add_library(Silikego::Core ALIAS SilikegoCore)
-target_include_directories(SilikegoCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+add_library(Silikego::Core ALIAS Silikego)
+target_include_directories(Silikego PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(Silikego PRIVATE cxx_std_11)
 
 set(PUBLIC_HEADERS
 	W32Dll.h
@@ -53,17 +53,16 @@ set(PUBLIC_HEADERS
 	Lexer.h
 	InfixParser.h
 )
-set_target_properties(SilikegoCore PROPERTIES
+set_target_properties(Silikego PROPERTIES
 		PUBLIC_HEADER     "${PUBLIC_HEADERS}"
 		RESOURCE
 			SilikegoConfig.cmake
-		OUTPUT_NAME       ${ONAMEDLIB}
 		FRAMEWORK         TRUE
 		FRAMEWORK_VERSION ${PROJECT_VERSION}
 		VERSION           ${PROJECT_VERSION}
 		SOVERSION         ${PROJECT_VERSION_MAJOR})
 
-install(TARGETS SilikegoCore
+install(TARGETS Silikego
 	RUNTIME       DESTINATION ${INSTBIN}
 	ARCHIVE       DESTINATION ${INSTLIB}
 	LIBRARY       DESTINATION ${INSTLIB}

@@ -40,8 +40,8 @@ add_custom_command(
 	DEPENDS silikego.gresource.xml
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(SilikegoGui)
-target_sources(SilikegoGui
+add_executable(SilikegujoForUnix)
+target_sources(SilikegujoForUnix
 	PRIVATE
 		Main.cc
 		EvalWindow.cc
@@ -49,12 +49,12 @@ target_sources(SilikegoGui
 		EvalWindow.h
 		gresource.h
 )
-target_compile_features(SilikegoCore PRIVATE cxx_std_11)
-set_target_properties(SilikegoGui PROPERTIES
-	OUTPUT_NAME ${ONAMEGUI})
-target_link_libraries(SilikegoGui PRIVATE Silikego::Core PkgConfig::Gtkmm3)
+target_compile_features(SilikegujoForUnix PRIVATE cxx_std_11)
+set_target_properties(SilikegujoForUnix PROPERTIES
+	OUTPUT_NAME Silikegujo)
+target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Core PkgConfig::Gtkmm3)
 
-install(TARGETS SilikegoGui
+install(TARGETS SSilikegujoForUnix
 	RUNTIME    DESTINATION ${INSTBIN})
 
 install(
