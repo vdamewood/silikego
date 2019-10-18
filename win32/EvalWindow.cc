@@ -23,8 +23,9 @@
 
 #include <memory>
 
-#include "StringSource.h"
-#include "InfixParser.h"
+#include <Silikego/StringSource.h>
+#include <Silikego/InfixParser.h>
+
 #include "EvalWindow.h"
 #include "About.h"
 #include "Id.h"

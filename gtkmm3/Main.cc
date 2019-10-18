@@ -17,7 +17,8 @@
 
 #include <gtkmm.h>
 
-#include "FunctionCaller.h"
+#include <Silikego/FunctionCaller.h>
+
 #include "EvalWindow.h"
 
 int main(int argc, char *argv[])

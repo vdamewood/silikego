@@ -17,9 +17,9 @@
 
 #include <gtkmm.h>
 
-#include "StringSource.h"
-#include "InfixParser.h"
-#include "Value.h"
+#include <Silikego/StringSource.h>
+#include <Silikego/InfixParser.h>
+#include <Silikego/Value.h>
 
 #include "EvalWindow.h"
 

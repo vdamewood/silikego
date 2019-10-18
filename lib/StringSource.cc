@@ -18,7 +18,7 @@
 
 #include <string>
 
-#include "StringSource.h"
+#include <Silikego/StringSource.h>
 
 namespace Silikego
 {

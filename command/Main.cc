@@ -27,10 +27,6 @@
 
 #include <iostream>
 
-#include "FunctionCaller.h"
-#include "InfixParser.h"
-#include "StringSource.h"
-
 #if HAVE_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -38,6 +34,11 @@
 extern "C" char *readline(const char *);
 extern "C" void add_history(char *);
 #endif /* HAVE_READLINE */
+
+#include <Silikego/FunctionCaller.h>
+#include <Silikego/InfixParser.h>
+
+#include "StringSource.h"
 
 int main(int argc, char *argv[])
 {

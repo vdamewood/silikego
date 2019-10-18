@@ -17,7 +17,8 @@
 
 #include <windows.h>
 
-#include "FunctionCaller.h"
+#include <Silikego/FunctionCaller.h>
+
 #include "EvalWindow.h"
 
 int WINAPI WinMain(

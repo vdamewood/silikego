@@ -23,7 +23,7 @@
 #include <sstream>
 #include <limits>
 
-#include "Value.h"
+#include <Silikego/Value.h>
 
 namespace Silikego
 {

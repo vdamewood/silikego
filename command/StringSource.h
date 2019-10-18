@@ -19,7 +19,8 @@
 #define STRING_SOURCE_H
 
 #include <string>
-#include "DataSource.h"
+
+#include <Silikego/DataSource.h>
 
 class StringSource : public Silikego::DataSource
 {

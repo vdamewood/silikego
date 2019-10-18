@@ -17,15 +17,15 @@
 add_library(Silikego SHARED)
 target_sources(Silikego
 	PRIVATE
-		W32Dll.h
-		Value.h
-		FunctionCaller.h
-		SyntaxTree.h
-		DataSource.h
-		StringSource.h
-		Token.h
-		Lexer.h
-		InfixParser.h
+		include/Silikego/W32Dll.h
+		include/Silikego/Value.h
+		include/Silikego/FunctionCaller.h
+		include/Silikego/SyntaxTree.h
+		include/Silikego/DataSource.h
+		include/Silikego/StringSource.h
+		include/Silikego/Token.h
+		include/Silikego/Lexer.h
+		include/Silikego/InfixParser.h
 		Functions.h
 		Value.cc
 		Functions.cc
@@ -39,19 +39,19 @@ target_sources(Silikego
 		SilikegoConfig.cmake
 )
 add_library(Silikego::Silikego ALIAS Silikego)
-target_include_directories(Silikego PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Silikego PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_features(Silikego PRIVATE cxx_std_11)
 
 set(PUBLIC_HEADERS
-	W32Dll.h
-	Value.h
-	FunctionCaller.h
-	SyntaxTree.h
-	DataSource.h
-	StringSource.h
-	Token.h
-	Lexer.h
-	InfixParser.h
+	include/Silikego/W32Dll.h
+	include/Silikego/Value.h
+	include/Silikego/FunctionCaller.h
+	include/Silikego/SyntaxTree.h
+	include/Silikego/DataSource.h
+	include/Silikego/StringSource.h
+	include/Silikego/Token.h
+	include/Silikego/Lexer.h
+	include/Silikego/InfixParser.h
 )
 set_target_properties(Silikego PROPERTIES
 		PUBLIC_HEADER     "${PUBLIC_HEADERS}"

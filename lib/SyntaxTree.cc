@@ -19,8 +19,8 @@
 #include <list>
 #include <memory>
 
-#include "SyntaxTree.h"
-#include "FunctionCaller.h"
+#include <Silikego/SyntaxTree.h>
+#include <Silikego/FunctionCaller.h>
 
 namespace Silikego
 {
