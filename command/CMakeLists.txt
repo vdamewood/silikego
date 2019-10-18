@@ -24,7 +24,7 @@ target_sources(SilikegoCli
 		StringSource.cc
 )
 target_compile_features(SilikegoCli PRIVATE cxx_std_11)
-target_link_libraries(SilikegoCli PRIVATE Silikego::Core)
+target_link_libraries(SilikegoCli PRIVATE Silikego::Silikego)
 set_target_properties(SilikegoCli PROPERTIES
 	OUTPUT_NAME silikegilo
 )
@@ -45,8 +45,8 @@ if(WIN32)
 	add_custom_command(
 		TARGET SilikegoCli POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		$<TARGET_FILE:Silikego::Core>
-		$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Core>>
+		$<TARGET_FILE:Silikego::Silikego>
+		$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Silikego>>
 		${CMAKE_CURRENT_BINARY_DIR})
 endif()
 

@@ -38,7 +38,7 @@ target_sources(Silikego
 		InfixParser.cc
 		SilikegoConfig.cmake
 )
-add_library(Silikego::Core ALIAS Silikego)
+add_library(Silikego::Silikego ALIAS Silikego)
 target_include_directories(Silikego PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(Silikego PRIVATE cxx_std_11)
 

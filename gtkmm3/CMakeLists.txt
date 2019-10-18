@@ -52,9 +52,9 @@ target_sources(SilikegujoForUnix
 target_compile_features(SilikegujoForUnix PRIVATE cxx_std_11)
 set_target_properties(SilikegujoForUnix PROPERTIES
 	OUTPUT_NAME Silikegujo)
-target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Core PkgConfig::Gtkmm3)
+target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Silikego PkgConfig::Gtkmm3)
 
-install(TARGETS SSilikegujoForUnix
+install(TARGETS SilikegujoForUnix
 	RUNTIME    DESTINATION ${INSTBIN})
 
 install(

@@ -37,7 +37,7 @@ target_sources(SilikegujoForMacOS
 )
 target_compile_options(SilikegujoForMacOS PRIVATE "-fobjc-arc")
 target_compile_features(SilikegujoForMacOS PRIVATE cxx_std_11)
-target_link_libraries(SilikegujoForMacOS PRIVATE Silikego::Core "-framework Cocoa")
+target_link_libraries(SilikegujoForMacOS PRIVATE Silikego::Silikego "-framework Cocoa")
 set_target_properties(SilikegujoForMacOS PROPERTIES
 	OUTPUT_NAME                         Silikegujo
 	MACOSX_BUNDLE_GUI_IDENTIFIER        "com.vdamewood.SilikegoGui"
@@ -53,4 +53,4 @@ install(TARGETS SilikegujoForMacOS
 	BUNDLE  DESTINATION .)
 
 install(CODE "include(BundleUtilities)")
-install(CODE "fixup_bundle(\"$<TARGET_FILE:SilikegujoForMacOS>\" \"\" \"$<TARGET_FILE_DIR:Silikego::Core>\")")
+install(CODE "fixup_bundle(\"$<TARGET_FILE:SilikegujoForMacOS>\" \"\" \"$<TARGET_FILE_DIR:Silikego::Silikego>\")")

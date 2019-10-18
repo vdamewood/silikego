@@ -28,13 +28,13 @@ target_compile_features(SilikegujoForWindows PRIVATE cxx_std_11)
 set_target_properties(SilikegujoForWindows PROPERTIES
 	OUTPUT_NAME Silikegujo
 )
-target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Core)
+target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Silikego)
 
 add_custom_command(
 	TARGET SilikegujoForWindows POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-	$<TARGET_FILE:Silikego::Core>
-	$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Core>>
+	$<TARGET_FILE:Silikego::Silikego>
+	$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Silikego>>
 	${CMAKE_CURRENT_BINARY_DIR})
 
 install(TARGETS SilikegujoForWindows
