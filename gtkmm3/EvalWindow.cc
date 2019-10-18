@@ -42,7 +42,7 @@ EvalWindow::EvalWindow()
 	MyInput(0),
 	MyOutput(0)
 {
-	MyBuilder = Gtk::Builder::create_from_resource("/com/vdamewood/Silikego/EvalWindow.glade");
+	MyBuilder = Gtk::Builder::create_from_resource("/com/vdamewood/SilikegujoForUnix/EvalWindow.glade");
 	MyBuilder->get_widget("EvalWindow", MyWindow);
 	MyBuilder->get_widget("CalculateButton", MyButton);
 	MyBuilder->get_widget("Input", MyInput);

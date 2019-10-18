@@ -25,7 +25,7 @@
 
 #import "Delegate.h"
 
-@implementation SilikegoDelegate
+@implementation SilikegujoDelegate
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification

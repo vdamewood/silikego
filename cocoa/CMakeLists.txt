@@ -41,7 +41,7 @@ target_link_libraries(SilikegujoForMacOS PRIVATE Silikego::Silikego "-framework 
 set_target_properties(SilikegujoForMacOS PROPERTIES
 	OUTPUT_NAME                         Silikegujo
 	MACOSX_BUNDLE_GUI_IDENTIFIER        "com.vdamewood.SilikegoGui"
-	MACOSX_BUNDLE_BUNDLE_NAME           "Silikego"
+	MACOSX_BUNDLE_BUNDLE_NAME           "Silikegujo"
 	MACOSX_BUNDLE_SHORT_VERSION_STRING  ${PROJECT_VERSION}
 	MACOSX_BUNDLE_BUNDLE_VERSION        ${PROJECT_VERSION}
 	MACOSX_BUNDLE_COPYRIGHT             ${COPYRIGHT_STATEMENT}

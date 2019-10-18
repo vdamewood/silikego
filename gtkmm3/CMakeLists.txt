@@ -27,8 +27,8 @@ add_custom_command(
 	COMMAND "${GRESOURCE}"
 		--generate-header
 		--target=${CMAKE_CURRENT_BINARY_DIR}/gresource.h
-		silikego.gresource.xml
-	DEPENDS silikego.gresource.xml
+		gresource.xml
+	DEPENDS gresource.xml
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_command(
@@ -36,8 +36,8 @@ add_custom_command(
 	COMMAND "${GRESOURCE}"
 		--generate-source
 		--target=${CMAKE_CURRENT_BINARY_DIR}/gresource.cc
-		silikego.gresource.xml
-	DEPENDS silikego.gresource.xml
+		gresource.xml
+	DEPENDS gresource.xml
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(SilikegujoForUnix)
@@ -58,7 +58,7 @@ install(TARGETS SilikegujoForUnix
 	RUNTIME    DESTINATION ${INSTBIN})
 
 install(
-	FILES silikego.desktop
+	FILES silikegujo.desktop
 	DESTINATION "${INSTSHR}/applications"
 )
 
