@@ -63,7 +63,6 @@ install(
 )
 
 install(
-	FILES ${CMAKE_SOURCE_DIR}/icon/silikego-48.png
+	FILES silikego.png
 	DESTINATION "${INSTSHR}/icons/hicolor/48x48/apps"
-	RENAME silikego.png
 )
