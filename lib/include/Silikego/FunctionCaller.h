@@ -21,8 +21,8 @@
 #include <string>
 #include <vector>
 
-#include "W32Dll.h"
-#include "Value.h"
+#include <Silikego/W32Dll.h>
+#include <Silikego/Value.h>
 
 
 namespace Silikego

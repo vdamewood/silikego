@@ -18,7 +18,7 @@
 #if !defined SILIKEGO_DATA_SOURCE_H
 #define SILIKEGO_DATA_SOURCE_H
 
-#include "W32Dll.h"
+#include <Silikego/W32Dll.h>
 
 namespace Silikego
 {

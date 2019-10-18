@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include "W32Dll.h"
+#include <Silikego/W32Dll.h>
 
 namespace Silikego
 {

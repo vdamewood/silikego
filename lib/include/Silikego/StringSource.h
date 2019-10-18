@@ -20,8 +20,8 @@
 
 #include <string>
 
-#include "W32Dll.h"
-#include "DataSource.h"
+#include <Silikego/W32Dll.h>
+#include <Silikego/DataSource.h>
 
 namespace Silikego
 {

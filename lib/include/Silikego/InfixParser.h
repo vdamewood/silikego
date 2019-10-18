@@ -20,9 +20,9 @@
 
 #include <memory>
 
-#include "W32Dll.h"
-#include "DataSource.h"
-#include "SyntaxTree.h"
+#include <Silikego/W32Dll.h>
+#include <Silikego/DataSource.h>
+#include <Silikego/SyntaxTree.h>
 
 namespace Silikego
 {
