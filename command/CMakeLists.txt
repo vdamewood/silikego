@@ -16,39 +16,39 @@
 
 find_package(Readline)
 
-add_executable(SilikegoCli)
-target_sources(SilikegoCli
+add_executable(Silikegilo)
+target_sources(Silikegilo
 	PRIVATE
 		StringSource.h
 		Main.cc
 		StringSource.cc
 )
-target_compile_features(SilikegoCli PRIVATE cxx_std_11)
-target_link_libraries(SilikegoCli PRIVATE Silikego::Silikego)
-set_target_properties(SilikegoCli PROPERTIES
+target_compile_features(Silikegilo PRIVATE cxx_std_11)
+target_link_libraries(Silikegilo PRIVATE Silikego::Silikego)
+set_target_properties(Silikegilo PROPERTIES
 	OUTPUT_NAME silikegilo
 )
 
 if (UNIX)
-	target_compile_definitions(SilikegoCli PRIVATE USE_UNIX=1)
+	target_compile_definitions(Silikegilo PRIVATE USE_UNIX=1)
 endif()
 
 if(Readline_FOUND)
-	target_link_libraries(SilikegoCli PRIVATE Readline::Readline)
-	target_compile_definitions(SilikegoCli PRIVATE HAVE_READLINE=1)
+	target_link_libraries(Silikegilo PRIVATE Readline::Readline)
+	target_compile_definitions(Silikegilo PRIVATE HAVE_READLINE=1)
 else()
-	target_sources(SilikegoCli PRIVATE rl.cc)
-	target_compile_definitions(SilikegoCli PRIVATE HAVE_READLINE=0)
+	target_sources(Silikegilo PRIVATE rl.cc)
+	target_compile_definitions(Silikegilo PRIVATE HAVE_READLINE=0)
 endif()
 
 if(WIN32)
 	add_custom_command(
-		TARGET SilikegoCli POST_BUILD
+		TARGET Silikegilo POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 		$<TARGET_FILE:Silikego::Silikego>
 		$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Silikego>>
 		${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
-install(TARGETS SilikegoCli
+install(TARGETS Silikegilo
 	RUNTIME    DESTINATION ${INSTBIN})
