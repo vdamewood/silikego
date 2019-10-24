@@ -30,12 +30,16 @@ set_target_properties(SilikegujoForWindows PROPERTIES
 )
 target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Silikego)
 
+if (CMAKE_C_LINKER_SUPPORTS_PDB)
+	set(PDB_GENEX "$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Silikego>>")
+endif()
 add_custom_command(
 	TARGET SilikegujoForWindows POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
 	$<TARGET_FILE:Silikego::Silikego>
-	$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:Silikego::Silikego>>
-	${CMAKE_CURRENT_BINARY_DIR})
+	"${PDB_GENEX}"
+	"${CMAKE_CURRENT_BINARY_DIR}"
+)
 
 install(TARGETS SilikegujoForWindows
 	RUNTIME DESTINATION ${INSTBIN})
