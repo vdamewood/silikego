@@ -20,7 +20,7 @@
 
 #include <memory>
 
-#include <Silikego/W32Dll.h>
+#include <Silikego/Api.h>
 #include <Silikego/Value.h>
 
 namespace Silikego

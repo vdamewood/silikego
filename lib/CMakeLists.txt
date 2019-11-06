@@ -15,17 +15,20 @@
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
 add_library(Silikego SHARED)
+set(PUBLIC_HEADERS
+	include/Silikego/Value.h
+	include/Silikego/FunctionCaller.h
+	include/Silikego/SyntaxTree.h
+	include/Silikego/DataSource.h
+	include/Silikego/StringSource.h
+	include/Silikego/Token.h
+	include/Silikego/Lexer.h
+	include/Silikego/InfixParser.h
+	${CMAKE_CURRENT_BINARY_DIR}/include/Silikego/Api.h
+)
 target_sources(Silikego
 	PRIVATE
-		include/Silikego/W32Dll.h
-		include/Silikego/Value.h
-		include/Silikego/FunctionCaller.h
-		include/Silikego/SyntaxTree.h
-		include/Silikego/DataSource.h
-		include/Silikego/StringSource.h
-		include/Silikego/Token.h
-		include/Silikego/Lexer.h
-		include/Silikego/InfixParser.h
+		${PUBLIC_HEADERS}
 		Functions.h
 		Value.cc
 		Functions.cc
@@ -39,28 +42,28 @@ target_sources(Silikego
 		SilikegoConfig.cmake
 )
 add_library(Silikego::Silikego ALIAS Silikego)
-target_include_directories(Silikego PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_compile_features(Silikego PRIVATE cxx_std_11)
-
-set(PUBLIC_HEADERS
-	include/Silikego/W32Dll.h
-	include/Silikego/Value.h
-	include/Silikego/FunctionCaller.h
-	include/Silikego/SyntaxTree.h
-	include/Silikego/DataSource.h
-	include/Silikego/StringSource.h
-	include/Silikego/Token.h
-	include/Silikego/Lexer.h
-	include/Silikego/InfixParser.h
+target_include_directories(Silikego
+	PUBLIC
+		"${CMAKE_CURRENT_SOURCE_DIR}/include"
+		"${CMAKE_CURRENT_BINARY_DIR}/include"
 )
+target_compile_features(Silikego PRIVATE cxx_std_11)
 set_target_properties(Silikego PROPERTIES
-		PUBLIC_HEADER     "${PUBLIC_HEADERS}"
-		RESOURCE
-			SilikegoConfig.cmake
-		FRAMEWORK         TRUE
-		FRAMEWORK_VERSION ${PROJECT_VERSION}
-		VERSION           ${PROJECT_VERSION}
-		SOVERSION         ${PROJECT_VERSION_MAJOR})
+	PUBLIC_HEADER             "${PUBLIC_HEADERS}"
+	CXX_VISIBILITY_PRESET     hidden
+	VISIBILITY_INLINES_HIDDEN On
+	RESOURCE                  SilikegoConfig.cmake
+	FRAMEWORK                 TRUE
+	FRAMEWORK_VERSION         ${PROJECT_VERSION}
+	VERSION                   ${PROJECT_VERSION}
+	SOVERSION                 ${PROJECT_VERSION_MAJOR}
+)
+
+include(GenerateExportHeader)
+generate_export_header(Silikego
+	EXPORT_FILE_NAME include/Silikego/Api.h
+	EXPORT_MACRO_NAME SILIKEGO_API
+)
 
 install(TARGETS Silikego
 	RUNTIME       DESTINATION ${INSTBIN}
