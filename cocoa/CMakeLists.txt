@@ -49,8 +49,8 @@ set_target_properties(SilikegujoForMacOS PROPERTIES
 	MACOSX_BUNDLE_INFO_PLIST            "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
 )
 install(TARGETS SilikegujoForMacOS
-	RUNTIME DESTINATION ${INSTBIN}
-	BUNDLE  DESTINATION .)
+	BUNDLE  DESTINATION .
+)
 
 install(CODE "include(BundleUtilities)")
 install(CODE "fixup_bundle(\"$<TARGET_FILE:SilikegujoForMacOS>\" \"\" \"$<TARGET_FILE_DIR:Silikego::Silikego>\")")

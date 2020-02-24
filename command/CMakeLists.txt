@@ -42,4 +42,5 @@ else()
 endif()
 
 install(TARGETS Silikegilo
-	RUNTIME    DESTINATION ${INSTBIN})
+	RUNTIME    DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

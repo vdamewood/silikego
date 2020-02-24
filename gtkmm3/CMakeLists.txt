@@ -55,14 +55,13 @@ set_target_properties(SilikegujoForUnix PROPERTIES
 target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Silikego PkgConfig::Gtkmm3)
 
 install(TARGETS SilikegujoForUnix
-	RUNTIME    DESTINATION ${INSTBIN})
-
-install(
-	FILES silikegujo.desktop
-	DESTINATION "${INSTSHR}/applications"
+	RUNTIME    DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-install(
-	FILES silikego.png
-	DESTINATION "${INSTSHR}/icons/hicolor/48x48/apps"
+install(FILES silikegujo.desktop
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"
+)
+
+install(FILES silikego.png
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps"
 )

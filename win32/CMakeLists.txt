@@ -31,4 +31,5 @@ set_target_properties(SilikegujoForWindows PROPERTIES
 target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Silikego)
 
 install(TARGETS SilikegujoForWindows
-	RUNTIME DESTINATION ${INSTBIN})
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
