@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012, 2014, 2015, 2016, 2019 Vincent Damewood
+# Copyright 2012, 2014, 2015, 2016, 2019, 2021 Vincent Damewood
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -29,16 +29,16 @@ set(PUBLIC_HEADERS
 target_sources(Silikego
 	PRIVATE
 		${PUBLIC_HEADERS}
-		Functions.h
-		Value.cc
-		Functions.cc
-		FunctionCaller.cc
-		SyntaxTree.cc
-		DataSource.cc
-		StringSource.cc
-		Token.cc
-		Lexer.cc
-		InfixParser.cc
+		src/Functions.h
+		src/Value.cc
+		src/Functions.cc
+		src/FunctionCaller.cc
+		src/SyntaxTree.cc
+		src/DataSource.cc
+		src/StringSource.cc
+		src/Token.cc
+		src/Lexer.cc
+		src/InfixParser.cc
 		SilikegoConfig.cmake
 )
 add_library(Silikego::Silikego ALIAS Silikego)

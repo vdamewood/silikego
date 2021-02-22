@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012, 2014, 2015, 2016, 2017, 2018 Vincent Damewood
+# Copyright 2012, 2014, 2015, 2016, 2017, 2018, 2021 Vincent Damewood
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,9 +49,10 @@ target_sources(SilikegujoForUnix
 		EvalWindow.h
 		gresource.h
 )
-target_compile_features(SilikegujoForUnix PRIVATE cxx_std_11)
 set_target_properties(SilikegujoForUnix PROPERTIES
-	OUTPUT_NAME Silikegujo)
+	OUTPUT_NAME Silikegujo
+)
+target_compile_features(SilikegujoForUnix PRIVATE cxx_std_11)
 target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Silikego PkgConfig::Gtkmm3)
 
 install(TARGETS SilikegujoForUnix

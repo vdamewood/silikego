@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012, 2014, 2015, 2016, 2019 Vincent Damewood
+# Copyright 2012, 2014, 2015, 2016, 2019, 2021 Vincent Damewood
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ add_custom_command(OUTPUT MainMenu.nib
 	COMMENT "Compiling ${CMAKE_CURRENT_SOURCE_DIR}/MainMenu.xib"
 )
 set_source_files_properties(MainMenu.nib PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-set_source_files_properties(silikego.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+set_source_files_properties(silikegujo.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
 add_executable(SilikegujoForMacOS MACOSX_BUNDLE)
 target_sources(SilikegujoForMacOS
@@ -33,21 +33,30 @@ target_sources(SilikegujoForMacOS
 		Delegate.mm
 		Main.mm
 		MainMenu.nib
-		silikego.icns
+		silikegujo.icns
 )
-target_compile_options(SilikegujoForMacOS PRIVATE "-fobjc-arc")
-target_compile_features(SilikegujoForMacOS PRIVATE cxx_std_11)
-target_link_libraries(SilikegujoForMacOS PRIVATE Silikego::Silikego "-framework Cocoa")
 set_target_properties(SilikegujoForMacOS PROPERTIES
 	OUTPUT_NAME                         Silikegujo
-	MACOSX_BUNDLE_GUI_IDENTIFIER        "com.vdamewood.SilikegoGui"
+	MACOSX_BUNDLE_GUI_IDENTIFIER        "com.vdamewood.SilikegujoForMacOS"
 	MACOSX_BUNDLE_BUNDLE_NAME           "Silikegujo"
 	MACOSX_BUNDLE_SHORT_VERSION_STRING  ${PROJECT_VERSION}
 	MACOSX_BUNDLE_BUNDLE_VERSION        ${PROJECT_VERSION}
 	MACOSX_BUNDLE_COPYRIGHT             ${COPYRIGHT_STATEMENT}
-	MACOSX_BUNDLE_ICON_FILE             silikego.icns
+	MACOSX_BUNDLE_ICON_FILE             silikegujo.icns
 	MACOSX_BUNDLE_INFO_PLIST            "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
 )
+target_compile_options(SilikegujoForMacOS
+	PRIVATE
+		"-fobjc-arc"
+)
+target_compile_features(SilikegujoForMacOS PRIVATE cxx_std_11)
+target_link_libraries(SilikegujoForMacOS
+	PRIVATE
+		Silikego::Silikego
+		"-framework Cocoa"
+)
+
+
 install(TARGETS SilikegujoForMacOS
 	BUNDLE  DESTINATION .
 )
