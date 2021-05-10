@@ -24,7 +24,7 @@
 
 namespace Silikego
 {
-	enum class SILIKEGO_API ValueStatus
+	enum class ValueStatus
 	{
 		INTEGER,       /* Success: The value is an integer. */
 		FLOAT,         /* Success: The valis is a double. */
