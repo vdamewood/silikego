@@ -15,6 +15,8 @@
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
 add_library(Silikego)
+add_library(Silikego::Silikego ALIAS Silikego)
+
 set(PUBLIC_HEADERS
 	include/Silikego/Value.h
 	include/Silikego/FunctionCaller.h
@@ -39,20 +41,23 @@ target_sources(Silikego
 		src/Token.cc
 		src/Lexer.cc
 		src/InfixParser.cc
-		SilikegoConfig.cmake
 )
-add_library(Silikego::Silikego ALIAS Silikego)
 target_include_directories(Silikego
 	PUBLIC
-		"${CMAKE_CURRENT_BINARY_DIR}/include"
-		"${CMAKE_CURRENT_SOURCE_DIR}/include"
+		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+		"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
 )
+if (NOT APPLE)
+	target_include_directories(Silikego
+		INTERFACE
+			"$<INSTALL_INTERFACE:include>"
+	)
+endif()
 target_compile_features(Silikego PRIVATE cxx_std_11)
 set_target_properties(Silikego PROPERTIES
 	PUBLIC_HEADER             "${PUBLIC_HEADERS}"
 	CXX_VISIBILITY_PRESET     hidden
 	VISIBILITY_INLINES_HIDDEN On
-	RESOURCE                  SilikegoConfig.cmake
 	FRAMEWORK                 TRUE
 	FRAMEWORK_VERSION         ${PROJECT_VERSION}
 	VERSION                   ${PROJECT_VERSION}
@@ -65,11 +70,33 @@ generate_export_header(Silikego
 	EXPORT_MACRO_NAME SILIKEGO_API
 )
 
-install(TARGETS Silikego
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+	SilikegoConfigVersion.cmake
+	VERSION ${Silikego_VERSION}
+	COMPATIBILITY SameMajorVersion
+)
+
+install(TARGETS Silikego EXPORT Silikego
 	RUNTIME       DESTINATION ${CMAKE_INSTALL_BINDIR}
 	ARCHIVE       DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY       DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	FRAMEWORK     DESTINATION .
 	RESOURCE      DESTINATION ${CMAKE_INSTALL_DATADIR}/Silikego
 	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Silikego
+)
+
+if(APPLE)
+	set(CONFIG_DESTINATION Silikego.framework/Resources)
+else()
+	set(CONFIG_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Silikego)
+endif()
+
+install(EXPORT Silikego
+      DESTINATION ${CONFIG_DESTINATION}
+      NAMESPACE Silikego::
+      FILE SilikegoConfig.cmake
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SilikegoConfigVersion.cmake
+	DESTINATION ${CONFIG_DESTINATION}
 )
