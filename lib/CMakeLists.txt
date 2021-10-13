@@ -44,8 +44,8 @@ target_sources(Silikego
 add_library(Silikego::Silikego ALIAS Silikego)
 target_include_directories(Silikego
 	PUBLIC
-		"${CMAKE_CURRENT_SOURCE_DIR}/include"
 		"${CMAKE_CURRENT_BINARY_DIR}/include"
+		"${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 target_compile_features(Silikego PRIVATE cxx_std_11)
 set_target_properties(Silikego PROPERTIES
