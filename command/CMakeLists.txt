@@ -24,7 +24,11 @@ target_sources(Silikegilo
 		StringSource.cc
 )
 set_target_properties(Silikegilo PROPERTIES
-	OUTPUT_NAME silikegilo
+	OUTPUT_NAME               silikegilo
+	RUNTIME_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	LIBRARY_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	ARCHIVE_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	PDB_OUTPUT_DIRECTORY      "${PROJECT_BINARY_DIR}/products"
 )
 target_compile_features(Silikegilo PRIVATE cxx_std_11)
 target_link_libraries(Silikegilo PRIVATE Silikego::Silikego)

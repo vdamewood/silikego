@@ -28,7 +28,11 @@ target_sources(SilikegujoForWindows
 		Icon.rc
 )
 set_target_properties(SilikegujoForWindows PROPERTIES
-	OUTPUT_NAME Silikegujo
+	OUTPUT_NAME               Silikegujo
+	RUNTIME_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	LIBRARY_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	ARCHIVE_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	PDB_OUTPUT_DIRECTORY      "${PROJECT_BINARY_DIR}/products"
 )
 target_compile_features(SilikegujoForWindows PRIVATE cxx_std_11)
 target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Silikego)

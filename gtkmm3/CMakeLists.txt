@@ -50,7 +50,11 @@ target_sources(SilikegujoForUnix
 		gresource.h
 )
 set_target_properties(SilikegujoForUnix PROPERTIES
-	OUTPUT_NAME Silikegujo
+	OUTPUT_NAME               Silikegujo
+	RUNTIME_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	LIBRARY_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	ARCHIVE_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
+	PDB_OUTPUT_DIRECTORY      "${PROJECT_BINARY_DIR}/products"
 )
 target_compile_features(SilikegujoForUnix PRIVATE cxx_std_11)
 target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Silikego PkgConfig::Gtkmm3)
