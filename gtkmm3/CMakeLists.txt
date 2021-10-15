@@ -60,7 +60,9 @@ target_compile_features(SilikegujoForUnix PRIVATE cxx_std_11)
 target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Silikego PkgConfig::Gtkmm3)
 
 install(TARGETS SilikegujoForUnix
-	RUNTIME    DESTINATION ${CMAKE_INSTALL_BINDIR}
+RUNTIME
+	DESTINATION  ${CMAKE_INSTALL_BINDIR}
+	COMPONENT    Silikegujo
 )
 
 install(FILES silikegujo.desktop

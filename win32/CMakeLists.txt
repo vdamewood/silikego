@@ -38,5 +38,7 @@ target_compile_features(SilikegujoForWindows PRIVATE cxx_std_11)
 target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Silikego)
 
 install(TARGETS SilikegujoForWindows
-	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+RUNTIME
+	DESTINATION  ${CMAKE_INSTALL_BINDIR}
+	COMPONENT    Silikegujo
 )
