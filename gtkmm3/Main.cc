@@ -1,5 +1,5 @@
 /* Main.cc: Entry point using GTKmm
- * Copyright 2015, 2016 Vincent Damewood
+ * Copyright 2012-2021 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

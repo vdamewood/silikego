@@ -102,7 +102,7 @@ installation package on Windows and macOS, build the target "package".
 
 ## License Information
 
-Copyright 2019 Vincent Damewood
+Copyright 2012-2021 Vincent Damewood
 
 Silikego is licensed under the terms of the GNU Lesser General Public
 license, version 3 or later. Silikegilo and Silikegujo are licensed
