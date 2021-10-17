@@ -15,18 +15,18 @@
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
 if(APPLE)
-	set(SILIKEGO_INSTALL_FRAMEWORKDIR Frameworks
-		CACHE STRING "Locaton to install framework bundles (relative to install prefix)"
-	)
-	set(SILIKEGO_INSTALL_CMAKEDIR "${SILIKO_INSTALL_FRAMEWORKDIR}/Siliko.framework/Resources")
+	set(FRAMEWORKDIR "${SILIKEGO_INSTALL_FRAMEWORKDIR}")
+	set(CMAKEDIR "${SILIKEGO_INSTALL_FRAMEWORKDIR}/Silikego.framework/Resources")
 else()
-	set(SILIKEGO_INSTALL_FRAMEWORKDIR Frameworks)
-	set(SILIKEGO_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Siliko
-		CACHE STRING "Locaton to install CMake package files (relative to install prefix)"
-	)
+	set(FRAMEWORKDIR "Frameworks")
+	set(CMAKEDIR "${SILIKEGO_INSTALL_CMAKEDIR}")
 endif()
 
-add_library(Silikego)
+if(SILIKEGO_BUILD_SHARED_LIBRARY)
+	add_library(Silikego SHARED)
+else()
+	add_library(Silikego STATIC)
+endif()
 add_library(Silikego::Silikego ALIAS Silikego)
 
 set(PUBLIC_HEADERS
@@ -95,29 +95,29 @@ write_basic_package_version_file(
 install(TARGETS Silikego
 	EXPORT Silikego
 RUNTIME
-	DESTINATION           ${CMAKE_INSTALL_BINDIR}
+	DESTINATION           "${CMAKE_INSTALL_BINDIR}"
 	COMPONENT             Silikego_Runtime
 ARCHIVE
-	DESTINATION           ${CMAKE_INSTALL_LIBDIR}
+	DESTINATION           "${CMAKE_INSTALL_LIBDIR}"
 	COMPONENT             Silikego_Development
 LIBRARY
-	DESTINATION           ${CMAKE_INSTALL_LIBDIR}
+	DESTINATION           "${CMAKE_INSTALL_LIBDIR}"
 	COMPONENT             Silikego_Runtime
 	NAMELINK_COMPONENT    Silikego_Development
 FRAMEWORK
-	DESTINATION           ${SILIKEGO_INSTALL_FRAMEWORKDIR}
+	DESTINATION           "${FRAMEWORKDIR}"
 	COMPONENT             Silikego_Development
 PUBLIC_HEADER
-	DESTINATION           ${CMAKE_INSTALL_INCLUDEDIR}/Silikego
+	DESTINATION           "${INCLUDEDIR}/Silikego"
 	COMPONENT             Silikego_Development
 )
 install(EXPORT Silikego
 	NAMESPACE             Silikego::
 	FILE                  SilikegoConfig.cmake
-	DESTINATION           ${SILIKEGO_INSTALL_CMAKEDIR}
+	DESTINATION           "${CMAKEDIR}"
 	COMPONENT             Silikego_Development
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SilikegoConfigVersion.cmake
-	DESTINATION           ${SILIKEGO_INSTALL_CMAKEDIR}
+	DESTINATION           "${CMAKEDIR}"
 	COMPONENT             Silikego_Development
 )
