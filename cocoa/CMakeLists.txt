@@ -61,11 +61,16 @@ target_link_libraries(SilikegujoForMacOS
 )
 
 
+install(CODE
+	"include(BundleUtilities)"
+	COMPONENT    Silikegujo
+)
+install(CODE
+	"fixup_bundle(\"$<TARGET_FILE:SilikegujoForMacOS>\" \"\" \"$<TARGET_FILE_DIR:Silikego::Silikego>\")"
+	COMPONENT    Silikegujo
+)
 install(TARGETS SilikegujoForMacOS
 BUNDLE
 	DESTINATION  ${SILIKEGO_INSTALL_APPDIR}
 	COMPONENT    Silikegujo
 )
-
-install(CODE "include(BundleUtilities)")
-install(CODE "fixup_bundle(\"$<TARGET_FILE:SilikegujoForMacOS>\" \"\" \"$<TARGET_FILE_DIR:Silikego::Silikego>\")")
