@@ -42,7 +42,12 @@ set(SILIKEGO_PACKAGE_VENDOR  "Unknown Vendor"  CACHE STRING
 	"The name of the vendor when generating packages (ignored if SILIKEGO_PACKAGE is off)"
 )
 
+set(SILIKEGO_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Silikego CACHE STRING
+	"Locaton to install CMake files (ignored if SILIKEGO_BUILD_FRAMEWORK is on)"
+)
+
 if(APPLE)
+	option(SILIKEGO_BUILD_FRAMEWORK   "Build Silikego as a framework." On)
 	option(SILIKEGO_PACKAGE_DMG       "Package as DMG file (ignored if SILIKEGO_PACKAGE is off)" On)
 
 	set(SILIKEGO_INSTALL_APPDIR Applications  CACHE STRING
@@ -50,10 +55,6 @@ if(APPLE)
 	)
 	set(SILIKEGO_INSTALL_FRAMEWORKDIR  Frameworks  CACHE STRING
 		"Locaton to install framework (ignored if SILIKEGO_BUILD_FRAMEWORK is off)"
-	)
-else()
-	set(SILIKEGO_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Silikego
-		CACHE STRING "Locaton to install CMake files"
 	)
 endif()
 
@@ -87,11 +88,6 @@ if(SILIKEGO_BUILD_GUI)
 		message(FATAL_ERROR "A GUI program is not available for this system.")
 	endif()
 endif()
-
-install(FILES Readme.md License.txt License.Gpl.txt
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/Silikego
-	COMPONENT Silikego_Runtime
-)
 
 
 #############################

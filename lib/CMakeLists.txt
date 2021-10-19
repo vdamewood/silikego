@@ -14,12 +14,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-if(APPLE)
-	set(FRAMEWORKDIR "${SILIKEGO_INSTALL_FRAMEWORKDIR}")
+if(SILIKEGO_BUILD_FRAMEWORK)
 	set(CMAKEDIR "${SILIKEGO_INSTALL_FRAMEWORKDIR}/Silikego.framework/Resources")
+	set(RUNTIME_COMPONENT "Silikego")
+	set(DEVELOPMENT_COMPONENT "Silikego")
 else()
-	set(FRAMEWORKDIR "Frameworks")
 	set(CMAKEDIR "${SILIKEGO_INSTALL_CMAKEDIR}")
+	set(RUNTIME_COMPONENT "Silikego_Runtime")
+	set(DEVELOPMENT_COMPONENT "Silikego_Development")
 endif()
 
 if(SILIKEGO_BUILD_SHARED_LIBRARY)
@@ -59,7 +61,7 @@ target_include_directories(Silikego
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
 )
-if (NOT APPLE)
+if (NOT SILIKEGO_BUILD_FRAMEWORK)
 	target_include_directories(Silikego
 	INTERFACE
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
@@ -69,7 +71,7 @@ set_target_properties(Silikego PROPERTIES
 	PUBLIC_HEADER             "${PUBLIC_HEADERS}"
 	CXX_VISIBILITY_PRESET     hidden
 	VISIBILITY_INLINES_HIDDEN On
-	FRAMEWORK                 TRUE
+	FRAMEWORK                 ${SILIKEGO_BUILD_FRAMEWORK}
 	FRAMEWORK_VERSION         ${PROJECT_VERSION}
 	VERSION                   ${PROJECT_VERSION}
 	SOVERSION                 ${PROJECT_VERSION_MAJOR}
@@ -96,28 +98,40 @@ install(TARGETS Silikego
 	EXPORT Silikego
 RUNTIME
 	DESTINATION           "${CMAKE_INSTALL_BINDIR}"
-	COMPONENT             Silikego_Runtime
+	COMPONENT             "${RUNTIME_COMPONENT}"
 ARCHIVE
 	DESTINATION           "${CMAKE_INSTALL_LIBDIR}"
-	COMPONENT             Silikego_Development
+	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 LIBRARY
 	DESTINATION           "${CMAKE_INSTALL_LIBDIR}"
-	COMPONENT             Silikego_Runtime
-	NAMELINK_COMPONENT    Silikego_Development
+	COMPONENT             "${RUNTIME_COMPONENT}"
+	NAMELINK_COMPONENT    "${DEVELOPMENT_COMPONENT}"
 FRAMEWORK
-	DESTINATION           "${FRAMEWORKDIR}"
-	COMPONENT             Silikego_Development
+	DESTINATION           "${SILIKEGO_INSTALL_FRAMEWORKDIR}"
+	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 PUBLIC_HEADER
-	DESTINATION           "${INCLUDEDIR}/Silikego"
-	COMPONENT             Silikego_Development
+	DESTINATION           "${CMAKE_INSTALL_INCLUDEDIR}/Silikego"
+	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 )
 install(EXPORT Silikego
 	NAMESPACE             Silikego::
 	FILE                  SilikegoConfig.cmake
 	DESTINATION           "${CMAKEDIR}"
-	COMPONENT             Silikego_Development
+	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 )
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SilikegoConfigVersion.cmake
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SilikegoConfigVersion.cmake"
 	DESTINATION           "${CMAKEDIR}"
-	COMPONENT             Silikego_Development
+	COMPONENT             "${DEVELOPMENT_COMPONENT}"
+)
+install(FILES
+		"${PROJECT_SOURCE_DIR}/Readme.md"
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/Silikego"
+	COMPONENT "${RUNTIME_COMPONENT}"
+)
+
+install(FILES
+		"${PROJECT_SOURCE_DIR}/License.txt"
+		"${PROJECT_SOURCE_DIR}/License.Gpl.txt"
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/Silikego"
+	COMPONENT "${RUNTIME_COMPONENT}"
 )
