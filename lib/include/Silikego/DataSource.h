@@ -22,7 +22,7 @@
 
 namespace Silikego
 {
-	class SILIKEGO_API DataSource
+	class SILIKEGO_EXPORT DataSource
 	{
 	public:
 		virtual ~DataSource();

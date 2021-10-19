@@ -45,7 +45,7 @@ namespace Silikego
 		                    range error. */
 	};
 
-	class SILIKEGO_API Value
+	class SILIKEGO_EXPORT Value
 	{
 	public:
 

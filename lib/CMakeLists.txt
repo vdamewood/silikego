@@ -84,7 +84,6 @@ set_target_properties(Silikego PROPERTIES
 include(GenerateExportHeader)
 generate_export_header(Silikego
 	EXPORT_FILE_NAME include/Silikego/Api.h
-	EXPORT_MACRO_NAME SILIKEGO_API
 )
 
 include(CMakePackageConfigHelpers)

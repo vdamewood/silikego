@@ -25,7 +25,7 @@
 
 namespace Silikego
 {
-	class SILIKEGO_API SyntaxTreeNode
+	class SILIKEGO_EXPORT SyntaxTreeNode
 	{
 	public:
 		virtual ~SyntaxTreeNode();
@@ -34,7 +34,7 @@ namespace Silikego
 		virtual bool IsError() = 0;
 	};
 
-	class SILIKEGO_API LeafNode : public SyntaxTreeNode
+	class SILIKEGO_EXPORT LeafNode : public SyntaxTreeNode
 	{
 	public:
 		LeafNode(const LeafNode&);
@@ -51,7 +51,7 @@ namespace Silikego
 		State *S;
 	};
 
-	class SILIKEGO_API BranchNode : public SyntaxTreeNode
+	class SILIKEGO_EXPORT BranchNode : public SyntaxTreeNode
 	{
 	public:
 		BranchNode(const std::string& NewFunctionId);

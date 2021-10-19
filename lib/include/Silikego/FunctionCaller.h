@@ -31,10 +31,10 @@ namespace Silikego
 	{
 		typedef Value (*FunctionPointer)(std::vector<Value>);
 
-		SILIKEGO_API bool SetUp();
-		SILIKEGO_API void TearDown();
-		SILIKEGO_API Value Call(const std::string &Name, std::vector<Value> Args);
-		SILIKEGO_API void Install(const std::string &Name, FunctionPointer Function);
+		SILIKEGO_EXPORT bool SetUp();
+		SILIKEGO_EXPORT void TearDown();
+		SILIKEGO_EXPORT Value Call(const std::string &Name, std::vector<Value> Args);
+		SILIKEGO_EXPORT void Install(const std::string &Name, FunctionPointer Function);
 	};
 };
 #endif // SILIKEGO_FUNCTION_CALLER_H

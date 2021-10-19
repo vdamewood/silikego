@@ -25,7 +25,7 @@
 
 namespace Silikego
 {
-	class SILIKEGO_API StringSource : public DataSource
+	class SILIKEGO_EXPORT StringSource : public DataSource
 	{
 	public:
 		StringSource(const char *);

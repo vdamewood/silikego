@@ -24,7 +24,7 @@
 
 namespace Silikego
 {
-	class SILIKEGO_API Token
+	class SILIKEGO_EXPORT Token
 	{
 	public:
 		enum TokenType

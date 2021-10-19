@@ -26,7 +26,7 @@
 
 namespace Silikego
 {
-	class SILIKEGO_API Lexer
+	class SILIKEGO_EXPORT Lexer
 	{
 	public:
 		Lexer(std::unique_ptr<DataSource> InputSource);
