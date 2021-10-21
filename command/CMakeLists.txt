@@ -45,6 +45,18 @@ else()
 	target_compile_definitions(Silikegilo PRIVATE HAVE_READLINE=0)
 endif()
 
+if(APPLE AND SILIKEGO_BUILD_SHARED_LIBRARY)
+	if (SILIKEGO_BUILD_FRAMEWORK)
+		set_target_properties(Silikegilo PROPERTIES
+			INSTALL_RPATH                   "@executable_path/../Frameworks"
+		)
+	else()
+		set_target_properties(Silikegilo PROPERTIES
+			INSTALL_RPATH                   "@executable_path/../lib"
+		)
+	endif()
+endif()
+
 install(TARGETS Silikegilo
 RUNTIME
 	DESTINATION  ${CMAKE_INSTALL_BINDIR}
