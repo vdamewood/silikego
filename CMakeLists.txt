@@ -130,7 +130,7 @@ if (SILIKEGO_PACKAGE)
 	endif()
 
 	if(SILIKEGO_BUILD_GUI)
-		list(APPEND CPACK_PACKAGE_EXECUTABLES Silikujo Silikujo)
+		list(APPEND CPACK_PACKAGE_EXECUTABLES Silikegujo Silikegujo)
 	endif()
 
 	if(SILIKEGO_PACKAGE_DMG)
