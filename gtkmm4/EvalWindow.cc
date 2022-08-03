@@ -1,5 +1,5 @@
 /* EvalWindow.cc: Expression evaluation window
- * Copyright 2012-2021 Vincent Damewood
+ * Copyright 2012-2022 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string>
+
 #include <gtkmm.h>
 
 #include <Silikego/StringSource.h>
@@ -22,6 +24,31 @@
 #include <Silikego/Value.h>
 
 #include "EvalWindow.h"
+
+static const char UiResource[] = "/com/vdamewood/SilikegujoForUnix/EvalWindow.ui";
+
+EvalWindow* EvalWindow::Create()
+{
+	auto builder = Gtk::Builder::create_from_resource(UiResource);
+	return Gtk::Builder::get_widget_derived<EvalWindow>(builder, "EvalWindow");
+}
+
+EvalWindow::EvalWindow(
+		BaseObjectType* cobject,
+		const Glib::RefPtr<Gtk::Builder>& builder)
+	: Gtk::Window(cobject),
+	MyBuilder(builder),
+	MyButton(builder->get_widget<Gtk::Button>("CalculateButton")),
+	MyInput(builder->get_widget<Gtk::Entry>("Input")),
+	MyOutput(builder->get_widget<Gtk::Label>("Output"))
+{
+	MyButton->signal_clicked().connect(
+		sigc::mem_fun(
+			*this,
+			&EvalWindow::Calculate));
+	set_default_widget(*MyButton);
+	MyInput->set_activates_default(true);
+}
 
 void EvalWindow::Calculate()
 {
@@ -35,26 +62,19 @@ void EvalWindow::Calculate()
 	MyOutput->set_text(ResultString.c_str());
 }
 
+/*
 EvalWindow::EvalWindow()
-	:MyBuilder(0),
-	MyWindow(0),
-	MyButton(0),
-	MyInput(0),
-	MyOutput(0)
+	:MyBuilder(Gtk::Builder::create_from_resource(UiFile)),
+	MyWindow(MyBuilder->get_widget<Gtk::Window>("EvalWindow")),
+	MyInput(MyBuilder->get_widget<Gtk::Entry>("Input")),
+	MyOutput(MyBuilder->get_widget<Gtk::Label>("Output"))
 {
-	MyBuilder = Gtk::Builder::create_from_resource("/com/vdamewood/SilikegujoForUnix/EvalWindow.glade");
-	MyBuilder->get_widget("EvalWindow", MyWindow);
-	MyBuilder->get_widget("CalculateButton", MyButton);
-	MyBuilder->get_widget("Input", MyInput);
-	MyBuilder->get_widget("Output", MyOutput);
-
+	auto MyButton = MyBuilder->get_widget<Gtk::Button>("CalculateButton");
 	MyButton->signal_clicked().connect(
 		sigc::mem_fun(
 		*this,
 		&EvalWindow::Calculate));
-	MyInput->signal_activate().connect(
-		sigc::mem_fun(
-		*this,
-		&EvalWindow::Calculate));
-	MyWindow->show();
+	MyWindow->set_default_widget(*MyButton);
+	MyInput->set_activates_default(true);
 }
+*/

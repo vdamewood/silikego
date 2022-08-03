@@ -1,5 +1,5 @@
-/* Main.cc: Entry point using GTKmm
- * Copyright 2012-2021 Vincent Damewood
+/* EvalWindow.h: Expression evaluation window
+ * Copyright 2012-2022 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if !defined EVAL_WINDOW_H
+#define EVAL_WINDOW_H
+
 #include <gtkmm.h>
 
-#include <Silikego/FunctionCaller.h>
-
-#include "EvalWindow.h"
-
-int main(int argc, char *argv[])
+class EvalWindow : public Gtk::Window
 {
-	Gtk::Main SilikegoGuiGtk(argc, argv);
-	Silikego::FunctionCaller::SetUp();
+public:
+	static EvalWindow* Create();
+	EvalWindow() = delete;
+	EvalWindow(
+		BaseObjectType* CObject,
+		const Glib::RefPtr<Gtk::Builder>& Builder);
+	void Calculate();
+private:
+	const Glib::RefPtr<Gtk::Builder>& MyBuilder;
+	Gtk::Button* MyButton;
+	Gtk::Entry* MyInput;
+	Gtk::Label* MyOutput;
+};
 
-	EvalWindow Window;
-	Gtk::Main::run(Window.Window());
-	Silikego::FunctionCaller::TearDown();
-	return 0;
-}
+#endif /* EVAL_WINDOW_H */
