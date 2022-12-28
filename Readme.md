@@ -1,16 +1,19 @@
 # Silikego
 
-<https://vdamewood.com/software/projects/Silikego>
+<https://vdamewood.com/software/projects/silikego>
 
 Silikego is library written in C++ for parsing and evaluating
 mathematical expressions. It was made to be an example for teaching
-software development.
+software development. It demonstrates how to organize a project, how
+to write modular code, how to write a recursive-descent parser, and how
+to build a project with CMake to make a cross-platform project.
 
-## Interface Programs
+## Organization
 
-This project includes interface programs called Silikegilo, and
-Silikegujo. Silikegilo is a command-line application, and Silikegujo is
-a GUI program. There are three different versions of Silikegujo:
+The project includes, Silikego the core library, and interface programs
+called Silikegilo, and Silikegujo. Silikegilo is a command-line tool,
+and Silikegujo is a GUI program. There are three different versions of
+Silikegujo:
 
 * For Windows, using the Win32 API
 * for macOS, using Cocoa
@@ -31,9 +34,15 @@ Silikego has a built-in infix parser that handles the following:
 * parenthetic expressions, such as `2 * (3 + 4)`.
 * Random number generation using a `d` operator to simulate die rolls.
   such as `3d6` or `1d20`.
-* Functions: `abs()`, `acos()`, `asin()`, `atan()`, `ceil()`, `cos()`,
-  `cosh()`, `exp()`, `floor()`, `log()`, `log10()`, `sin()`, `sinh()`,
-  `sqrt()`, `tan()`, and `tanh()`.
+* Functions: The syntax to call functions is
+  `<function name>(<argument>[, ...])`. Functions take one or more
+  arguments. The functions `acos`, `asin`, `atan`, `ceil`, `cos`,
+  `cosh`, `exp`, `floor`, `log`, `log10`, `sin`, `sinh`, `sqrt`, `tan`,
+  and `tanh`. are available, and behave the same as their analogs in
+  the C standard library. There is an `abs` function that will work as
+  the `abs` function in the C standard library if the argument given is
+  an integer, or the `fabs` functions if the argument given if a
+  floating-point value.
 
 Silikego ignores space and tab characters in its input, except to
 separate tokens.
@@ -41,74 +50,26 @@ separate tokens.
 Silikego supports integer and floating-point arithmetic. In most
 situations, integer expressions will yield integer results, and
 floating-point expressions will yield floating-point results. The
-exceptions are that the above-mentioned functions always return
-floating-point values, and any integer division where the result would
-be truncated will result in a floating-point quotient.
+exceptions are that the above-mentioned functions, except `abs`, always
+return floating-point values, and any integer division where the result
+would be truncated will result in a floating-point quotient.
 
 ## Building Silikego
 
-Silikego includes files to use CMake <http://www.cmake.org> to generate
-a build system. The following build systems are regularly tested with
-Silikego:
-
-* Ninja
-* Unix Makefiles
-* NMake Makefiles (on Windows only)
-
-Other build systems, including IDE-based projects, should work, but
-don't receive extensive testing. Additionally, the build process is
-tested with the following compilers.
-
-* Clang (including both the standard clang distribution and Apple Clang
-    on macOS)
-* gcc
-* Microsoft Visual C++ (on Windows)
-
-The build system is tested with the following compilers:
-
-* Linux: GCC and Clang
-* FreeBSD: Clang
-* OS X: Clang
-* Windows: Visual C++ (cl.exe)
-
-The command-line interface program, Silikegilo, can use GNU Readline
-to improve the user experience. The GUI program for Linux and FreeBSD
-uses GTKmm. Make sure you have these libraries installed, including
-their 'development' components. In Windows, you will need to setup
-appropriate environment variables so cmake can find your compile,
-headers, and libraries.
-
-Under normal conditions, you can build Silikego by first making a
-an empty directory in which to build it, then running `cmake` with the
-following command:
-
-```Command-Line
-cmake <Path to Silikego Source>
-```
-
-On Mac OS X, FreeBSD, and Linux, the default build-system generator is
-the "Unix Makefiles" generator.  On Windows, the default is to setup a
-Visual Studio solution. Consult the CMake documentation to select a
-different build system generator if you do not wish to use the default.
-
-### Building an Installation Package
-
-Silikego is configured to build an installer using the WiX Toolset
-<https://wixtoolset.org> on Windows, and a Drag-and-Drop disk image on
-macOS. For other systems, it's assumed that an immediate installation
-suffices, and that package maintainers for each system will build
-installation packages using their own processes. To build an
-installation package on Windows and macOS, build the target "package".
+See the file Build.md in the source tree for instructions on building
+Silikego.
 
 ## License Information
 
-Copyright 2012-2021 Vincent Damewood
+Copyright 2012-2022 Vincent Damewood
 
 Silikego is licensed under the terms of the GNU Lesser General Public
-license, version 3 or later. Silikegilo and Silikegujo are licensed
-under the terms of the GNU General Public license, version 3 or later.
+license, version 3 or later. Silikegilo, Silikegujo for macOS,
+Silikegujo for Windows, and Silikegujo for Unix, are licensed under the
+terms of the GNU General Public license, version 3 or later.
 
-Silikego, Silikegilo, and Silikegujo are distributed in the hope that
+Silikego, Silikegilo, and Silikegilo, Silikegujo for macOS, Silikegujo
+for Windows, and Silikegujo for Unix are distributed in the hope that
 they will be useful, but WITHOUT ANY WARRANTY; without even the implied
 warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
