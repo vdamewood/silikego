@@ -61,20 +61,3 @@ void EvalWindow::Calculate()
 	std::string ResultString = Value.ToString();
 	MyOutput->set_text(ResultString.c_str());
 }
-
-/*
-EvalWindow::EvalWindow()
-	:MyBuilder(Gtk::Builder::create_from_resource(UiFile)),
-	MyWindow(MyBuilder->get_widget<Gtk::Window>("EvalWindow")),
-	MyInput(MyBuilder->get_widget<Gtk::Entry>("Input")),
-	MyOutput(MyBuilder->get_widget<Gtk::Label>("Output"))
-{
-	auto MyButton = MyBuilder->get_widget<Gtk::Button>("CalculateButton");
-	MyButton->signal_clicked().connect(
-		sigc::mem_fun(
-		*this,
-		&EvalWindow::Calculate));
-	MyWindow->set_default_widget(*MyButton);
-	MyInput->set_activates_default(true);
-}
-*/
