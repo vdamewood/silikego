@@ -114,11 +114,12 @@ PUBLIC_HEADER
 )
 install(EXPORT Silikego
 	NAMESPACE             Silikego::
-	FILE                  SilikegoConfig.cmake
+	FILE                  SilikegoTarget.cmake
 	DESTINATION           "${CMAKEDIR}"
 	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 )
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SilikegoConfigVersion.cmake"
+               "SilikegoConfig.cmake"
 	DESTINATION           "${CMAKEDIR}"
 	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 )

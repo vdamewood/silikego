@@ -42,10 +42,6 @@ set(SILIKEGO_PACKAGE_VENDOR  "Unknown Vendor"  CACHE STRING
 	"The name of the vendor when generating packages (ignored if SILIKEGO_PACKAGE is off)"
 )
 
-set(SILIKEGO_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Silikego CACHE STRING
-	"Locaton to install CMake files (ignored if SILIKEGO_BUILD_FRAMEWORK is on)"
-)
-
 if(APPLE)
 	option(SILIKEGO_BUILD_FRAMEWORK   "Build Silikego as a framework." On)
 	option(SILIKEGO_PACKAGE_DMG       "Package as DMG file (ignored if SILIKEGO_PACKAGE is off)" On)
@@ -64,8 +60,16 @@ if(WIN32)
 	set(SILIKEGO_MSI_GUID  "00000000-0000-0000-0000-000000000000"  CACHE STRING
 		"The Upgrade GUID used for MSI Installers (Ignored if SILIKEGO_PACKAGE or SILIKEGO_PACKAGE_MSI is false)"
 	)
+	set(TMP_INSTALL_CMAKEDIR "cmake")
+else()
+	set(TMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Silikego")
 endif()
 
+# We use TMP_INSTALL_CMAKEDIR here to avoid a duplicate call to set()
+# so there's a single place to edit the docstring.
+set(SILIKEGO_INSTALL_CMAKEDIR "${TMP_INSTALL_CMAKEDIR}" CACHE STRING
+		"Locaton to install CMake files (ignored if SILIKEGO_BUILD_FRAMEWORK is on)"
+)
 
 ###########
 # Targets #
