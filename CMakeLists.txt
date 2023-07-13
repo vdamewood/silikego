@@ -1,5 +1,5 @@
 # CMakeLists.txt: Build Script
-# Copyright 2012-2022 Vincent Damewood
+# Copyright 2012-2023 Vincent Damewood
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,7 @@ project(Silikego
 	LANGUAGES     CXX
 )
 
+set(SILIKEGO_COPYRIGHT "Copyright 2012 - 2023 Vincent Damewood")
 
 #########################
 # Configuration Options #
@@ -60,6 +61,14 @@ if(WIN32)
 	set(SILIKEGO_MSI_GUID  "00000000-0000-0000-0000-000000000000"  CACHE STRING
 		"The Upgrade GUID used for MSI Installers (Ignored if SILIKEGO_PACKAGE or SILIKEGO_PACKAGE_MSI is false)"
 	)
+	option(SILIKEGO_OFFICIAL_RELEASE  "Build an official release of Siolikego." Off)
+	if(SILIKEGO_OFFICIAL_RELEASE)
+	  set(VSV_PRERELEASE_FLAG 0)
+    else()
+	  set(VSV_PRERELEASE_FLAG VS_FF_PRERELEASE)
+    endif()
+
+
 	set(TMP_INSTALL_CMAKEDIR "cmake")
 else()
 	set(TMP_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/Silikego")
