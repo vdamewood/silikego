@@ -24,11 +24,7 @@ else()
 	set(DEVELOPMENT_COMPONENT "Silikego_Development")
 endif()
 
-if(SILIKEGO_BUILD_SHARED_LIBRARY)
-	add_library(Silikego SHARED)
-else()
-	add_library(Silikego STATIC)
-endif()
+add_library(Silikego)
 add_library(Silikego::Silikego ALIAS Silikego)
 
 set(PUBLIC_HEADERS
