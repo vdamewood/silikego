@@ -211,11 +211,16 @@ namespace Silikego
 
 	Value Functions::dice(std::vector<Value> Args)
 	{
-		static int hasSeeded = 0;
 
 		if(Args.size() != 2)
 			return ValueStatus::BAD_ARGUMENTS;
 
+		long long int count = Args[0].Integer();
+		long long int faces = Args[1].Integer();
+		if (faces == 0)
+			return 0;
+
+		static int hasSeeded = 0;
 		if (!hasSeeded)
 		{
 			hasSeeded = 1;
@@ -223,9 +228,8 @@ namespace Silikego
 		}
 
 		long long int runningTotal = 0;
-		for (int i = 1; i <= Args[0].Integer(); i++)
-			runningTotal += (std::rand() % Args[1].Integer()) + 1;
-
+		for (int i = 1; i <= count; i++)
+			runningTotal += (std::rand() % faces) + 1;
 		return runningTotal;
 	}
 
