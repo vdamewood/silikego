@@ -205,6 +205,14 @@ install(FILES
 	COMPONENT "${DOC_COMPONENT}"
 )
 
+if(PROJECT_IS_TOP_LEVEL)
+  include(CTest)
+endif()
+
+if(BUILD_TESTING)
+	add_subdirectory(test)
+endif()
+
 function(silikego_core_fixup_bundle TGT)
 	if(APPLE AND TARGET ${TGT})
 		get_target_property(TGT_IS_BUNDLE ${TGT} MACOSX_BUNDLE)
