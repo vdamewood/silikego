@@ -25,13 +25,20 @@ Test(FunctionCallerTests, NewCaller) {
     cr_assert(Caller != nullptr);
 }
 
-Test(FunctionCallerTests, UseIntFunction) {
+Test(FunctionCallerTests, GetIntFunction) {
     unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
     cr_assert(Caller != nullptr);
     Caller->Install("gfti", GetFortyTwoInt);
-    Value TestValue = Caller->Call("gfti", vector<Value>());
-    cr_assert(TestValue.Status() == ValueStatus::INTEGER);
-    cr_assert(TestValue.Integer() == 42);
+    Silikego::FunctionCaller::FunctionPointer result = Caller->Get("gfti");
+    cr_assert(result == GetFortyTwoInt);
+}
+
+Test(FunctionCallerTests, GetFloatFunction) {
+    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
+    cr_assert(Caller != nullptr);
+    Caller->Install("gftf", GetFortyTwoFloat);
+    Silikego::FunctionCaller::FunctionPointer result = Caller->Get("gftf");
+    cr_assert(result == GetFortyTwoFloat);
 }
 
 Test(FunctionCallerTests, UseFloatFunction) {

@@ -35,6 +35,7 @@ namespace Silikego
 		FunctionCaller();
 		~FunctionCaller();
 
+		FunctionPointer Get(const std::string &Name);
 		Value Call(const std::string &Name, std::vector<Value> Args);
 		void Install(const std::string &Name, FunctionPointer Function);
 		void InstallOperators();

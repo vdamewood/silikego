@@ -73,6 +73,18 @@ namespace Silikego
 		S->lookup[Name] = Function;
 	}
 
+	FunctionCaller::FunctionPointer FunctionCaller::Get(const std::string &Name)
+	{
+		try
+		{
+			return S->lookup.at(Name);
+		}
+		catch (const std::out_of_range &)
+		{
+			return nullptr;
+		}
+	}
+
 	Value FunctionCaller::Call(const std::string &Name, std::vector<Value> Args)
 	try
 	{
