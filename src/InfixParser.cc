@@ -21,108 +21,104 @@
 
 namespace Silikego
 {
-	static std::unique_ptr<SyntaxTreeNode> GetExprssion(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetExprssionRest(Lexer&, std::unique_ptr<SyntaxTreeNode>);
-	static std::unique_ptr<SyntaxTreeNode> GetTerm(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetTermRest(Lexer&, std::unique_ptr<SyntaxTreeNode>);
-	static std::unique_ptr<SyntaxTreeNode> GetExponent(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetExponentRest(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetRoll(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetRollRest(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetAtom(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetNumber(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetUnsignedNumber(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetFunctionCall(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetArguments(Lexer&, const std::string&);
+	static SyntaxTreeNode GetExprssion(Lexer&);
+	static SyntaxTreeNode GetExprssionRest(Lexer&, SyntaxTreeNode&&);
+	static SyntaxTreeNode GetTerm(Lexer&);
+	static SyntaxTreeNode GetTermRest(Lexer&, SyntaxTreeNode&&);
+	static SyntaxTreeNode GetExponent(Lexer&);
+	static SyntaxTreeNode GetExponentRest(Lexer&);
+	static SyntaxTreeNode GetRoll(Lexer&);
+	static SyntaxTreeNode GetRollRest(Lexer&);
+	static SyntaxTreeNode GetAtom(Lexer&);
+	static SyntaxTreeNode GetNumber(Lexer&);
+	static SyntaxTreeNode GetUnsignedNumber(Lexer&);
+	static SyntaxTreeNode GetFunctionCall(Lexer&);
+	static SyntaxTreeNode GetArguments(Lexer&, const std::string&);
 
 
-	std::unique_ptr<SyntaxTreeNode> ParseInfix(std::unique_ptr<DataSource> NewSource)
+	SyntaxTreeNode ParseInfix(std::unique_ptr<DataSource> NewSource)
 	{
 		Lexer MyLexer(std::move(NewSource));
-
-		std::unique_ptr<SyntaxTreeNode> rVal = GetExprssion(MyLexer);
-		if (MyLexer.GetToken().Type() != Token::EOL
-			&& !rVal->IsError())
-			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
-
-		return rVal;
+		SyntaxTreeNode result = GetExprssion(MyLexer);
+		if (MyLexer.GetToken().Type() != Token::EOL)
+			return ValueStatus::SYNTAX_ERR;
+		return result;
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetExprssion(Lexer& MyLexer)
+	static SyntaxTreeNode GetExprssion(Lexer& MyLexer)
 	{
 		return GetExprssionRest(MyLexer, GetTerm(MyLexer));
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetExprssionRest(Lexer& MyLexer, std::unique_ptr<SyntaxTreeNode> Left)
+	static SyntaxTreeNode GetExprssionRest(Lexer& lexer, SyntaxTreeNode&& left_side)
 	{
-		const char *FunctionId;
-		switch (MyLexer.GetToken().Type())
+		const char *function_id;
+		switch (lexer.GetToken().Type())
 		{
 		case '+':
-			FunctionId = "add";
+			function_id = "add";
 			break;
 		case '-':
-			FunctionId = "subtract";
+			function_id = "subtract";
 			break;
 		default:
-			return std::move(Left);
+			return left_side;
 		}
 
-		MyLexer.Next();
+		lexer.Next();
 
-		std::unique_ptr<BranchNode> Branch(new BranchNode(FunctionId));
-		Branch->PushRight(std::move(Left));
-		Branch->PushRight(GetTerm(MyLexer));
-		return GetExprssionRest(MyLexer, std::move(Branch));
+		SyntaxTreeNode branch{function_id};
+		branch.PushRight(std::move(left_side));
+		branch.PushRight(GetTerm(lexer));
+		return GetExprssionRest(lexer, std::move(branch));
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetTerm(Lexer& MyLexer)
+	static SyntaxTreeNode GetTerm(Lexer& MyLexer)
 	{
 		return GetTermRest(MyLexer, GetExponent(MyLexer));
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetTermRest(Lexer& MyLexer, std::unique_ptr<SyntaxTreeNode> Left)
+	static SyntaxTreeNode GetTermRest(Lexer& MyLexer, SyntaxTreeNode&& left_side)
 	{
-		const char *FunctionId;
+		const char *function_id;
 		switch (MyLexer.GetToken().Type())
 		{
 			case '*':
-				FunctionId = "multiply";
+				function_id = "multiply";
 				break;
 			case '/':
-				FunctionId = "divide";
+				function_id = "divide";
 				break;
 			default:
-				return std::move(Left);
+				return std::move(left_side);
 		}
 
 		MyLexer.Next();
 
-		std::unique_ptr<BranchNode> Branch(new BranchNode(FunctionId));
-		Branch->PushRight(std::move(Left));
-		Branch->PushRight(GetTerm(MyLexer));
-		return GetTermRest(MyLexer, std::move(Branch));
+		SyntaxTreeNode branch{function_id};
+		branch.PushRight(std::move(left_side));
+		branch.PushRight(GetTerm(MyLexer));
+		return GetTermRest(MyLexer, std::move(branch));
 	}
 
 
-	static std::unique_ptr<SyntaxTreeNode> GetExponent(Lexer& MyLexer)
+	static SyntaxTreeNode GetExponent(Lexer& MyLexer)
 	{
-		std::unique_ptr<SyntaxTreeNode> leftValue = GetRoll(MyLexer);
-		std::unique_ptr<SyntaxTreeNode> Rest = GetExponentRest(MyLexer);
-
-		if (Rest.get() == nullptr)
+		SyntaxTreeNode leftValue = GetRoll(MyLexer);
+		SyntaxTreeNode Rest = GetExponentRest(MyLexer);
+		if (Rest.IsNothing())
 			return leftValue;
 
-        std::unique_ptr<BranchNode> rVal(new BranchNode("power"));
-		rVal->PushRight(std::move(leftValue));
-		rVal->PushRight(std::move(Rest));
-		return std::move(rVal);
+        SyntaxTreeNode result{"power"};
+		result.PushRight(std::move(leftValue));
+		result.PushRight(std::move(Rest));
+		return std::move(result);
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetExponentRest(Lexer& MyLexer)
+	static SyntaxTreeNode GetExponentRest(Lexer& MyLexer)
 	{
 		if (MyLexer.GetToken().Type() != '^')
-			return std::unique_ptr<SyntaxTreeNode>(nullptr);
+			return SyntaxTreeNode();
 
 		MyLexer.Next();
 
@@ -135,46 +131,46 @@ namespace Silikego
 		case '(':
 			return GetExponent(MyLexer);
 		default:
-			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+			return ValueStatus::SYNTAX_ERR;
 		}
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetRoll(Lexer& MyLexer)
+	static SyntaxTreeNode GetRoll(Lexer& lexer)
 	{
-		std::unique_ptr<SyntaxTreeNode> leftValue = GetAtom(MyLexer);
-		std::unique_ptr<SyntaxTreeNode> Rest = GetRollRest(MyLexer);
+		SyntaxTreeNode left_side = GetAtom(lexer);
+		SyntaxTreeNode rest = GetRollRest(lexer);
 
-		if (Rest.get() == nullptr)
-			return leftValue;
+		if (rest.IsNothing())
+			return left_side;
 
-        std::unique_ptr<BranchNode> rVal(new BranchNode("dice"));
-		rVal->PushRight(std::move(leftValue));
-		rVal->PushRight(std::move(Rest));
-        return std::move(rVal);
+        SyntaxTreeNode result{"dice"};
+		result.PushRight(std::move(left_side));
+		result.PushRight(std::move(rest));
+        return std::move(result);
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetRollRest(Lexer& MyLexer)
+	static SyntaxTreeNode GetRollRest(Lexer& MyLexer)
 	{
 		if(MyLexer.GetToken().Type() != 'd')
-			return std::unique_ptr<SyntaxTreeNode>(nullptr);
+			return SyntaxTreeNode();
 
 		MyLexer.Next();
 
 		if (MyLexer.GetToken().Type() == Token::INTEGER)
 		{
-			std::unique_ptr<SyntaxTreeNode> rVal(new LeafNode(MyLexer.GetToken().Integer()));
+			long long int result = MyLexer.GetToken().Integer();
 			MyLexer.Next();
-			return rVal;
+			return result;
 		}
 		else
 		{
-			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+			return ValueStatus::SYNTAX_ERR;
 		}
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetAtom(Lexer& MyLexer)
+	static SyntaxTreeNode GetAtom(Lexer& MyLexer)
 	{
-		std::unique_ptr<SyntaxTreeNode> value;
+		SyntaxTreeNode value;
 
 		switch(MyLexer.GetToken().Type())
 		{
@@ -188,7 +184,7 @@ namespace Silikego
 
 			if (MyLexer.GetToken().Type() != ')')
 			{
-				return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+				return ValueStatus::SYNTAX_ERR;
 			}
 
 			MyLexer.Next();
@@ -196,91 +192,94 @@ namespace Silikego
 		case Token::ID:
 			return GetFunctionCall(MyLexer);
 		default:
-			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+			return ValueStatus::SYNTAX_ERR;
 		}
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetNumber(Lexer& MyLexer)
+	static SyntaxTreeNode GetNumber(Lexer& MyLexer)
 	{
-		std::unique_ptr<SyntaxTreeNode> rVal;
-
 		switch (MyLexer.GetToken().Type())
 		{
 		case Token::INTEGER:
 		case Token::FLOAT:
 			return GetUnsignedNumber(MyLexer);
 		case '-':
+		{
 			MyLexer.Next();
-			rVal = GetUnsignedNumber(MyLexer);
-			rVal->Negate();
-			return rVal;
+			SyntaxTreeNode number = GetUnsignedNumber(MyLexer);
+			number.Negate();
+			return number;
+		}
 		default:
-			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+			return ValueStatus::SYNTAX_ERR;
 		}
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetUnsignedNumber(Lexer& MyLexer)
+	static SyntaxTreeNode GetUnsignedNumber(Lexer& MyLexer)
 	{
-		std::unique_ptr<SyntaxTreeNode> rVal;
+		SyntaxTreeNode rVal;
 
 		switch (MyLexer.GetToken().Type())
 		{
 		case Token::INTEGER:
-            rVal = std::unique_ptr<SyntaxTreeNode>(new LeafNode(MyLexer.GetToken().Integer()));
+		{
+            long long int number = MyLexer.GetToken().Integer();
 			MyLexer.Next();
-			return rVal;
+			return number;
+		}
 		case Token::FLOAT:
-            rVal = std::unique_ptr<SyntaxTreeNode>(new LeafNode(MyLexer.GetToken().Float()));
+		{
+            double number = MyLexer.GetToken().Float();
 			MyLexer.Next();
-			return rVal;
+			return number;
+		}
 		default:
-			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+			return ValueStatus::SYNTAX_ERR;
 		}
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetFunctionCall(Lexer& MyLexer)
+	static SyntaxTreeNode GetFunctionCall(Lexer& MyLexer)
 	{
 		if (MyLexer.GetToken().Type() != Token::ID)
-			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+			return ValueStatus::SYNTAX_ERR;
 
         std::string FunctionName = MyLexer.GetToken().Id();
         MyLexer.Next();
 
 		if (MyLexer.GetToken().Type() != '(')
-            return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+            return ValueStatus::SYNTAX_ERR;
 
         MyLexer.Next();
 
-        std::unique_ptr<SyntaxTreeNode> rVal(GetArguments(MyLexer, FunctionName));
+        SyntaxTreeNode rVal(GetArguments(MyLexer, FunctionName));
 
 		if (MyLexer.GetToken().Type() != ')')
-            return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
+            return ValueStatus::SYNTAX_ERR;
 
         MyLexer.Next();
         return rVal;
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetArguments(Lexer& MyLexer, const std::string& FName)
+	static SyntaxTreeNode GetArguments(Lexer& MyLexer, const std::string& function_id)
 	{
-		std::unique_ptr<BranchNode> rVal(new BranchNode(FName));
+		SyntaxTreeNode branch{function_id};
 		while(true)
 		{
-			std::unique_ptr<SyntaxTreeNode> Expression = GetExprssion(MyLexer);
-            bool IsError = Expression->IsError();
-            rVal->PushRight(std::move(Expression));
+			SyntaxTreeNode current = GetExprssion(MyLexer);
+            bool was_error = current.IsError();
+            branch.PushRight(std::move(current));
 
-			if (IsError
-				|| MyLexer.GetToken().Type() == ')')
+			if (was_error || MyLexer.GetToken().Type() == ')')
 			{
 				break;
 			}
 			else if (MyLexer.GetToken().Type() != ',')
 			{
-                rVal->PushRight(std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR)));
+                branch.PushRight(ValueStatus::SYNTAX_ERR);
 				break;
 			}
 			MyLexer.Next();
 		}
-        return std::move(rVal);
+        return std::move(branch);
 	}
 }

@@ -18,8 +18,6 @@
 #if !defined SILIKEGO_SYNTAX_TREE_H
 #define SILIKEGO_SYNTAX_TREE_H
 
-#include <memory>
-
 #include <SilikegoCore/Api.h>
 #include <SilikegoCore/FunctionCaller.h>
 #include <SilikegoCore/Value.h>
@@ -29,46 +27,30 @@ namespace Silikego
 	class SILIKEGOCORE_EXPORT SyntaxTreeNode
 	{
 	public:
-		virtual ~SyntaxTreeNode();
-		virtual Silikego::Value Evaluate(FunctionCaller&) = 0;
-		virtual void Negate() = 0;
-		virtual bool IsError() = 0;
-	};
+		SyntaxTreeNode();
+		SyntaxTreeNode(long long int);
+		SyntaxTreeNode(double);
+		SyntaxTreeNode(ValueStatus);
+		SyntaxTreeNode(Value);
+		SyntaxTreeNode(const std::string&);
 
-	class SILIKEGOCORE_EXPORT LeafNode : public SyntaxTreeNode
-	{
-	public:
-		LeafNode(const LeafNode&);
-		LeafNode(Value NewValue);
-		virtual ~LeafNode();
+		SyntaxTreeNode(const SyntaxTreeNode&);
+		SyntaxTreeNode(SyntaxTreeNode&&);
+		SyntaxTreeNode& operator=(const SyntaxTreeNode&);
+		SyntaxTreeNode& operator=(SyntaxTreeNode&&);
+		~SyntaxTreeNode();
 
-		const LeafNode& operator=(const LeafNode&);
-
-		virtual Silikego::Value Evaluate(FunctionCaller& caller);
-		virtual void Negate();
-		virtual bool IsError();
+		Silikego::Value Evaluate(FunctionCaller&);
+		void Negate();
+		bool IsError();
+		bool IsBranch();
+		bool IsLeaf();
+		bool IsNothing();
+		void PushLeft(SyntaxTreeNode&&);
+		void PushRight(SyntaxTreeNode&&);
 	private:
-		class State;
-		State *S;
-	};
-
-	class SILIKEGOCORE_EXPORT BranchNode : public SyntaxTreeNode
-	{
-	public:
-		BranchNode(const std::string& NewFunctionId);
-		virtual ~BranchNode();
-
-		virtual Silikego::Value Evaluate(FunctionCaller& caller);
-		virtual void Negate();
-		virtual bool IsError();
-
-		void PushLeft(std::unique_ptr<SyntaxTreeNode>);
-		void PushRight(std::unique_ptr<SyntaxTreeNode>);
-	private:
-		BranchNode(const BranchNode&);
-		const BranchNode& operator=(const BranchNode&);
-		class State;
-		State *S;
+		class Impl;
+		Impl *I;
 	};
 };
 

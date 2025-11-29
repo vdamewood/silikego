@@ -26,7 +26,7 @@
 
 namespace Silikego
 {
-	SILIKEGOCORE_EXPORT std::unique_ptr<SyntaxTreeNode> ParseInfix(std::unique_ptr<DataSource> Input);
+	SILIKEGOCORE_EXPORT SyntaxTreeNode ParseInfix(std::unique_ptr<DataSource> Input);
 };
 
 #endif // SILIKEGO_INFIX_PARSER_H

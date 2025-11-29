@@ -25,9 +25,9 @@ Test(ParserTests, NAME) \
     caller.InstallOperators(); \
     caller.InstallFunctions(); \
 \
-	std::unique_ptr<SyntaxTreeNode> tree(Silikego::ParseInfix(std::move(src))); \
-    Value target(TARGET); \
-	Value result(tree->Evaluate(caller)); \
+	SyntaxTreeNode tree = Silikego::ParseInfix(std::move(src)); \
+    Value target{TARGET}; \
+	Value result{tree.Evaluate(caller)}; \
     cr_assert(target.Status() == result.Status()); \
     switch(result.Status()) \
     { \

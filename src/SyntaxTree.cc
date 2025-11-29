@@ -15,128 +15,163 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstring>
-#include <list>
-#include <memory>
+#include <string>
+#include <vector>
+#include <deque>
+#include <variant>
 
 #include <SilikegoCore/SyntaxTree.h>
 #include <SilikegoCore/FunctionCaller.h>
 
+namespace
+{
+	const int Nothing = 0;
+	const int Leaf = 1;
+	const int Branch = 2;
+}
+
 namespace Silikego
 {
-	SyntaxTreeNode::~SyntaxTreeNode() { }
-
-	class LeafNode::State
+	struct NodeBranch
 	{
-	public:
-		State(long long int NewValue): MyValue(NewValue) { }
-		State(double NewValue) : MyValue(NewValue) { }
-		State(Value NewValue) : MyValue(NewValue) { }
-		State(const State& RightSide) : MyValue(RightSide.MyValue) { }
-		State& operator=(const State& RightSide)
-		{
-			MyValue = RightSide.MyValue;
-			return *this;
-		}
-		Value MyValue;
+		NodeBranch(const std::string& new_id) : id(new_id) { }
+		std::string id;
+		std::deque<SyntaxTreeNode> children;
+		bool is_negated = false;
 	};
 
-	LeafNode::LeafNode(Value NewValue) : S(new State(NewValue)) { }
-
-	LeafNode::LeafNode(const LeafNode& RightSide)
+	class SyntaxTreeNode::Impl
 	{
-		S = new State(*RightSide.S);
+	public:
+		Impl()
+		{ }
+
+		Impl(Value new_value):
+			data(new_value)
+		{ }
+
+		Impl(NodeBranch new_branch):
+			data(new_branch)
+		{ }
+
+		std::variant<std::monostate, Value, NodeBranch> data;
+	}; // Impl
+
+	SyntaxTreeNode::SyntaxTreeNode(): I(new Impl()) {}
+	SyntaxTreeNode::SyntaxTreeNode(long long int new_value): I(new Impl(Value(new_value))) {}
+	SyntaxTreeNode::SyntaxTreeNode(double new_value): I(new Impl(Value(new_value))) {}
+	SyntaxTreeNode::SyntaxTreeNode(ValueStatus new_status): I(new Impl(Value(new_status))) {}
+	SyntaxTreeNode::SyntaxTreeNode(Value new_value): I(new Impl(new_value)) {}
+	SyntaxTreeNode::SyntaxTreeNode(const std::string& new_id): I(new Impl(NodeBranch(new_id))) {}
+
+	SyntaxTreeNode::SyntaxTreeNode(const SyntaxTreeNode& new_node)
+		: I(new Impl(*new_node.I))
+	{}
+
+	SyntaxTreeNode::SyntaxTreeNode(SyntaxTreeNode&& old_node)
+		: I(old_node.I)
+	{
+		old_node.I = nullptr;
 	}
 
-	LeafNode::~LeafNode()
-	{
-		delete S;
+	SyntaxTreeNode::~SyntaxTreeNode() {
+		delete I;
 	}
 
-	const LeafNode& LeafNode::operator=(const LeafNode& RightSide)
+	SyntaxTreeNode& SyntaxTreeNode::operator=(const SyntaxTreeNode& right_side)
 	{
-		*S = *RightSide.S;
+		delete I;
+		I = new Impl(*right_side.I);
 		return *this;
 	}
 
-
-	Value LeafNode::Evaluate(FunctionCaller&)
+	SyntaxTreeNode& SyntaxTreeNode::operator=(SyntaxTreeNode&& right_side)
 	{
-		return S->MyValue;
+		I = right_side.I;
+		right_side.I = nullptr;
+		return *this;
 	}
 
-	void LeafNode::Negate()
+	Value SyntaxTreeNode::Evaluate(FunctionCaller& caller)
 	{
-		S->MyValue.Negate();
-	}
+		// std::visit
+		switch (I->data.index())
+		{
+		case Nothing:
+			return ValueStatus::SYNTAX_ERR;
+		case Leaf:
+			return std::get<Value>(I->data);
+		case Branch:
+		{
+			std::vector<Value> Arguments;
 
-	bool LeafNode::IsError()
-	{
-		return !S->MyValue.IsNumber();
-	}
-
-	class BranchNode::State
-	{
-	public:
-		State(const std::string& newName) : Id(newName) {}
-
-		bool IsNegated = false;
-		std::string Id;
-		std::list< std::unique_ptr<SyntaxTreeNode> > Children;
-	};
-
-	BranchNode::BranchNode(const std::string& NewId) : S(new State(NewId))
-	{
-	}
-
-	BranchNode::~BranchNode()
-	{
-		delete S;
-	}
-
-	Value BranchNode::Evaluate(FunctionCaller& caller)
-	{
-		std::vector<Value> Arguments;
-
-		if (S->Children.size())
-			for (auto& i : S->Children)
+			for (auto& i : std::get<NodeBranch>(I->data).children)
 			{
-				Value Current = i->Evaluate(caller);
-				if (!Current.IsNumber())
-					return Current;
-
-				Arguments.push_back(Current);
+				Value current = i.Evaluate(caller);
+				if (!current.IsNumber())
+					return current;
+				Arguments.push_back(current);
 			}
 
-		Value rVal(caller.Call(S->Id.c_str(), Arguments));
-		if (S->IsNegated)
-		{
-			if (rVal.Status() == ValueStatus::INTEGER)
-				rVal = rVal.Integer() * -1;
-			else if (rVal.Status() == ValueStatus::FLOAT)
-				rVal = rVal.Float() * -1.0;
+			Value result(caller.Call(std::get<NodeBranch>(I->data).id.c_str(), Arguments));
+			if (std::get<NodeBranch>(I->data).is_negated)
+				result.Negate();
+
+			return result;
 		}
-
-		return rVal;
+		default:
+			return ValueStatus::SYNTAX_ERR;
+		}
 	}
 
-	void BranchNode::Negate()
+	void SyntaxTreeNode::Negate()
 	{
-		S->IsNegated = !S->IsNegated;
+		// std::visit
+		switch(I->data.index())
+		{
+		case Nothing:
+			break;
+		case Leaf:
+			std::get<Value>(I->data).Negate();
+			break;
+		case Branch:
+			std::get<NodeBranch>(I->data).is_negated
+				= !std::get<NodeBranch>(I->data).is_negated;
+			break;
+		}
 	}
 
-	bool BranchNode::IsError()
+	bool SyntaxTreeNode::IsError()
 	{
-		return false;
+		return (I->data.index() == Leaf)
+			? !std::get<Value>(I->data).IsNumber()
+			: false;
 	}
 
-	void BranchNode::PushLeft(std::unique_ptr<SyntaxTreeNode> NewChild)
+	bool SyntaxTreeNode::IsBranch()
 	{
-		S->Children.push_front(std::move(NewChild));
+		return I->data.index() == Branch;
 	}
 
-	void BranchNode::PushRight(std::unique_ptr<SyntaxTreeNode> NewChild)
+	bool SyntaxTreeNode::IsLeaf()
 	{
-		S->Children.push_back(std::move(NewChild));
+		return I->data.index() == Leaf;
+	}
+
+	bool SyntaxTreeNode::IsNothing()
+	{
+		return I->data.index() == Nothing;
+	}
+
+	void SyntaxTreeNode::PushLeft(SyntaxTreeNode&& new_child)
+	{
+		if (I->data.index() == Branch)
+			std::get<NodeBranch>(I->data).children.push_front(new_child);
+	}
+
+	void SyntaxTreeNode::PushRight(SyntaxTreeNode&& new_child)
+	{
+		if (I->data.index() == Branch)
+			std::get<NodeBranch>(I->data).children.push_back(new_child);
 	}
 }
