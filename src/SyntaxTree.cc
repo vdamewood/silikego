@@ -54,6 +54,20 @@ namespace Silikego
 			data(new_branch)
 		{ }
 
+		int checkBounds(int index)
+		{
+			if (data.index() != Branch
+					|| index >= std::get<Branch>(data).children.size()
+					|| index < -std::get<Branch>(data).children.size()
+			)
+				return -1;
+
+			if (index < 0)
+				return index + std::get<Branch>(data).children.size();
+
+			return index;
+		}
+
 		std::variant<std::monostate, Value, NodeBranch> data;
 	}; // Impl
 
@@ -124,6 +138,11 @@ namespace Silikego
 		}
 	}
 
+	SyntaxTreeNode SyntaxTreeNode::collapse(FunctionCaller& caller)
+	{
+		return Evaluate(caller);
+	}
+
 	void SyntaxTreeNode::Negate()
 	{
 		// std::visit
@@ -163,15 +182,50 @@ namespace Silikego
 		return I->data.index() == Nothing;
 	}
 
-	void SyntaxTreeNode::PushLeft(SyntaxTreeNode&& new_child)
+	bool SyntaxTreeNode::PushLeft(SyntaxTreeNode&& new_child)
 	{
-		if (I->data.index() == Branch)
-			std::get<NodeBranch>(I->data).children.push_front(new_child);
+		if (I->data.index() != Branch)
+			return false;
+
+		std::get<NodeBranch>(I->data).children.push_front(new_child);
+		return true;
 	}
 
-	void SyntaxTreeNode::PushRight(SyntaxTreeNode&& new_child)
+	bool SyntaxTreeNode::PushRight(SyntaxTreeNode&& new_child)
 	{
-		if (I->data.index() == Branch)
-			std::get<NodeBranch>(I->data).children.push_back(new_child);
+		if (I->data.index() != Branch)
+			return false;
+
+		std::get<NodeBranch>(I->data).children.push_back(new_child);
+		return true;
+	}
+
+	SyntaxTreeNode* SyntaxTreeNode::getChild(int child_index)
+	{
+		if ((child_index = I->checkBounds(child_index)) < 0)
+			return nullptr;
+
+		return &std::get<Branch>(I->data).children[child_index];
+	}
+
+	std::optional<SyntaxTreeNode> SyntaxTreeNode::pruneChild(int child_index)
+	{
+		if ((child_index = I->checkBounds(child_index)) < 0)
+			return std::nullopt;
+
+		auto& children = std::get<Branch>(I->data).children;
+		SyntaxTreeNode child = children[child_index];
+		children.erase(children.begin() + child_index);
+		return child;
+	}
+
+	bool SyntaxTreeNode::collapseChild(int child_index, FunctionCaller& caller)
+	{
+		if ((child_index = I->checkBounds(child_index)) < 0)
+			return false;
+
+		auto& children = std::get<Branch>(I->data).children;
+		children[child_index] = children[child_index].collapse(caller);
+		return true;
 	}
 }

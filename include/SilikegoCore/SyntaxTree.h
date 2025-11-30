@@ -18,6 +18,8 @@
 #if !defined SILIKEGO_SYNTAX_TREE_H
 #define SILIKEGO_SYNTAX_TREE_H
 
+#include <optional>
+
 #include <SilikegoCore/Api.h>
 #include <SilikegoCore/FunctionCaller.h>
 #include <SilikegoCore/Value.h>
@@ -40,14 +42,22 @@ namespace Silikego
 		SyntaxTreeNode& operator=(SyntaxTreeNode&&);
 		~SyntaxTreeNode();
 
-		Silikego::Value Evaluate(FunctionCaller&);
 		void Negate();
 		bool IsError();
 		bool IsBranch();
 		bool IsLeaf();
 		bool IsNothing();
-		void PushLeft(SyntaxTreeNode&&);
-		void PushRight(SyntaxTreeNode&&);
+
+		Value Evaluate(FunctionCaller&);
+		SyntaxTreeNode collapse(FunctionCaller& caller);
+
+		bool PushLeft(SyntaxTreeNode&&);
+		bool PushRight(SyntaxTreeNode&&);
+
+		SyntaxTreeNode* getChild(int childIndex);
+		std::optional<SyntaxTreeNode> pruneChild(int childIndex);
+		bool collapseChild(int ChildIndex, FunctionCaller& Caller);
+
 	private:
 		class Impl;
 		Impl *I;
