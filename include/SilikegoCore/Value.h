@@ -60,8 +60,8 @@ namespace Silikego
 		Value(const Value&);
 		~Value();
 
-		const Value& operator=(const Value& other);
-		const Value& Negate();
+		Value& operator=(const Value& other);
+		Value& Negate();
 
 		ValueStatus Status() const;
 		long long int Integer() const;

@@ -25,7 +25,15 @@ namespace Silikego
 	class SILIKEGOCORE_EXPORT DataSource
 	{
 	public:
-		virtual ~DataSource();
+		DataSource() = default;
+
+		DataSource(const DataSource&) = delete;
+		DataSource(DataSource&&) = delete;
+		virtual ~DataSource() = default;
+
+		DataSource& operator=(const DataSource&) = delete;
+		DataSource& operator=(DataSource&&) = delete;
+
 		virtual bool Advance() = 0;
 		virtual char GetCurrent() = 0;
 	};

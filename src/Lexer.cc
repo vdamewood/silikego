@@ -249,15 +249,15 @@ namespace Silikego
 			}
 			break;
 		case DFA_TERM_INTEGER:
-			S->Token = Token(std::strtoll(lexeme.c_str(), 0, 10));
+			S->Token = std::strtoll(lexeme.c_str(), 0, 10);
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_FLOAT:
-			S->Token = Token(std::atof(lexeme.c_str()));
+			S->Token = std::atof(lexeme.c_str());
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_E:
-			S->Token = Token(EULER);
+			S->Token = EULER;
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_PI:

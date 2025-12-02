@@ -46,6 +46,7 @@ namespace Silikego
 			EOL
 		};
 
+		Token() = delete;
 		Token(TokenType NewType);
 		Token(short int NewInteger);
 		Token(int NewInteger);
@@ -57,7 +58,7 @@ namespace Silikego
 		Token(const Token&);
 		~Token();
 
-		const Token& operator=(const Token&);
+		Token& operator=(const Token&);
 
 		TokenType     Type() const;
 		long long int Integer() const;

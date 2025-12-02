@@ -15,11 +15,11 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <SilikegoCore/DataSource.h>
+//#include <SilikegoCore/DataSource.h>
 
 namespace Silikego
 {
-	DataSource::~DataSource()
+	/*DataSource::~DataSource()
 	{
-	}
+	}*/
 }

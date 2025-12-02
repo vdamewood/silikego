@@ -30,6 +30,7 @@ namespace Silikego
 	{
 	public:
 		SyntaxTreeNode();
+
 		SyntaxTreeNode(long long int);
 		SyntaxTreeNode(double);
 		SyntaxTreeNode(ValueStatus);
@@ -38,9 +39,10 @@ namespace Silikego
 
 		SyntaxTreeNode(const SyntaxTreeNode&);
 		SyntaxTreeNode(SyntaxTreeNode&&);
+		~SyntaxTreeNode();
+
 		SyntaxTreeNode& operator=(const SyntaxTreeNode&);
 		SyntaxTreeNode& operator=(SyntaxTreeNode&&);
-		~SyntaxTreeNode();
 
 		void Negate();
 		bool IsError();

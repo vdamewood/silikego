@@ -86,13 +86,13 @@ namespace Silikego
 		delete S;
 	}
 
-	const Value& Value::operator=(const Value& RightSide)
+	Value& Value::operator=(const Value& RightSide)
 	{
 		*S = *RightSide.S;
 		return *this;
 	}
 
-	const Value& Value::Negate()
+	Value& Value::Negate()
 	{
 		switch (S->Status)
 		{

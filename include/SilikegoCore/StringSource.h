@@ -28,16 +28,21 @@ namespace Silikego
 	class SILIKEGOCORE_EXPORT StringSource : public DataSource
 	{
 	public:
+		StringSource() = delete;
+
 		StringSource(const char *);
 		StringSource(const std::string &);
-		virtual ~StringSource();
 
-		virtual bool Advance();
-		virtual char GetCurrent();
-
-	private:
 		StringSource(const StringSource&) = delete;
-		const StringSource& operator=(const StringSource&) = delete;
+		StringSource(StringSource&&) = delete;
+		virtual ~StringSource() override;
+
+		StringSource& operator=(const StringSource&) = delete;
+		StringSource& operator=(StringSource&&) = delete;
+
+		virtual bool Advance() override;
+		virtual char GetCurrent() override;
+	private:
 		class State;
 		State* S;
 	};

@@ -30,14 +30,18 @@ namespace Silikego
 	{
 	public:
 		Lexer(std::unique_ptr<DataSource> InputSource);
+
+		Lexer(const Lexer&) = delete;
+		Lexer(Lexer&&) = default;
 		~Lexer();
+
+		Lexer& operator=(const Lexer&) = delete;
+		Lexer& operator=(Lexer&&) = default;
 
 		Silikego::Token &GetToken();
 		void Next();
 
 	private:
-		Lexer(const Lexer&) = delete;
-		const Lexer& operator=(const Lexer&) = delete;
 		class State;
 		State *S;
 	};

@@ -33,7 +33,13 @@ namespace Silikego
 		typedef Value (*FunctionPointer)(std::vector<Value>);
 
 		FunctionCaller();
+
+		FunctionCaller(const FunctionCaller&) = delete;
+		FunctionCaller(FunctionCaller&&) = default;
 		~FunctionCaller();
+
+		FunctionCaller& operator=(const FunctionCaller&) = delete;
+		FunctionCaller& operator=(FunctionCaller&&) = default;
 
 		FunctionPointer Get(const std::string &Name);
 		Value Call(const std::string &Name, std::vector<Value> Args);
