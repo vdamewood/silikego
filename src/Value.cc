@@ -33,54 +33,68 @@ namespace {
 
 namespace Silikego
 {
-	class Value::State
+	class Value::Impl
 	{
 	public:
-		State(Error new_error) : data(new_error) { }
-		State(long long int new_integer) : data(new_integer) { }
-		State(double new_float) : data(new_float) { }
-		State(const State &source) : data(source.data) { }
+		Impl(Error new_error) : data(new_error) { }
+		Impl(long long int new_integer) : data(new_integer) { }
+		Impl(double new_float) : data(new_float) { }
 
 		std::variant<Error, long long int, double> data;
 	};
 
 	Value::Value(Error new_error)
-		: S(new State(new_error)) { }
+		: impl(new Impl(new_error)) { }
 	Value::Value(short new_integer)
-		: S(new State(static_cast<long long int>(new_integer))) { }
+		: impl(new Impl(static_cast<long long int>(new_integer))) { }
 	Value::Value(int new_integer)
-		: S(new State(static_cast<long long int>(new_integer))) { }
+		: impl(new Impl(static_cast<long long int>(new_integer))) { }
 	Value::Value(long int new_integer)
-		: S(new State(static_cast<long long int>(new_integer))) { }
+		: impl(new Impl(static_cast<long long int>(new_integer))) { }
 	Value::Value(long long int new_integer)
-		: S(new State(new_integer)) { }
+		: impl(new Impl(new_integer)) { }
 	Value::Value(float new_float)
-		: S(new State(static_cast<double>(new_float))) { }
+		: impl(new Impl(static_cast<double>(new_float))) { }
 	Value::Value(double new_float)
-		: S(new State(new_float)) { }
+		: impl(new Impl(new_float)) { }
+
 	Value::Value(const Value& source)
-		: S(new State(*source.S)) { }
+		: impl(new Impl(*source.impl)) { }
+
+	Value::Value(Value&& source)
+		: impl(source.impl)
+	{
+		source.impl = nullptr;
+	}
 
 	Value::~Value()
 	{
-		delete S;
+		delete impl;
 	}
 
 	Value& Value::operator=(const Value& right_side)
 	{
-		S->data = right_side.S->data;
+		impl->data = right_side.impl->data;
+		return *this;
+	}
+
+	Value& Value::operator=(Value&& right_side)
+	{
+		delete impl;
+		impl = right_side.impl;
+		right_side.impl = nullptr;
 		return *this;
 	}
 
 	Value& Value::negate()
 	{
-		switch (S->data.index())
+		switch (impl->data.index())
 		{
 		case (IntegerIndex):
-			std::get<IntegerIndex>(S->data) *= -1;
+			std::get<IntegerIndex>(impl->data) *= -1;
 			break;
 		case (FloatIndex):
-			std::get<FloatIndex>(S->data) *= -1.0;
+			std::get<FloatIndex>(impl->data) *= -1.0;
 			break;
 		default:
 			; // Do nothing. Silence warning.
@@ -90,7 +104,7 @@ namespace Silikego
 
 	ValueStatus Value::status() const
 	{
-		switch (S->data.index())
+		switch (impl->data.index())
 		{
 		case ErrorIndex:
 			return ValueStatus::Error;
@@ -105,17 +119,17 @@ namespace Silikego
 
 	bool Value::isInteger() const
 	{
-		return S->data.index() == IntegerIndex;
+		return impl->data.index() == IntegerIndex;
 	}
 
 	long long int Value::asInteger() const
 	{
-		switch (S->data.index())
+		switch (impl->data.index())
 		{
 		case IntegerIndex:
-			return std::get<IntegerIndex>(S->data);
+			return std::get<IntegerIndex>(impl->data);
 		case FloatIndex:
-			return static_cast<long long int>(std::get<FloatIndex>(S->data));
+			return static_cast<long long int>(std::get<FloatIndex>(impl->data));
 		default:
 			return 0;
 		}
@@ -123,17 +137,17 @@ namespace Silikego
 
 	bool Value::isFloat() const
 	{
-		return S->data.index() == FloatIndex;
+		return impl->data.index() == FloatIndex;
 	}
 
 	double Value::asFloat() const
 	{
-		switch (S->data.index())
+		switch (impl->data.index())
 		{
 		case IntegerIndex:
-			return static_cast<double>(std::get<IntegerIndex>(S->data));
+			return static_cast<double>(std::get<IntegerIndex>(impl->data));
 		case FloatIndex:
-			return std::get<FloatIndex>(S->data);
+			return std::get<FloatIndex>(impl->data);
 		default:
 			return std::numeric_limits<double>::quiet_NaN();
 		}
@@ -141,13 +155,13 @@ namespace Silikego
 
 	bool Value::isError() const
 	{
-		return S->data.index() == ErrorIndex;
+		return impl->data.index() == ErrorIndex;
 	}
 
 	Error Value::asError() const
 	{
-		return S->data.index() == ErrorIndex
-			? std::get<ErrorIndex>(S->data)
+		return impl->data.index() == ErrorIndex
+			? std::get<ErrorIndex>(impl->data)
 			: Error::None;
 	}
 }

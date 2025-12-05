@@ -19,100 +19,117 @@
 
 #include <SilikegoCore/Token.h>
 
+namespace
+{
+	const int UnsetIndex = 0;
+	const int OperatorIndex = 1;
+	const int IntegerIndex = 2;
+	const int FloatIndex = 3;
+	const int IdIndex = 4;
+	const int EndOfInputIndex = 5;
+};
+
 namespace Silikego
 {
-	class Token::State
+	class Token::Impl
 	{
 	public:
-		State(TokenType NewType) : Type(NewType) {}
-		State(long long int NewValue) : Type(INTEGER), Integer(NewValue) {}
-		State(double NewValue) : Type(FLOAT), Float(NewValue) {}
-		State(const std::string& NewId) : Type(ID), Id(NewId) {}
-		State(const State& RightSide) : Type(RightSide.Type)
-		{
-			switch (Type)
-			{
-			case INTEGER:
-				Integer = RightSide.Integer;
-				break;
-			case FLOAT:
-				Float = RightSide.Float;
-				break;
-			case ID:
-				Id = RightSide.Id;
-				break;
-			default:
-				; // Do nothing. Slience warning.
-			}
-		}
+		Impl() { }
+		Impl(char new_operator) : data(new_operator) { }
+		Impl(long long int new_value) : data(new_value) { }
+		Impl(double new_value) : data(new_value) { }
+		Impl(const std::string& new_id) : data(new_id) { }
+		Impl(EndOfInput placeholder) : data(placeholder) { }
+		Impl(const Impl& other) : data(other.data) { }
 
-		State& operator=(const State& RightSide)
+		Impl& operator=(const Impl& right_side)
 		{
-			Type = RightSide.Type;
-			switch (Type)
-			{
-			case INTEGER:
-				Integer = RightSide.Integer;
-				break;
-			case FLOAT:
-				Float = RightSide.Float;
-				break;
-			case ID:
-				Id = RightSide.Id;
-				break;
-			default:
-				; // Do nothing. Slience warning.
-			}
+			data = right_side.data;
 			return *this;
 		}
 
-		TokenType Type;
-		union
-		{
-			long long int Integer;
-			double Float;
-		};
-		std::string Id;
+		std::variant<
+			std::monostate,
+			char,
+			long long int,
+			double,
+			std::string,
+			EndOfInput
+		> data;
 	};
 
-	Token::Token(TokenType NewType) : S(new State(NewType)) { }
-	Token::Token(short NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	Token::Token(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	Token::Token(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	Token::Token(long long int NewValue) : S(new State(NewValue)) { }
-	Token::Token(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
-	Token::Token(double NewValue) : S(new State(NewValue)) { }
-	Token::Token(const std::string& NewId) : S(new State(NewId)) { }
-	Token::Token(const Token& RightSide) : S(new State(*RightSide.S)) { }
+	Token::Token()
+		: impl(new Impl()) { }
+	Token::Token(char new_operator)
+		: impl(new Impl(new_operator)) { }
+	Token::Token(short new_value)
+		: impl(new Impl(static_cast<long long int>(new_value))) { }
+	Token::Token(int new_value)
+		: impl(new Impl(static_cast<long long int>(new_value))) { }
+	Token::Token(long int new_value)
+		: impl(new Impl(static_cast<long long int>(new_value))) { }
+	Token::Token(long long int new_value)
+		: impl(new Impl(new_value)) { }
+	Token::Token(float new_value)
+		: impl(new Impl(static_cast<double>(new_value))) { }
+	Token::Token(double new_value)
+		: impl(new Impl(new_value)) { }
+	Token::Token(const std::string& new_id)
+		: impl(new Impl(new_id)) { }
+	Token::Token(EndOfInput placeholder)
+		: impl(new Impl(placeholder)) { }
+	Token::Token(const Token& right_side)
+		: impl(new Impl(*right_side.impl)) { }
 
 	Token::~Token()
 	{
-		delete S;
+		delete impl;
 	}
 
 	Token& Token::operator=(const Token& RightSide)
 	{
-		*S = *RightSide.S;
+		*impl = *RightSide.impl;
 		return *this;
 	}
 
-	Token::TokenType Token::Type() const
+	TokenStatus Token::status() const
 	{
-		return S->Type;
+		switch(impl->data.index())
+		{
+		case UnsetIndex:
+			return TokenStatus::Unset;
+		case OperatorIndex:
+			return TokenStatus::Operator;
+		case IntegerIndex:
+			return TokenStatus::Integer;
+		case FloatIndex:
+			return TokenStatus::Float;
+		case IdIndex:
+			return TokenStatus::Id;
+		case EndOfInputIndex:
+			return TokenStatus::EndOfInput;
+		default:
+			throw; // shouldn't happen
+		}
 	}
 
-	long long int Token::Integer() const
+	char Token::operatorValue() const
 	{
-		return S->Integer;
+		return std::get<OperatorIndex>(impl->data);
 	}
 
-	double Token::Float() const
+	long long int Token::integerValue() const
 	{
-		return S->Float;
+		return std::get<IntegerIndex>(impl->data);
 	}
 
-	const char *Token::Id() const
+	double Token::floatValue() const
 	{
-		return S->Id.c_str();
+		return std::get<FloatIndex>(impl->data);
+	}
+
+	const std::string& Token::idValue() const
+	{
+		return std::get<IdIndex>(impl->data);
 	}
 }

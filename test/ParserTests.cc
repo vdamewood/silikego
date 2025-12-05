@@ -22,12 +22,12 @@ Test(ParserTests, NAME) \
 	std::unique_ptr<DataSource> src = std::make_unique<StringSource>(Input); \
 	cr_assert(src != NULL); \
 	FunctionCaller caller; \
-    caller.InstallOperators(); \
-    caller.InstallFunctions(); \
+    InstallOperators(caller); \
+    InstallFunctions(caller); \
 \
 	SyntaxTreeNode tree = Silikego::ParseInfix(std::move(src)); \
     Value target{TARGET}; \
-	Value result{tree.Evaluate(caller)}; \
+	Value result{tree.evaluate(caller)}; \
     cr_assert(target.status() == result.status()); \
     switch(result.status()) \
     { \

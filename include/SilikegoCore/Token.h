@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_TOKEN_H
-#define SILIKEGO_TOKEN_H
+#if !defined SILIKEGO_CORE_TOKEN_H
+#define SILIKEGO_CORE_TOKEN_H
 
 #include <string>
 
@@ -24,51 +24,48 @@
 
 namespace Silikego
 {
+	enum class TokenStatus
+	{
+		Unset,
+		Integer,
+		Float,
+		Operator,
+		Id,
+		EndOfInput
+	};
+
+	struct SILIKEGOCORE_EXPORT EndOfInput{};
+
 	class SILIKEGOCORE_EXPORT Token
 	{
 	public:
-		enum TokenType
-		{
-			ERROR = -1,
-			UNSET = 0,
-			LPAREN = '(',
-			RPAREN = ')',
-			MULTIPLY = '*',
-			ADDITION = '+',
-			COMMA = ',',
-			SUBTRACT = '-',
-			DIVISION = '/',
-			EXPONENT = '^',
-			DICE = 'd',
-			INTEGER = 256,
-			FLOAT,
-			ID,
-			EOL
-		};
+		Token();
 
-		Token() = delete;
-		Token(TokenType);
+		Token(char);
 		Token(short int);
 		Token(int);
 		Token(long int);
 		Token(long long int);
 		Token(float);
 		Token(double);
+		Token(EndOfInput);
 		Token(const std::string&);
+
 		Token(const Token&);
 		~Token();
 
 		Token& operator=(const Token&);
 
-		TokenType     Type() const;
-		long long int Integer() const;
-		double        Float() const;
-		const char*   Id() const;
+		TokenStatus status() const;
+		long long int integerValue() const;
+		double floatValue() const;
+		char operatorValue() const;
+		const std::string& idValue() const;
 
 	private:
-		class State;
-		State *S;
+		class Impl;
+		Impl *impl;
 	};
 };
 
-#endif // SILIKEGO_TOKEN_H
+#endif // SILIKEGO_CORE_TOKEN_H

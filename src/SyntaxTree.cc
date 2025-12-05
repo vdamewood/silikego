@@ -71,64 +71,64 @@ namespace Silikego
 		std::variant<std::monostate, Value, NodeBranch> data;
 	}; // Impl
 
-	SyntaxTreeNode::SyntaxTreeNode(): I(new Impl()) {}
-	SyntaxTreeNode::SyntaxTreeNode(long long int new_value): I(new Impl(Value(new_value))) {}
-	SyntaxTreeNode::SyntaxTreeNode(double new_value): I(new Impl(Value(new_value))) {}
-	SyntaxTreeNode::SyntaxTreeNode(Error new_error): I(new Impl(Value(new_error))) {}
-	SyntaxTreeNode::SyntaxTreeNode(Value new_value): I(new Impl(new_value)) {}
-	SyntaxTreeNode::SyntaxTreeNode(const std::string& new_id): I(new Impl(NodeBranch(new_id))) {}
+	SyntaxTreeNode::SyntaxTreeNode(): impl(new Impl()) {}
+	SyntaxTreeNode::SyntaxTreeNode(long long int new_value): impl(new Impl(Value(new_value))) {}
+	SyntaxTreeNode::SyntaxTreeNode(double new_value): impl(new Impl(Value(new_value))) {}
+	SyntaxTreeNode::SyntaxTreeNode(Error new_error): impl(new Impl(Value(new_error))) {}
+	SyntaxTreeNode::SyntaxTreeNode(Value new_value): impl(new Impl(new_value)) {}
+	SyntaxTreeNode::SyntaxTreeNode(const std::string& new_id): impl(new Impl(NodeBranch(new_id))) {}
 
 	SyntaxTreeNode::SyntaxTreeNode(const SyntaxTreeNode& new_node)
-		: I(new Impl(*new_node.I))
+		: impl(new Impl(*new_node.impl))
 	{}
 
 	SyntaxTreeNode::SyntaxTreeNode(SyntaxTreeNode&& old_node)
-		: I(old_node.I)
+		: impl(old_node.impl)
 	{
-		old_node.I = nullptr;
+		old_node.impl = nullptr;
 	}
 
 	SyntaxTreeNode::~SyntaxTreeNode() {
-		delete I;
+		delete impl;
 	}
 
 	SyntaxTreeNode& SyntaxTreeNode::operator=(const SyntaxTreeNode& right_side)
 	{
-		delete I;
-		I = new Impl(*right_side.I);
+		delete impl;
+		impl = new Impl(*right_side.impl);
 		return *this;
 	}
 
 	SyntaxTreeNode& SyntaxTreeNode::operator=(SyntaxTreeNode&& right_side)
 	{
-		I = right_side.I;
-		right_side.I = nullptr;
+		impl = right_side.impl;
+		right_side.impl = nullptr;
 		return *this;
 	}
 
-	Value SyntaxTreeNode::Evaluate(FunctionCaller& caller)
+	Value SyntaxTreeNode::evaluate(FunctionCaller& caller)
 	{
 		// std::visit
-		switch (I->data.index())
+		switch (impl->data.index())
 		{
 		case Nothing:
 			return Error::Syntax;
 		case Leaf:
-			return std::get<Value>(I->data);
+			return std::get<Value>(impl->data);
 		case Branch:
 		{
 			std::vector<Value> Arguments;
 
-			for (auto& i : std::get<NodeBranch>(I->data).children)
+			for (auto& i : std::get<NodeBranch>(impl->data).children)
 			{
-				Value current = i.Evaluate(caller);
+				Value current = i.evaluate(caller);
 				if (current.isError())
 					return current;
 				Arguments.push_back(current);
 			}
 
-			Value result(caller.Call(std::get<NodeBranch>(I->data).id.c_str(), Arguments));
-			if (std::get<NodeBranch>(I->data).is_negated)
+			Value result(caller.call(std::get<NodeBranch>(impl->data).id, Arguments));
+			if (std::get<NodeBranch>(impl->data).is_negated)
 				result.negate();
 
 			return result;
@@ -140,80 +140,80 @@ namespace Silikego
 
 	SyntaxTreeNode SyntaxTreeNode::collapse(FunctionCaller& caller)
 	{
-		return Evaluate(caller);
+		return evaluate(caller);
 	}
 
-	void SyntaxTreeNode::Negate()
+	void SyntaxTreeNode::negate()
 	{
 		// std::visit
-		switch(I->data.index())
+		switch(impl->data.index())
 		{
 		case Nothing:
 			break;
 		case Leaf:
-			std::get<Value>(I->data).negate();
+			std::get<Value>(impl->data).negate();
 			break;
 		case Branch:
-			std::get<NodeBranch>(I->data).is_negated
-				= !std::get<NodeBranch>(I->data).is_negated;
+			std::get<NodeBranch>(impl->data).is_negated
+				= !std::get<NodeBranch>(impl->data).is_negated;
 			break;
 		}
 	}
 
-	bool SyntaxTreeNode::IsError()
+	bool SyntaxTreeNode::isError()
 	{
-		return (I->data.index() == Leaf)
-			? std::get<Value>(I->data).isError()
+		return (impl->data.index() == Leaf)
+			? std::get<Value>(impl->data).isError()
 			: false;
 	}
 
-	bool SyntaxTreeNode::IsBranch()
+	bool SyntaxTreeNode::isBranch()
 	{
-		return I->data.index() == Branch;
+		return impl->data.index() == Branch;
 	}
 
-	bool SyntaxTreeNode::IsLeaf()
+	bool SyntaxTreeNode::isLeaf()
 	{
-		return I->data.index() == Leaf;
+		return impl->data.index() == Leaf;
 	}
 
-	bool SyntaxTreeNode::IsNothing()
+	bool SyntaxTreeNode::isNothing()
 	{
-		return I->data.index() == Nothing;
+		return impl->data.index() == Nothing;
 	}
 
-	bool SyntaxTreeNode::PushLeft(SyntaxTreeNode&& new_child)
+	bool SyntaxTreeNode::pushLeft(SyntaxTreeNode&& new_child)
 	{
-		if (I->data.index() != Branch)
+		if (impl->data.index() != Branch)
 			return false;
 
-		std::get<NodeBranch>(I->data).children.push_front(new_child);
+		std::get<NodeBranch>(impl->data).children.push_front(new_child);
 		return true;
 	}
 
-	bool SyntaxTreeNode::PushRight(SyntaxTreeNode&& new_child)
+	bool SyntaxTreeNode::pushRight(SyntaxTreeNode&& new_child)
 	{
-		if (I->data.index() != Branch)
+		if (impl->data.index() != Branch)
 			return false;
 
-		std::get<NodeBranch>(I->data).children.push_back(new_child);
+		std::get<NodeBranch>(impl->data).children.push_back(new_child);
 		return true;
 	}
 
-	SyntaxTreeNode* SyntaxTreeNode::getChild(int child_index)
+	SyntaxTreeNode* SyntaxTreeNode::child(int child_index)
 	{
-		if ((child_index = I->checkBounds(child_index)) < 0)
+		if ((child_index = impl->checkBounds(child_index)) < 0)
 			return nullptr;
 
-		return &std::get<Branch>(I->data).children[child_index];
+		return &std::get<Branch>(impl->data).children[child_index];
 	}
 
 	std::optional<SyntaxTreeNode> SyntaxTreeNode::pruneChild(int child_index)
 	{
-		if ((child_index = I->checkBounds(child_index)) < 0)
+		if ((child_index = impl->checkBounds(child_index)) < 0)
 			return std::nullopt;
 
-		auto& children = std::get<Branch>(I->data).children;
+		auto& children = std::get<Branch>(impl->data).children;
 		SyntaxTreeNode child = children[child_index];
 		children.erase(children.begin() + child_index);
 		return child;
@@ -221,10 +221,10 @@ namespace Silikego
 
 	bool SyntaxTreeNode::collapseChild(int child_index, FunctionCaller& caller)
 	{
-		if ((child_index = I->checkBounds(child_index)) < 0)
+		if ((child_index = impl->checkBounds(child_index)) < 0)
 			return false;
 
-		auto& children = std::get<Branch>(I->data).children;
+		auto& children = std::get<Branch>(impl->data).children;
 		children[child_index] = children[child_index].collapse(caller);
 		return true;
 	}

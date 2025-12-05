@@ -5,6 +5,8 @@
 #define INSTALL_FUNCTION InstallOperators
 #include "FunctionMacros.h"
 
+using Silikego::InstallOperators;
+
 TestFunctionForEquality(TwoPlusThreeIsFive,
     "add", 5,
     2,

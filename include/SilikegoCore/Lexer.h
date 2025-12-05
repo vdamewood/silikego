@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_LEXER_H
-#define SILIKEGO_LEXER_H
+#if !defined SILIKEGO_CORE_LEXER_H
+#define SILIKEGO_CORE_LEXER_H
 
 #include <memory>
 
@@ -29,7 +29,9 @@ namespace Silikego
 	class SILIKEGOCORE_EXPORT Lexer
 	{
 	public:
-		Lexer(std::unique_ptr<DataSource> InputSource);
+		Lexer() = delete;
+	
+		Lexer(std::unique_ptr<DataSource>);
 
 		Lexer(const Lexer&) = delete;
 		Lexer(Lexer&&) = default;
@@ -38,13 +40,13 @@ namespace Silikego
 		Lexer& operator=(const Lexer&) = delete;
 		Lexer& operator=(Lexer&&) = default;
 
-		Silikego::Token &GetToken();
-		void Next();
+		void advance();
+		Silikego::Token& token();
 
 	private:
-		class State;
-		State *S;
+		class Impl;
+		Impl* impl;
 	};
 };
 
-#endif // SILIKEGO_LEXER_H
+#endif // SILIKEGO_CORE_LEXER_H

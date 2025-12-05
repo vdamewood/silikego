@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_SYNTAX_TREE_H
-#define SILIKEGO_SYNTAX_TREE_H
+#if !defined SILIKEGO_CORE_SYNTAX_TREE_H
+#define SILIKEGO_CORE_SYNTAX_TREE_H
 
 #include <optional>
 
@@ -44,26 +44,23 @@ namespace Silikego
 		SyntaxTreeNode& operator=(const SyntaxTreeNode&);
 		SyntaxTreeNode& operator=(SyntaxTreeNode&&);
 
-		void Negate();
-		bool IsError();
-		bool IsBranch();
-		bool IsLeaf();
-		bool IsNothing();
-
-		Value Evaluate(FunctionCaller&);
+		SyntaxTreeNode* child(int child_index);
 		SyntaxTreeNode collapse(FunctionCaller& caller);
-
-		bool PushLeft(SyntaxTreeNode&&);
-		bool PushRight(SyntaxTreeNode&&);
-
-		SyntaxTreeNode* getChild(int childIndex);
-		std::optional<SyntaxTreeNode> pruneChild(int childIndex);
 		bool collapseChild(int ChildIndex, FunctionCaller& Caller);
+		Value evaluate(FunctionCaller&);
+		bool isBranch();
+		bool isError();
+		bool isLeaf();
+		bool isNothing();
+		void negate();
+		std::optional<SyntaxTreeNode> pruneChild(int child_index);
+		bool pushLeft(SyntaxTreeNode&&);
+		bool pushRight(SyntaxTreeNode&&);
 
 	private:
 		class Impl;
-		Impl *I;
+		Impl* impl;
 	};
 };
 
-#endif // SILIKEGO_SYNTAX_TREE_H
+#endif // SILIKEGO_CORE_SYNTAX_TREE_H

@@ -38,22 +38,27 @@ namespace Silikego
 
 	SyntaxTreeNode ParseInfix(std::unique_ptr<DataSource> NewSource)
 	{
-		Lexer MyLexer(std::move(NewSource));
-		SyntaxTreeNode result = GetExprssion(MyLexer);
-		if (MyLexer.GetToken().Type() != Token::EOL)
+		Lexer lexer(std::move(NewSource));
+		SyntaxTreeNode result = GetExprssion(lexer);
+		if (lexer.token().status() != TokenStatus::EndOfInput)
 			return Error::Syntax;
 		return result;
 	}
 
-	static SyntaxTreeNode GetExprssion(Lexer& MyLexer)
+	static SyntaxTreeNode GetExprssion(Lexer& lexer)
 	{
-		return GetExprssionRest(MyLexer, GetTerm(MyLexer));
+		return GetExprssionRest(lexer, GetTerm(lexer));
 	}
 
 	static SyntaxTreeNode GetExprssionRest(Lexer& lexer, SyntaxTreeNode&& left_side)
 	{
+		if (lexer.token().status() != TokenStatus::Operator
+				|| (lexer.token().operatorValue() != '+'
+					&& lexer.token().operatorValue() != '-'))
+			return left_side;
+
 		const char *function_id;
-		switch (lexer.GetToken().Type())
+		switch (lexer.token().operatorValue())
 		{
 		case '+':
 			function_id = "add";
@@ -65,23 +70,28 @@ namespace Silikego
 			return left_side;
 		}
 
-		lexer.Next();
+		lexer.advance();
 
 		SyntaxTreeNode branch{function_id};
-		branch.PushRight(std::move(left_side));
-		branch.PushRight(GetTerm(lexer));
+		branch.pushRight(std::move(left_side));
+		branch.pushRight(GetTerm(lexer));
 		return GetExprssionRest(lexer, std::move(branch));
 	}
 
-	static SyntaxTreeNode GetTerm(Lexer& MyLexer)
+	static SyntaxTreeNode GetTerm(Lexer& lexer)
 	{
-		return GetTermRest(MyLexer, GetExponent(MyLexer));
+		return GetTermRest(lexer, GetExponent(lexer));
 	}
 
-	static SyntaxTreeNode GetTermRest(Lexer& MyLexer, SyntaxTreeNode&& left_side)
+	static SyntaxTreeNode GetTermRest(Lexer& lexer, SyntaxTreeNode&& left_side)
 	{
+		if (lexer.token().status() != TokenStatus::Operator
+				|| (lexer.token().operatorValue() != '*'
+					&& lexer.token().operatorValue() != '/'))
+			return left_side;
+
 		const char *function_id;
-		switch (MyLexer.GetToken().Type())
+		switch (lexer.token().operatorValue())
 		{
 			case '*':
 				function_id = "multiply";
@@ -93,46 +103,54 @@ namespace Silikego
 				return std::move(left_side);
 		}
 
-		MyLexer.Next();
+		lexer.advance();
 
 		SyntaxTreeNode branch{function_id};
-		branch.PushRight(std::move(left_side));
-		branch.PushRight(GetTerm(MyLexer));
-		return GetTermRest(MyLexer, std::move(branch));
+		branch.pushRight(std::move(left_side));
+		branch.pushRight(GetTerm(lexer));
+		return GetTermRest(lexer, std::move(branch));
 	}
 
-
-	static SyntaxTreeNode GetExponent(Lexer& MyLexer)
+	static SyntaxTreeNode GetExponent(Lexer& lexer)
 	{
-		SyntaxTreeNode leftValue = GetRoll(MyLexer);
-		SyntaxTreeNode Rest = GetExponentRest(MyLexer);
-		if (Rest.IsNothing())
+		SyntaxTreeNode leftValue = GetRoll(lexer);
+		SyntaxTreeNode Rest = GetExponentRest(lexer);
+		if (Rest.isNothing())
 			return leftValue;
 
         SyntaxTreeNode result{"power"};
-		result.PushRight(std::move(leftValue));
-		result.PushRight(std::move(Rest));
+		result.pushRight(std::move(leftValue));
+		result.pushRight(std::move(Rest));
 		return std::move(result);
 	}
 
-	static SyntaxTreeNode GetExponentRest(Lexer& MyLexer)
+	static SyntaxTreeNode GetExponentRest(Lexer& lexer)
 	{
-		if (MyLexer.GetToken().Type() != '^')
+		if (lexer.token().status() != TokenStatus::Operator
+				|| lexer.token().operatorValue() != '^')
 			return SyntaxTreeNode();
 
-		MyLexer.Next();
+		lexer.advance();
 
-		switch (MyLexer.GetToken().Type())
+		switch (lexer.token().status())
 		{
-		case Token::INTEGER:
-		case Token::FLOAT:
-		case '-':
-		case Token::ID:
-		case '(':
-			return GetExponent(MyLexer);
+		case TokenStatus::Integer:
+		case TokenStatus::Float:
+		case TokenStatus::Id:
+			return GetExponent(lexer);
+		case TokenStatus::Operator:
+			switch(lexer.token().operatorValue())
+			{
+			case '-':
+			case '(':
+				return GetExponent(lexer);
+			default:
+				;
+			}
 		default:
-			return Error::Syntax;
+			;
 		}
+		return Error::Syntax;
 	}
 
 	static SyntaxTreeNode GetRoll(Lexer& lexer)
@@ -140,26 +158,27 @@ namespace Silikego
 		SyntaxTreeNode left_side = GetAtom(lexer);
 		SyntaxTreeNode rest = GetRollRest(lexer);
 
-		if (rest.IsNothing())
+		if (rest.isNothing())
 			return left_side;
 
         SyntaxTreeNode result{"dice"};
-		result.PushRight(std::move(left_side));
-		result.PushRight(std::move(rest));
+		result.pushRight(std::move(left_side));
+		result.pushRight(std::move(rest));
         return std::move(result);
 	}
 
-	static SyntaxTreeNode GetRollRest(Lexer& MyLexer)
+	static SyntaxTreeNode GetRollRest(Lexer& lexer)
 	{
-		if(MyLexer.GetToken().Type() != 'd')
+		if(lexer.token().status() != TokenStatus::Operator
+				|| lexer.token().operatorValue() != 'd')
 			return SyntaxTreeNode();
 
-		MyLexer.Next();
+		lexer.advance();
 
-		if (MyLexer.GetToken().Type() == Token::INTEGER)
+		if (lexer.token().status() == TokenStatus::Integer)
 		{
-			long long int result = MyLexer.GetToken().Integer();
-			MyLexer.Next();
+			long long int result = lexer.token().integerValue();
+			lexer.advance();
 			return result;
 		}
 		else
@@ -168,69 +187,81 @@ namespace Silikego
 		}
 	}
 
-	static SyntaxTreeNode GetAtom(Lexer& MyLexer)
+	static SyntaxTreeNode GetAtom(Lexer& lexer)
 	{
-		SyntaxTreeNode value;
-
-		switch(MyLexer.GetToken().Type())
+		switch(lexer.token().status())
 		{
-		case '-':
-		case Token::INTEGER:
-		case Token::FLOAT:
-			return GetNumber(MyLexer);
-		case '(':
-			MyLexer.Next();
-			value = GetExprssion(MyLexer);
-
-			if (MyLexer.GetToken().Type() != ')')
+		case TokenStatus::Integer:
+		case TokenStatus::Float:
+			return GetNumber(lexer);
+		case TokenStatus::Id:
+			return GetFunctionCall(lexer);
+		case TokenStatus::Operator:
+			switch (lexer.token().operatorValue())
 			{
-				return Error::Syntax;
+			case '-':
+				return GetNumber(lexer);
+			case '(':
+			{
+				lexer.advance();
+				SyntaxTreeNode value = GetExprssion(lexer);
+
+				if (lexer.token().status() == TokenStatus::Operator
+					&& lexer.token().operatorValue() == ')')
+				{
+					lexer.advance();
+					return value;
+				}
 			}
-
-			MyLexer.Next();
-			return value;
-		case Token::ID:
-			return GetFunctionCall(MyLexer);
+				break;
+			default:
+				;
+			}
 		default:
-			return Error::Syntax;
+			;
 		}
+		return Error::Syntax;
 	}
 
-	static SyntaxTreeNode GetNumber(Lexer& MyLexer)
+	static SyntaxTreeNode GetNumber(Lexer& lexer)
 	{
-		switch (MyLexer.GetToken().Type())
+		switch (lexer.token().status())
 		{
-		case Token::INTEGER:
-		case Token::FLOAT:
-			return GetUnsignedNumber(MyLexer);
-		case '-':
+		case TokenStatus::Integer:
+		case TokenStatus::Float:
+			return GetUnsignedNumber(lexer);
+		case TokenStatus::Operator:
 		{
-			MyLexer.Next();
-			SyntaxTreeNode number = GetUnsignedNumber(MyLexer);
-			number.Negate();
-			return number;
+			if ( lexer.token().operatorValue() == '-')
+			{
+				lexer.advance();
+				SyntaxTreeNode number = GetUnsignedNumber(lexer);
+				number.negate();
+				return number;
+			}
 		}
 		default:
-			return Error::Syntax;
+			;
 		}
+		return Error::Syntax;
 	}
 
-	static SyntaxTreeNode GetUnsignedNumber(Lexer& MyLexer)
+	static SyntaxTreeNode GetUnsignedNumber(Lexer& lexer)
 	{
 		SyntaxTreeNode rVal;
 
-		switch (MyLexer.GetToken().Type())
+		switch (lexer.token().status())
 		{
-		case Token::INTEGER:
+		case TokenStatus::Integer:
 		{
-            long long int number = MyLexer.GetToken().Integer();
-			MyLexer.Next();
+            long long int number = lexer.token().integerValue();
+			lexer.advance();
 			return number;
 		}
-		case Token::FLOAT:
+		case TokenStatus::Float:
 		{
-            double number = MyLexer.GetToken().Float();
-			MyLexer.Next();
+            double number = lexer.token().floatValue();
+			lexer.advance();
 			return number;
 		}
 		default:
@@ -238,47 +269,54 @@ namespace Silikego
 		}
 	}
 
-	static SyntaxTreeNode GetFunctionCall(Lexer& MyLexer)
+	static SyntaxTreeNode GetFunctionCall(Lexer& lexer)
 	{
-		if (MyLexer.GetToken().Type() != Token::ID)
+		if (lexer.token().status() != TokenStatus::Id)
 			return Error::Syntax;
 
-        std::string FunctionName = MyLexer.GetToken().Id();
-        MyLexer.Next();
+        std::string FunctionName = lexer.token().idValue();
+        lexer.advance();
 
-		if (MyLexer.GetToken().Type() != '(')
+		if (lexer.token().status() != TokenStatus::Operator
+				|| lexer.token().operatorValue() != '(')
             return Error::Syntax;
 
-        MyLexer.Next();
+        lexer.advance();
 
-        SyntaxTreeNode rVal(GetArguments(MyLexer, FunctionName));
+        SyntaxTreeNode function_call(GetArguments(lexer, FunctionName));
 
-		if (MyLexer.GetToken().Type() != ')')
-            return Error::Syntax;
+		if (lexer.token().status() == TokenStatus::Operator
+				&& lexer.token().operatorValue() == ')')
+		{
+	        lexer.advance();
+    	    return function_call;
+		}
 
-        MyLexer.Next();
-        return rVal;
+		return Error::Syntax;
 	}
 
-	static SyntaxTreeNode GetArguments(Lexer& MyLexer, const std::string& function_id)
+	static SyntaxTreeNode GetArguments(Lexer& lexer, const std::string& function_id)
 	{
 		SyntaxTreeNode branch{function_id};
 		while(true)
 		{
-			SyntaxTreeNode current = GetExprssion(MyLexer);
-            bool was_error = current.IsError();
-            branch.PushRight(std::move(current));
+			SyntaxTreeNode current = GetExprssion(lexer);
+            bool was_error = current.isError();
+            branch.pushRight(std::move(current));
 
-			if (was_error || MyLexer.GetToken().Type() == ')')
+			if (was_error || (
+					lexer.token().status() == TokenStatus::Operator
+					&& lexer.token().operatorValue() == ')'))
 			{
 				break;
 			}
-			else if (MyLexer.GetToken().Type() != ',')
+			else if (lexer.token().status() != TokenStatus::Operator
+					|| lexer.token().operatorValue() != ',')
 			{
-                branch.PushRight(Error::Syntax);
+                branch.pushRight(Error::Syntax);
 				break;
 			}
-			MyLexer.Next();
+			lexer.advance();
 		}
         return std::move(branch);
 	}

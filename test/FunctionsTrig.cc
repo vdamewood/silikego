@@ -7,6 +7,8 @@
 #define INSTALL_FUNCTION InstallFunctions
 #include "FunctionMacros.h"
 
+using Silikego::InstallFunctions;
+
 TestFunctionForEquality(SinZeroIsZero,
     "sin", 0.0,
     0.0

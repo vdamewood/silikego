@@ -12,12 +12,12 @@ using Silikego::ValueStatus;
 Test(SUITE, NAME) \
 { \
     Silikego::FunctionCaller caller; \
-    caller.INSTALL_FUNCTION(); \
+    INSTALL_FUNCTION(caller); \
     std::vector<Silikego::Value> input \
     { \
         __VA_ARGS__ \
     }; \
-    Silikego::Value result = caller.Call( \
+    Silikego::Value result = caller.call( \
         FUNCTION, \
         input); \
     cr_assert(result.status() == STATUS, \

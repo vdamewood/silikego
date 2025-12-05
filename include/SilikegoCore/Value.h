@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_VALUE_H
-#define SILIKEGO_VALUE_H
+#if !defined SILIKEGO_CORE_VALUE_H
+#define SILIKEGO_CORE_VALUE_H
 
 #include <string>
 
@@ -57,9 +57,11 @@ namespace Silikego
 		Value(double);
 
 		Value(const Value&);
+		Value(Value&&);
 		~Value();
 
-		Value& operator=(const Value& other);
+		Value& operator=(const Value&);
+		Value& operator=(Value&&);
 
 		Value& negate();
 		ValueStatus status() const;
@@ -69,10 +71,11 @@ namespace Silikego
 		double asFloat() const;
 		bool isError() const;
 		Error asError() const;
+
 	private:
-		class State;
-		State *S;
+		class Impl;
+		Impl *impl;
 	};
 }
 
-#endif // SILIKEGO_VALUE_H
+#endif // SILIKEGO_CORE_VALUE_H

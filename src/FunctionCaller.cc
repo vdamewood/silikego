@@ -24,74 +24,81 @@
 
 namespace Silikego
 {
-	class FunctionCaller::State
+	class FunctionCaller::Impl
 	{
 	public:
-		std::unordered_map<std::string, FunctionCaller::FunctionPointer> lookup;
+		std::unordered_map<
+			std::string,
+			FunctionPointer
+		> lookup;
 	};
 
-	FunctionCaller::FunctionCaller(): S(new State) { }
+	FunctionCaller::FunctionCaller(): impl(new Impl) { }
 
 	FunctionCaller::~FunctionCaller()
 	{
-		delete S;
+		delete impl;
 	}
 
-	void FunctionCaller::InstallOperators()
+	void FunctionCaller::install(
+		const std::string& name,
+		FunctionPointer pointer)
 	{
-		Install("add", Functions::add);
-		Install("subtract", Functions::subtract);
-		Install("multiply", Functions::multiply);
-		Install("divide", Functions::divide);
-		Install("power", Functions::power);
-		Install("dice", Functions::dice);
+		impl->lookup[name] = pointer;
 	}
 
-	void FunctionCaller::InstallFunctions()
-	{
-		Install("abs", Functions::abs);
-		Install("acos", Functions::acos);
-		Install("asin", Functions::asin);
-		Install("atan", Functions::atan);
-		Install("ceil", Functions::ceil);
-		Install("cos", Functions::cos);
-		Install("cosh", Functions::cosh);
-		Install("exp", Functions::exp);
-		Install("floor", Functions::floor);
-		Install("log", Functions::log);
-		Install("log10", Functions::log10);
-		Install("sin", Functions::sin);
-		Install("sinh", Functions::sinh);
-		Install("sqrt", Functions::sqrt);
-		Install("tan", Functions::tan);
-		Install("tanh", Functions::tanh);
-	}
-
-
-	void FunctionCaller::Install(const std::string &Name, FunctionPointer Function)
-	{
-		S->lookup[Name] = Function;
-	}
-
-	FunctionCaller::FunctionPointer FunctionCaller::Get(const std::string &Name)
+	FunctionPointer FunctionCaller::fetch(
+		const std::string& name)
 	{
 		try
 		{
-			return S->lookup.at(Name);
+			return impl->lookup.at(name);
 		}
-		catch (const std::out_of_range &)
+		catch (const std::out_of_range&)
 		{
 			return nullptr;
 		}
 	}
 
-	Value FunctionCaller::Call(const std::string &Name, std::vector<Value> Args)
+	Value FunctionCaller::call(
+		const std::string& name,
+		std::vector<Value> args)
 	try
 	{
-		return S->lookup.at(Name)(Args);
+		return impl->lookup.at(name)(args);
 	}
-	catch (const std::out_of_range &)
+	catch (const std::out_of_range&)
 	{
 		return Error::FunctionName;
+	}
+
+	void InstallOperators(FunctionCaller& caller)
+	{
+		caller.install("add", Functions::add);
+		caller.install("subtract", Functions::subtract);
+		caller.install("multiply", Functions::multiply);
+		caller.install("divide", Functions::divide);
+		caller.install("power", Functions::power);
+		caller.install("dice", Functions::dice);
+	}
+
+	void InstallFunctions(FunctionCaller& caller)
+	{
+		caller.install("abs", Functions::abs);
+		caller.install("acos", Functions::acos);
+		caller.install("asin", Functions::asin);
+		caller.install("atan", Functions::atan);
+		caller.install("ceil", Functions::ceil);
+		caller.install("cos", Functions::cos);
+		caller.install("cosh", Functions::cosh);
+		caller.install("exp", Functions::exp);
+		caller.install("floor", Functions::floor);
+		caller.install("log", Functions::log);
+		caller.install("log10", Functions::log10);
+		caller.install("sin", Functions::sin);
+		caller.install("sinh", Functions::sinh);
+		caller.install("sqrt", Functions::sqrt);
+		caller.install("tan", Functions::tan);
+		caller.install("tanh", Functions::tanh);
 	}
 }

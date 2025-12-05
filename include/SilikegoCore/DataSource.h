@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_DATA_SOURCE_H
-#define SILIKEGO_DATA_SOURCE_H
+#if !defined SILIKEGO_CORE_DATA_SOURCE_H
+#define SILIKEGO_CORE_DATA_SOURCE_H
 
 #include <SilikegoCore/Api.h>
 
@@ -34,9 +34,9 @@ namespace Silikego
 		DataSource& operator=(const DataSource&) = delete;
 		DataSource& operator=(DataSource&&) = delete;
 
-		virtual bool Advance() = 0;
-		virtual char GetCurrent() = 0;
+		virtual bool advance() = 0;
+		virtual char current() = 0;
 	};
 };
 
-#endif // SILIKEGO_DATA_SOURCE_H
+#endif // SILIKEGO_CORE_DATA_SOURCE_H

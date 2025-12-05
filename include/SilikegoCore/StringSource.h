@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_STRING_SOURCE_H
-#define SILIKEGO_STRING_SOURCE_H
+#if !defined SILIKEGO_CORE_STRING_SOURCE_H
+#define SILIKEGO_CORE_STRING_SOURCE_H
 
 #include <string>
 
@@ -40,12 +40,13 @@ namespace Silikego
 		StringSource& operator=(const StringSource&) = delete;
 		StringSource& operator=(StringSource&&) = delete;
 
-		virtual bool Advance() override;
-		virtual char GetCurrent() override;
+		virtual bool advance() override;
+		virtual char current() override;
+
 	private:
-		class State;
-		State* S;
+		class Impl;
+		Impl* impl;
 	};
 };
 
-#endif // SILIKEGO_STRING_SOURCE_H
+#endif // SILIKEGO_CORE_STRING_SOURCE_H

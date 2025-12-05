@@ -22,36 +22,36 @@
 
 namespace Silikego
 {
-	class StringSource::State
+	class StringSource::Impl
 	{
 	public:
-		State(const char* NewInput) : Input(NewInput) { }
-		State(const std::string &NewInput) : Input(NewInput) { }
+		Impl(const char* NewInput) : Input(NewInput) { }
+		Impl(const std::string &NewInput) : Input(NewInput) { }
 
 		std::string Input;
 		std::string::iterator Index = Input.begin();
 	};
 
 	StringSource::StringSource(const char *NewSource)
-		: S(new State(NewSource))
+		: impl(new Impl(NewSource))
 	{
 	}
 
 	StringSource::StringSource(const std::string &NewSource)
-		: S(new State(NewSource))
+		: impl(new Impl(NewSource))
 	{
 	}
 
 	StringSource::~StringSource()
 	{
-		delete S;
+		delete impl;
 	}
 
-	bool StringSource::Advance()
+	bool StringSource::advance()
 	{
-		if (S->Index != S->Input.end())
+		if (impl->Index != impl->Input.end())
 		{
-			S->Index++;
+			impl->Index++;
 			return true;
 		}
 		else
@@ -60,10 +60,10 @@ namespace Silikego
 		}
 	}
 
-	char StringSource::GetCurrent()
+	char StringSource::current()
 	{
-		if (S->Index != S->Input.end())
-			return *S->Index;
+		if (impl->Index != impl->Input.end())
+			return *impl->Index;
 		else
 			return '\0';
 	}

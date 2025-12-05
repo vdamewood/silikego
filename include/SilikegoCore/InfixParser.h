@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_INFIX_PARSER_H
-#define SILIKEGO_INFIX_PARSER_H
+#if !defined SILIKEGO_CORE_INFIX_PARSER_H
+#define SILIKEGO_CORE_INFIX_PARSER_H
 
 #include <memory>
 
@@ -26,7 +26,8 @@
 
 namespace Silikego
 {
-	SILIKEGOCORE_EXPORT SyntaxTreeNode ParseInfix(std::unique_ptr<DataSource> Input);
+	SILIKEGOCORE_EXPORT
+	SyntaxTreeNode ParseInfix(std::unique_ptr<DataSource>);
 };
 
-#endif // SILIKEGO_INFIX_PARSER_H
+#endif // SILIKEGO_CORE_INFIX_PARSER_H

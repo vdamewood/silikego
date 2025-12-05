@@ -15,8 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_FUNCTION_CALLER_H
-#define SILIKEGO_FUNCTION_CALLER_H
+#if !defined SILIKEGO_CORE_FUNCTION_CALLER_H
+#define SILIKEGO_CORE_FUNCTION_CALLER_H
 
 #include <string>
 #include <vector>
@@ -27,11 +27,11 @@
 
 namespace Silikego
 {
+	typedef Value (*FunctionPointer)(std::vector<Value>);
+
 	class SILIKEGOCORE_EXPORT FunctionCaller
 	{
 	public:
-		typedef Value (*FunctionPointer)(std::vector<Value>);
-
 		FunctionCaller();
 
 		FunctionCaller(const FunctionCaller&) = delete;
@@ -41,15 +41,21 @@ namespace Silikego
 		FunctionCaller& operator=(const FunctionCaller&) = delete;
 		FunctionCaller& operator=(FunctionCaller&&) = default;
 
-		FunctionPointer Get(const std::string &Name);
-		Value Call(const std::string &Name, std::vector<Value> Args);
-		void Install(const std::string &Name, FunctionPointer Function);
-		void InstallOperators();
-		void InstallFunctions();
+		Value call(
+			const std::string &function_name,
+			std::vector<Value> arguments);
+		FunctionPointer fetch(
+			const std::string& function_name);
+		void install(
+			const std::string &function_name,
+			FunctionPointer function_pointer);
 
 	private:
-		class State;
-		State *S;	
+		class Impl;
+		Impl* impl;
 	};
+
+	SILIKEGOCORE_EXPORT void InstallOperators(FunctionCaller&);
+	SILIKEGOCORE_EXPORT void InstallFunctions(FunctionCaller&);
 };
-#endif // SILIKEGO_FUNCTION_CALLER_H
+#endif // SILIKEGO_CORE_FUNCTION_CALLER_H

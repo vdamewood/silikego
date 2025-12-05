@@ -2,6 +2,9 @@
 #include <SilikegoCore/StringSource.h>
 #include <SilikegoCore/Lexer.h>
 
+using Silikego::TokenStatus;
+using Silikego::EndOfInput;
+
 #define TestLexer(NAME, INSTRING, ...) \
 Test(LexerTests, NAME) \
 { \
@@ -15,79 +18,79 @@ Test(LexerTests, NAME) \
     Silikego::Lexer lex(std::move(source)); \
     for (int i = 0; i < tokens.size(); i++) \
     { \
-        Silikego::Token current = lex.GetToken(); \
-        cr_assert(current.Type() == tokens[i].Type(), \
-            "Types[%i]: %i/%c %i/%c", \
-            i, \
-            current.Type(), \
-            current.Type(), \
-            tokens[i].Type(), \
-            tokens[i].Type() \
-        ); \
-        switch(current.Type()) \
+        Silikego::Token current = lex.token(); \
+        cr_assert(current.status() == tokens[i].status()); \
+        switch(current.status()) \
         { \
-        case Silikego::Token::TokenType::INTEGER: \
-            cr_assert(current.Integer() == tokens[i].Integer()); \
+        case TokenStatus::Operator: \
+            cr_assert(current.operatorValue() == tokens[i].operatorValue()); \
             break; \
-        case Silikego::Token::TokenType::FLOAT: \
-            cr_assert(current.Float() == tokens[i].Float()); \
+        case TokenStatus::Integer: \
+            cr_assert(current.integerValue() == tokens[i].integerValue()); \
+            break; \
+        case TokenStatus::Float: \
+            cr_assert(current.floatValue() == tokens[i].floatValue()); \
             break; \
         default: \
             break; \
         } \
-        lex.Next(); \
+        lex.advance(); \
     } \
 }
 
 TestLexer(Nothing,
     "",
-    Silikego::Token::TokenType::EOL
+    EndOfInput()
 )
 
 TestLexer(AnInteger,
     "42386",
-    42386
+    42386,
+    EndOfInput()
 )
 
 TestLexer(AFloat,
     "32156.25",
-    32156.25
+    32156.25,
+    EndOfInput()
+
 )
 
 TestLexer(AnId,
     "beep",
-    std::string("beep")
+    std::string("beep"),
+    EndOfInput()
 )
 
 TestLexer(TwoPlusTwo,
     "2 + 2.0",
     2,
-    Silikego::Token::TokenType::ADDITION,
+    '+',
     2.0,
-    Silikego::Token::TokenType::EOL
+    EndOfInput()
 )
 
 TestLexer(SomethingComplex,
     "3d6 + -5 * (sin(3.25)/cos(5.125))",
     3,
-    Silikego::Token::TokenType::DICE,
+    'd',
     6,
-    Silikego::Token::TokenType::ADDITION,
-    Silikego::Token::TokenType::SUBTRACT,
+    '+',
+    '-',
     5,
-    Silikego::Token::TokenType::MULTIPLY,
-    Silikego::Token::TokenType::LPAREN,
+    '*',
+    '(',
     std::string("sin"),
-    Silikego::Token::TokenType::LPAREN,
+    '(',
     3.25,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::DIVISION,
+    ')',
+    '/',
     std::string("cos"),
-    Silikego::Token::TokenType::LPAREN,
+    '(',
     5.125,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::EOL,
+    ')',
+    ')',
+    EndOfInput()
 )
 
 // No, this won't parse using the existing parser, but you could write
@@ -97,29 +100,29 @@ TestLexer(SomethingComplexLispy,
     "\t(+ (d 3 6) -5)\n"
     "\t(/ (sin 3.25)\n"
     "\t\t(cos 5.125)))\n",
-    Silikego::Token::TokenType::LPAREN,
-    Silikego::Token::TokenType::MULTIPLY,
-    Silikego::Token::TokenType::LPAREN,
-    Silikego::Token::TokenType::ADDITION,
-    Silikego::Token::TokenType::LPAREN,
-    Silikego::Token::TokenType::DICE,
+    '(',
+    '*',
+    '(',
+    '+',
+    '(',
+    'd',
     3,
     6,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::SUBTRACT,
+    ')',
+    '-',
     5,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::LPAREN,
-    Silikego::Token::TokenType::DIVISION,
-    Silikego::Token::TokenType::LPAREN,
+    ')',
+    '(',
+    '/',
+    '(',
     std::string("sin"),
     3.25,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::LPAREN,
+    ')',
+    '(',
     std::string("cos"),
     5.125,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::RPAREN,
-    Silikego::Token::TokenType::EOL,
+    ')',
+    ')',
+    ')',
+    EndOfInput()
 )

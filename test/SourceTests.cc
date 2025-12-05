@@ -15,10 +15,10 @@ Test(StringSourceTests, NAME) \
 \
     for (int i = 0; i < input.size(); i++) \
     { \
-        cr_assert(source->GetCurrent() == input[i]); \
-        source->Advance(); \
+        cr_assert(source->current() == input[i]); \
+        source->advance(); \
     } \
-    cr_assert(source->GetCurrent() == '\0'); \
+    cr_assert(source->current() == '\0'); \
 }
 
 SourceTest(EmptryString, "")
