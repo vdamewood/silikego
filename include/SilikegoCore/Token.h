@@ -47,14 +47,14 @@ namespace Silikego
 		};
 
 		Token() = delete;
-		Token(TokenType NewType);
-		Token(short int NewInteger);
-		Token(int NewInteger);
-		Token(long int NewInteger);
-		Token(long long int NewInteger);
-		Token(float NewFloat);
-		Token(double NewFloat);
-		Token(const std::string& NewString);
+		Token(TokenType);
+		Token(short int);
+		Token(int);
+		Token(long int);
+		Token(long long int);
+		Token(float);
+		Token(double);
+		Token(const std::string&);
 		Token(const Token&);
 		~Token();
 

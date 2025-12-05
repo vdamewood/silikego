@@ -25,82 +25,62 @@
 
 #include <SilikegoCore/Value.h>
 
+namespace {
+	const int ErrorIndex = 0;
+	const int IntegerIndex = 1;
+	const int FloatIndex = 2;
+}
+
 namespace Silikego
 {
 	class Value::State
 	{
 	public:
-		State(long long int NewInteger) : Status(ValueStatus::INTEGER), Integer(NewInteger) { }
-		State(double NewFloat) : Status(ValueStatus::FLOAT), Float(NewFloat) { }
-		State(ValueStatus NewStatus) : Status(NewStatus) { }
-		State(const State &RightSide) : Status(RightSide.Status)
-		{
-			switch (Status)
-			{
-			case ValueStatus::INTEGER:
-				Integer = RightSide.Integer;
-				break;
-			case ValueStatus::FLOAT:
-				Float = RightSide.Float;
-				break;
-			default:
-				; // Do nothing. Silence warning.
-			}
-		}
+		State(Error new_error) : data(new_error) { }
+		State(long long int new_integer) : data(new_integer) { }
+		State(double new_float) : data(new_float) { }
+		State(const State &source) : data(source.data) { }
 
-		State& operator=(const State &RightSide)
-		{
-			Status = RightSide.Status;
-			switch (Status)
-			{
-			case ValueStatus::INTEGER:
-				Integer = RightSide.Integer;
-				break;
-			case ValueStatus::FLOAT:
-				Float = RightSide.Float;
-				break;
-			default:
-				; // Do nothing. Silence warning.
-			}
-			return *this;
-		}
-
-		ValueStatus Status;
-		union
-		{
-			long long int Integer;
-			double Float;
-		};
+		std::variant<Error, long long int, double> data;
 	};
 
-	Value::Value(ValueStatus NewStatus) : S(new State(NewStatus)) { }
-	Value::Value(short NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	Value::Value(int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	Value::Value(long int NewValue) : S(new State(static_cast<long long int>(NewValue))) { }
-	Value::Value(long long int NewValue) : S(new State(NewValue)) { }
-	Value::Value(float NewValue) : S(new State(static_cast<double>(NewValue))) { }
-	Value::Value(double NewValue) : S(new State(NewValue)) { }
-	Value::Value(const Value& RightSide) : S(new State(*RightSide.S)) { }
+	Value::Value(Error new_error)
+		: S(new State(new_error)) { }
+	Value::Value(short new_integer)
+		: S(new State(static_cast<long long int>(new_integer))) { }
+	Value::Value(int new_integer)
+		: S(new State(static_cast<long long int>(new_integer))) { }
+	Value::Value(long int new_integer)
+		: S(new State(static_cast<long long int>(new_integer))) { }
+	Value::Value(long long int new_integer)
+		: S(new State(new_integer)) { }
+	Value::Value(float new_float)
+		: S(new State(static_cast<double>(new_float))) { }
+	Value::Value(double new_float)
+		: S(new State(new_float)) { }
+	Value::Value(const Value& source)
+		: S(new State(*source.S)) { }
+
 	Value::~Value()
 	{
 		delete S;
 	}
 
-	Value& Value::operator=(const Value& RightSide)
+	Value& Value::operator=(const Value& right_side)
 	{
-		*S = *RightSide.S;
+		S->data = right_side.S->data;
 		return *this;
 	}
 
-	Value& Value::Negate()
+	Value& Value::negate()
 	{
-		switch (S->Status)
+		switch (S->data.index())
 		{
-		case (ValueStatus::INTEGER):
-			S->Integer *= -1;
+		case (IntegerIndex):
+			std::get<IntegerIndex>(S->data) *= -1;
 			break;
-		case (ValueStatus::FLOAT):
-			S->Float *= -1.0;
+		case (FloatIndex):
+			std::get<FloatIndex>(S->data) *= -1.0;
 			break;
 		default:
 			; // Do nothing. Silence warning.
@@ -108,33 +88,66 @@ namespace Silikego
 		return *this;
 	}
 
-	ValueStatus Value::Status() const
+	ValueStatus Value::status() const
 	{
-		return S->Status;
+		switch (S->data.index())
+		{
+		case ErrorIndex:
+			return ValueStatus::Error;
+		case IntegerIndex:
+			return ValueStatus::Integer;
+		case FloatIndex:
+			return ValueStatus::Float;
+		default:
+			throw; // shouldn't happen
+		}
 	}
 
-	long long int Value::Integer() const
+	bool Value::isInteger() const
 	{
-		if (S->Status == ValueStatus::INTEGER)
-			return S->Integer;
-		else if (S->Status == ValueStatus::FLOAT)
-			return static_cast<int>(S->Float);
-		else
+		return S->data.index() == IntegerIndex;
+	}
+
+	long long int Value::asInteger() const
+	{
+		switch (S->data.index())
+		{
+		case IntegerIndex:
+			return std::get<IntegerIndex>(S->data);
+		case FloatIndex:
+			return static_cast<long long int>(std::get<FloatIndex>(S->data));
+		default:
 			return 0;
+		}
 	}
 
-	double Value::Float() const
+	bool Value::isFloat() const
 	{
-		if (S->Status == ValueStatus::INTEGER)
-			return static_cast<double>(S->Integer);
-		else if (S->Status == ValueStatus::FLOAT)
-			return S->Float;
-		else
+		return S->data.index() == FloatIndex;
+	}
+
+	double Value::asFloat() const
+	{
+		switch (S->data.index())
+		{
+		case IntegerIndex:
+			return static_cast<double>(std::get<IntegerIndex>(S->data));
+		case FloatIndex:
+			return std::get<FloatIndex>(S->data);
+		default:
 			return std::numeric_limits<double>::quiet_NaN();
+		}
 	}
 
-	bool Value::IsNumber() const
+	bool Value::isError() const
 	{
-		return (S->Status == ValueStatus::INTEGER || S->Status == ValueStatus::FLOAT);
+		return S->data.index() == ErrorIndex;
+	}
+
+	Error Value::asError() const
+	{
+		return S->data.index() == ErrorIndex
+			? std::get<ErrorIndex>(S->data)
+			: Error::None;
 	}
 }

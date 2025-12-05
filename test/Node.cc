@@ -6,19 +6,19 @@ using Silikego::Value;
 using Silikego::ValueStatus;
 
 Test(SyntaxTreeTests, NewIntZero) {
-    SyntaxTreeNode Node{0LL};
+    SyntaxTreeNode node{0LL};
 
     Silikego::FunctionCaller caller;
-    Value result = Node.Evaluate(caller);
-    cr_assert(result.Status() == ValueStatus::INTEGER);
-    cr_assert(result.Integer() == 0LL);
+    Value result = node.Evaluate(caller);
+    cr_assert(result.status() == ValueStatus::Integer);
+    cr_assert(result.asInteger() == 0LL);
 }
 
 Test(SyntaxTreeTests, NewFloatZero) {
-    SyntaxTreeNode Node{0.0};
+    SyntaxTreeNode node{0.0};
 
     Silikego::FunctionCaller caller;
-    Value result = Node.Evaluate(caller);
-    cr_assert(result.Status() == ValueStatus::FLOAT);
-    cr_assert(result.Integer() == 0.0);
+    Value result = node.Evaluate(caller);
+    cr_assert(result.status() == ValueStatus::Float);
+    cr_assert(result.asFloat() == 0.0);
 }

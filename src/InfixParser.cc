@@ -41,7 +41,7 @@ namespace Silikego
 		Lexer MyLexer(std::move(NewSource));
 		SyntaxTreeNode result = GetExprssion(MyLexer);
 		if (MyLexer.GetToken().Type() != Token::EOL)
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		return result;
 	}
 
@@ -131,7 +131,7 @@ namespace Silikego
 		case '(':
 			return GetExponent(MyLexer);
 		default:
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		}
 	}
 
@@ -164,7 +164,7 @@ namespace Silikego
 		}
 		else
 		{
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		}
 	}
 
@@ -184,7 +184,7 @@ namespace Silikego
 
 			if (MyLexer.GetToken().Type() != ')')
 			{
-				return ValueStatus::SYNTAX_ERR;
+				return Error::Syntax;
 			}
 
 			MyLexer.Next();
@@ -192,7 +192,7 @@ namespace Silikego
 		case Token::ID:
 			return GetFunctionCall(MyLexer);
 		default:
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		}
 	}
 
@@ -211,7 +211,7 @@ namespace Silikego
 			return number;
 		}
 		default:
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		}
 	}
 
@@ -234,27 +234,27 @@ namespace Silikego
 			return number;
 		}
 		default:
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		}
 	}
 
 	static SyntaxTreeNode GetFunctionCall(Lexer& MyLexer)
 	{
 		if (MyLexer.GetToken().Type() != Token::ID)
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 
         std::string FunctionName = MyLexer.GetToken().Id();
         MyLexer.Next();
 
 		if (MyLexer.GetToken().Type() != '(')
-            return ValueStatus::SYNTAX_ERR;
+            return Error::Syntax;
 
         MyLexer.Next();
 
         SyntaxTreeNode rVal(GetArguments(MyLexer, FunctionName));
 
 		if (MyLexer.GetToken().Type() != ')')
-            return ValueStatus::SYNTAX_ERR;
+            return Error::Syntax;
 
         MyLexer.Next();
         return rVal;
@@ -275,7 +275,7 @@ namespace Silikego
 			}
 			else if (MyLexer.GetToken().Type() != ',')
 			{
-                branch.PushRight(ValueStatus::SYNTAX_ERR);
+                branch.PushRight(Error::Syntax);
 				break;
 			}
 			MyLexer.Next();

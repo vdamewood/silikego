@@ -74,7 +74,7 @@ namespace Silikego
 	SyntaxTreeNode::SyntaxTreeNode(): I(new Impl()) {}
 	SyntaxTreeNode::SyntaxTreeNode(long long int new_value): I(new Impl(Value(new_value))) {}
 	SyntaxTreeNode::SyntaxTreeNode(double new_value): I(new Impl(Value(new_value))) {}
-	SyntaxTreeNode::SyntaxTreeNode(ValueStatus new_status): I(new Impl(Value(new_status))) {}
+	SyntaxTreeNode::SyntaxTreeNode(Error new_error): I(new Impl(Value(new_error))) {}
 	SyntaxTreeNode::SyntaxTreeNode(Value new_value): I(new Impl(new_value)) {}
 	SyntaxTreeNode::SyntaxTreeNode(const std::string& new_id): I(new Impl(NodeBranch(new_id))) {}
 
@@ -112,7 +112,7 @@ namespace Silikego
 		switch (I->data.index())
 		{
 		case Nothing:
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		case Leaf:
 			return std::get<Value>(I->data);
 		case Branch:
@@ -122,19 +122,19 @@ namespace Silikego
 			for (auto& i : std::get<NodeBranch>(I->data).children)
 			{
 				Value current = i.Evaluate(caller);
-				if (!current.IsNumber())
+				if (current.isError())
 					return current;
 				Arguments.push_back(current);
 			}
 
 			Value result(caller.Call(std::get<NodeBranch>(I->data).id.c_str(), Arguments));
 			if (std::get<NodeBranch>(I->data).is_negated)
-				result.Negate();
+				result.negate();
 
 			return result;
 		}
 		default:
-			return ValueStatus::SYNTAX_ERR;
+			return Error::Syntax;
 		}
 	}
 
@@ -151,7 +151,7 @@ namespace Silikego
 		case Nothing:
 			break;
 		case Leaf:
-			std::get<Value>(I->data).Negate();
+			std::get<Value>(I->data).negate();
 			break;
 		case Branch:
 			std::get<NodeBranch>(I->data).is_negated
@@ -163,7 +163,7 @@ namespace Silikego
 	bool SyntaxTreeNode::IsError()
 	{
 		return (I->data.index() == Leaf)
-			? !std::get<Value>(I->data).IsNumber()
+			? std::get<Value>(I->data).isError()
 			: false;
 	}
 

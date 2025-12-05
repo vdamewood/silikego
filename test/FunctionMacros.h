@@ -20,46 +20,46 @@ Test(SUITE, NAME) \
     Silikego::Value result = caller.Call( \
         FUNCTION, \
         input); \
-    cr_assert(result.Status() == STATUS, \
-        "Status: Expected: %d; Got %d;", STATUS, result.Status()); \
+    cr_assert(result.status() == STATUS, \
+        "Status: Expected: %d; Got %d;", STATUS, result.status()); \
     cr_assert(RESULT_EXPRESSION); \
 }
 
-#define TestFunctionForStatus(NAME, FUNCTION, STATUS, ...) \
+#define TestFunctionForError(NAME, FUNCTION, ERROR, ...) \
     TestFunction(NAME, FUNCTION, \
-        STATUS, \
-        (result.Integer() == 0), \
+        ValueStatus::Error, \
+        (result.asError() == ERROR), \
         __VA_ARGS__ \
 )
 
 #define TestFunctionForEpsilon(NAME, FUNCTION, RESULT, EPSILON, ...) \
     TestFunction(NAME, FUNCTION, \
-        ValueStatus::FLOAT, \
-        (std::fabs(result.Float() - RESULT) <= EPSILON), \
+        ValueStatus::Float, \
+        (std::fabs(result.asFloat() - RESULT) <= EPSILON), \
         __VA_ARGS__ \
 )
 
 #define TestFunctionForEquality(NAME, FUNCTION, RESULT, ...) \
     TestFunction(NAME, FUNCTION, \
         _Generic((RESULT), \
-            signed char:            ValueStatus::INTEGER, \
-            short int:              ValueStatus::INTEGER, \
-            int:                    ValueStatus::INTEGER, \
-            long int:               ValueStatus::INTEGER, \
-            long long int:          ValueStatus::INTEGER, \
-            float:                  ValueStatus::FLOAT,   \
-            double:                 ValueStatus::FLOAT,   \
-            default:                ValueStatus::INTEGER  \
+            signed char:            ValueStatus::Integer, \
+            short int:              ValueStatus::Integer, \
+            int:                    ValueStatus::Integer, \
+            long int:               ValueStatus::Integer, \
+            long long int:          ValueStatus::Integer, \
+            float:                  ValueStatus::Float,   \
+            double:                 ValueStatus::Float,   \
+            default:                ValueStatus::Integer  \
         ), \
         (_Generic((RESULT), \
-            signed char:            result.Integer(), \
-            short int:              result.Integer(), \
-            int:                    result.Integer(), \
-            long int:               result.Integer(), \
-            long long int:          result.Integer(), \
-            float:                  result.Float(),   \
-            double:                 result.Float(),   \
-            default:                result.Integer()  \
+            signed char:            result.asInteger(), \
+            short int:              result.asInteger(), \
+            int:                    result.asInteger(), \
+            long int:               result.asInteger(), \
+            long long int:          result.asInteger(), \
+            float:                  result.asFloat(),   \
+            double:                 result.asFloat(),   \
+            default:                result.asInteger()  \
         ) == RESULT), \
         __VA_ARGS__ \
 )

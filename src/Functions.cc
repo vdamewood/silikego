@@ -26,41 +26,44 @@ namespace Silikego
 {
 	Value Functions::add(std::vector<Value> Args)
 	{
-		if (!Args.size())
+		if (Args.size() == 0)
 			return 0;
+
+		if (Args[0].isError())
+			return Args[0];
 
 		Value rVal = Args[0];
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
-			switch (rVal.Status())
+			switch (rVal.status())
 			{
-			case ValueStatus::INTEGER:
-				switch(i->Status())
+			case ValueStatus::Integer:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					rVal = rVal.Integer() + i->Integer();
+				case ValueStatus::Integer:
+					rVal = rVal.asInteger() + i->asInteger();
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Integer() + i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asInteger() + i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return *i;
 				}
 				break;
-			case ValueStatus::FLOAT:
-				switch(i->Status())
+			case ValueStatus::Float:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					rVal = rVal.Float() + i->Integer();
+				case ValueStatus::Integer:
+					rVal = rVal.asFloat() + i->asInteger();
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Float() + i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asFloat() + i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return *i;
 				}
 				break;
-			default:
-				return ValueStatus::BAD_ARGUMENTS;
+			default: // shouldn't happen
+				return Error::FunctionArguments;
 			}
 		return rVal;
 	}
@@ -70,38 +73,41 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
+		if (Args[0].isError())
+			return Args[0];
+
 		Value rVal = Args[0];
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
-			switch (rVal.Status())
+			switch (rVal.status())
 			{
-			case ValueStatus::INTEGER:
-				switch(i->Status())
+			case ValueStatus::Integer:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					rVal = rVal.Integer() - i->Integer();
+				case ValueStatus::Integer:
+					rVal = rVal.asInteger() - i->asInteger();
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Integer() - i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asInteger() - i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return *i;
 				}
 				break;
-			case ValueStatus::FLOAT:
-				switch(i->Status())
+			case ValueStatus::Float:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					rVal = rVal.Float() - i->Integer();
+				case ValueStatus::Integer:
+					rVal = rVal.asFloat() - i->asInteger();
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Float() - i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asFloat() - i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return *i;
 				}
 				break;
-			default:
-				return ValueStatus::BAD_ARGUMENTS;
+			default: // shouldn't happen
+				return Error::FunctionArguments;
 			}
 		return rVal;
 	}
@@ -111,112 +117,123 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
+		if (Args[0].isError())
+			return Args[0];
+
 		Value rVal = Args[0];
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
-			switch (rVal.Status())
+			switch (rVal.status())
 			{
-			case ValueStatus::INTEGER:
-				switch(i->Status())
+			case ValueStatus::Integer:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					rVal = rVal.Integer() * i->Integer();
+				case ValueStatus::Integer:
+					rVal = rVal.asInteger() * i->asInteger();
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Integer() * i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asInteger() * i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return Error::FunctionArguments;
 				}
 				break;
-			case ValueStatus::FLOAT:
-				switch(i->Status())
+			case ValueStatus::Float:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					rVal = rVal.Float() * i->Integer();
+				case ValueStatus::Integer:
+					rVal = rVal.asFloat() * i->asInteger();
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Float() * i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asFloat() * i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return Error::FunctionArguments;
 				}
 				break;
 			default:
-				return ValueStatus::BAD_ARGUMENTS;
+				return Error::FunctionArguments;
 			}
 		return rVal;	}
 
 	Value Functions::divide(std::vector<Value> Args)
 	{
 		if (Args.size() < 2)
-			return ValueStatus::BAD_ARGUMENTS;
+			return Error::FunctionArguments;
+
+		if (Args[0].isError())
+			return Args[0];
 
 		Value rVal = Args[0];
 		for (auto i = Args.begin()+1; i != Args.end(); i++)
 		{
 			/* Division-by-Zero Error */
-			if ((i->Status() == ValueStatus::FLOAT && i->Float() == 0.0)
-				|| (i->Status() == ValueStatus::INTEGER && i->Integer() == 0))
+			if ((i->status() == ValueStatus::Float && i->asFloat() == 0.0)
+				|| (i->status() == ValueStatus::Integer && i->asInteger() == 0))
 			{
-				return ValueStatus::ZERO_DIV_ERR;
+				return Error::ZeroDivision;
 			}
 
-			switch (rVal.Status())
+			switch (rVal.status())
 			{
-			case ValueStatus::INTEGER:
-				switch(i->Status())
+			case ValueStatus::Integer:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					if (rVal.Integer() % i->Integer() == 0)
-						rVal = rVal.Integer() / i->Integer();
+				case ValueStatus::Integer:
+					if (rVal.asInteger() % i->asInteger() == 0)
+						rVal = rVal.asInteger() / i->asInteger();
 					else
-						rVal = static_cast<double>(rVal.Integer())
-							/ static_cast<double>(i->Integer());
+						rVal = static_cast<double>(rVal.asInteger())
+							/ static_cast<double>(i->asInteger());
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Integer() / i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asInteger() / i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return Error::FunctionArguments;
 				}
 				break;
-			case ValueStatus::FLOAT:
-				switch(i->Status())
+			case ValueStatus::Float:
+				switch(i->status())
 				{
-				case ValueStatus::INTEGER:
-					rVal = rVal.Float() / i->Integer();
+				case ValueStatus::Integer:
+					rVal = rVal.asFloat() / i->asInteger();
 					break;
-				case ValueStatus::FLOAT:
-					rVal = rVal.Float() / i->Float();
+				case ValueStatus::Float:
+					rVal = rVal.asFloat() / i->asFloat();
 					break;
 				default:
-					return ValueStatus::BAD_ARGUMENTS;
+					return Error::FunctionArguments;
 				}
 				break;
 			default:
-				return ValueStatus::BAD_ARGUMENTS;
+				return Error::FunctionArguments;
 			}
 		}
 		return rVal;
 	}
 
-	Value Functions::power(std::vector<Value> Args)
+	Value Functions::power(std::vector<Value> args)
 	{
-		double runningValue = Args[0].Float();
-		for (auto i = Args.begin()+1; i != Args.end(); i++)
-			runningValue = std::pow(runningValue, i->Float());
-		return runningValue;
+		if (args.size() == 0)
+			return Error::ZeroDivision;
+
+		if (args[0].isError())
+			return args[0];
+
+		double result = args[0].asFloat();
+		for (auto i = args.begin()+1; i != args.end(); i++)
+			result = std::pow(result, i->asFloat());
+		return result;
 	}
 
 
-	Value Functions::dice(std::vector<Value> Args)
+	Value Functions::dice(std::vector<Value> args)
 	{
+		if(args.size() != 2)
+			return Error::FunctionArguments;
 
-		if(Args.size() != 2)
-			return ValueStatus::BAD_ARGUMENTS;
-
-		long long int count = Args[0].Integer();
-		long long int faces = Args[1].Integer();
+		long long int count = args[0].asInteger();
+		long long int faces = args[1].asInteger();
 		if (faces == 0)
 			return 0;
 
@@ -227,168 +244,165 @@ namespace Silikego
 			std::srand((unsigned int)std::time(NULL));
 		}
 
-		long long int runningTotal = 0;
+		long long int result = 0;
 		for (int i = 1; i <= count; i++)
-			runningTotal += (std::rand() % faces) + 1;
-		return runningTotal;
+			result += (std::rand() % faces) + 1;
+		return result;
 	}
 
-	Value Functions::abs(std::vector<Value> Args)
+	Value Functions::abs(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		switch (Args[0].Status())
+		switch (args[0].status())
 		{
-		case ValueStatus::FLOAT:
-			return std::abs(Args[0].Float());
-		case ValueStatus::INTEGER:
-			return std::abs(Args[0].Integer());
+		case ValueStatus::Float:
+			return std::abs(args[0].asFloat());
+		case ValueStatus::Integer:
+			return std::abs(args[0].asInteger());
 		default:
-			return Args[0];
+			return args[0];
 		}
 	}
 
-	Value Functions::acos(std::vector<Value> Args)
+	Value Functions::acos(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		if (Args[0].Float() < -1 || Args[0].Float() > 1)
-			return ValueStatus::DOMAIN_ERR;
+		if (args[0].asFloat() < -1 || args[0].asFloat() > 1)
+			return Error::Domain;
 
-		return std::acos(Args[0].Float());
+		return std::acos(args[0].asFloat());
 	}
 
-	Value Functions::asin(std::vector<Value> Args)
+	Value Functions::asin(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		if (Args[0].Float() < -1 || Args[0].Float() > 1)
-			return ValueStatus::DOMAIN_ERR;
+		if (args[0].asFloat() < -1 || args[0].asFloat() > 1)
+			return Error::Domain;
 
-		return std::asin(Args[0].Float());
+		return std::asin(args[0].asFloat());
 	}
 
-	Value Functions::atan(std::vector<Value> Args)
+	Value Functions::atan(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::atan(Args[0].Float());
+		return std::atan(args[0].asFloat());
 	}
 
-	Value Functions::ceil(std::vector<Value> Args)
+	Value Functions::ceil(std::vector<Value> args)
 	{
-		double result;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
-
-		result = std::ceil(Args[0].Float());
-
-		if (result <= std::numeric_limits<long long int>::max() && result >= std::numeric_limits<long long int>::min())
+		double result = std::ceil(args[0].asFloat());
+		if (result <= std::numeric_limits<long long int>::max()
+				&& result >= std::numeric_limits<long long int>::min())
 			return static_cast<long long int>(result);
 		else
 			return result;
 	}
 
-	Value Functions::cos(std::vector<Value> Args)
+	Value Functions::cos(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::cos(Args[0].Float());
+		return std::cos(args[0].asFloat());
 	}
 
-	Value Functions::cosh(std::vector<Value> Args)
+	Value Functions::cosh(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::cosh(Args[0].Float());
+		return std::cosh(args[0].asFloat());
 	}
 
-	Value Functions::exp(std::vector<Value> Args)
+	Value Functions::exp(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::exp(Args[0].Float());
+		return std::exp(args[0].asFloat());
 	}
 
-	Value Functions::floor(std::vector<Value> Args)
+	Value Functions::floor(std::vector<Value> args)
 	{
-		double result;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		double result = std::floor(args[0].asFloat());
 
-		result = std::floor(Args[0].Float());
-
-		if (result <= std::numeric_limits<long long int>::max() && result >= std::numeric_limits<long long int>::min())
+		if (result <= std::numeric_limits<long long int>::max()
+				&& result >= std::numeric_limits<long long int>::min())
 			return static_cast<long long int>(result);
 		else
 			return result;
 	}
 
-	Value Functions::log(std::vector<Value> Args)
+	Value Functions::log(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::log(Args[0].Float());
+		return std::log(args[0].asFloat());
 	}
 
-	Value Functions::log10(std::vector<Value> Args)
+	Value Functions::log10(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::log10(Args[0].Float());
+		return std::log10(args[0].asFloat());
 	}
 
-	Value Functions::sin(std::vector<Value> Args)
+	Value Functions::sin(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::sin(Args[0].Float());
+		return std::sin(args[0].asFloat());
 	}
 
-	Value Functions::sinh(std::vector<Value> Args)
+	Value Functions::sinh(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::sinh(Args[0].Float());
+		return std::sinh(args[0].asFloat());
 	}
 
-	Value Functions::sqrt(std::vector<Value> Args)
+	Value Functions::sqrt(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		if (Args[0].Float() < 0.0)
-			return ValueStatus::DOMAIN_ERR;
+		if (args[0].asFloat() < 0.0)
+			return Error::Domain;
 
-		return std::sqrt(Args[0].Float());
+		return std::sqrt(args[0].asFloat());
 	}
 
-	Value Functions::tan(std::vector<Value> Args)
+	Value Functions::tan(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::tan(Args[0].Float());
+		return std::tan(args[0].asFloat());
 	}
 
-	Value Functions::tanh(std::vector<Value> Args)
+	Value Functions::tanh(std::vector<Value> args)
 	{
-		if (Args.size() != 1)
-			return ValueStatus::BAD_ARGUMENTS;
+		if (args.size() != 1)
+			return Error::FunctionArguments;
 
-		return std::tanh(Args[0].Float());
+		return std::tanh(args[0].asFloat());
 	}
 }

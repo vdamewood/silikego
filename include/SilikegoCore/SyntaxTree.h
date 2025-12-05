@@ -31,9 +31,9 @@ namespace Silikego
 	public:
 		SyntaxTreeNode();
 
+		SyntaxTreeNode(Error);
 		SyntaxTreeNode(long long int);
 		SyntaxTreeNode(double);
-		SyntaxTreeNode(ValueStatus);
 		SyntaxTreeNode(Value);
 		SyntaxTreeNode(const std::string&);
 

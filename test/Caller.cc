@@ -4,6 +4,7 @@
 using std::unique_ptr;
 using std::make_unique;
 using std::vector;
+using Silikego::Error;
 using Silikego::Value;
 using Silikego::ValueStatus;
 using Silikego::FunctionCaller;
@@ -21,55 +22,56 @@ Value GetFortyTwoFloat(vector<Value> ArgV)
 }
 
 Test(FunctionCallerTests, NewCaller) {
-    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
-    cr_assert(Caller != nullptr);
+    unique_ptr<FunctionCaller> caller = make_unique<FunctionCaller>();
+    cr_assert(caller != nullptr);
 }
 
 Test(FunctionCallerTests, GetIntFunction) {
-    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
-    cr_assert(Caller != nullptr);
-    Caller->Install("gfti", GetFortyTwoInt);
-    Silikego::FunctionCaller::FunctionPointer result = Caller->Get("gfti");
+    unique_ptr<FunctionCaller> caller = make_unique<FunctionCaller>();
+    cr_assert(caller != nullptr);
+    caller->Install("gfti", GetFortyTwoInt);
+    Silikego::FunctionCaller::FunctionPointer result = caller->Get("gfti");
     cr_assert(result == GetFortyTwoInt);
 }
 
 Test(FunctionCallerTests, GetFloatFunction) {
-    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
-    cr_assert(Caller != nullptr);
-    Caller->Install("gftf", GetFortyTwoFloat);
-    Silikego::FunctionCaller::FunctionPointer result = Caller->Get("gftf");
+    unique_ptr<FunctionCaller> caller = make_unique<FunctionCaller>();
+    cr_assert(caller != nullptr);
+    caller->Install("gftf", GetFortyTwoFloat);
+    Silikego::FunctionCaller::FunctionPointer result = caller->Get("gftf");
     cr_assert(result == GetFortyTwoFloat);
 }
 
 Test(FunctionCallerTests, UseFloatFunction) {
-    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
-    cr_assert(Caller != nullptr);
-    Caller->Install("gftf", GetFortyTwoFloat);
-    Value TestValue = Caller->Call("gftf", vector<Value>());
-    cr_assert(TestValue.Status() == ValueStatus::FLOAT);
-    cr_assert(TestValue.Float() == 42.0);
+    unique_ptr<FunctionCaller> caller = make_unique<FunctionCaller>();
+    cr_assert(caller != nullptr);
+    caller->Install("gftf", GetFortyTwoFloat);
+    Value result = caller->Call("gftf", vector<Value>());
+    cr_assert(result.status() == ValueStatus::Float);
+    cr_assert(result.asFloat() == 42.0);
 }
 
 Test(FunctionCallerTests, HandleBadFunction)
 {
-    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
-    cr_assert(Caller != nullptr);
-    Value TestValue = Caller->Call("bogus", vector<Value>());
-    cr_assert(TestValue.Status() == ValueStatus::BAD_FUNCTION);
+    unique_ptr<FunctionCaller> caller = make_unique<FunctionCaller>();
+    cr_assert(caller != nullptr);
+    Value result = caller->Call("bogus", vector<Value>());
+    cr_assert(result.status() == ValueStatus::Error);
+    cr_assert(result.asError() == Error::FunctionName);
 }
 
 Test(FunctionCallerTests, FunctionsInstall)
 {
-    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
-    cr_assert(Caller != nullptr);
-    Caller->InstallFunctions();
+    unique_ptr<FunctionCaller> caller = make_unique<FunctionCaller>();
+    cr_assert(caller != nullptr);
+    caller->InstallFunctions();
     //cr_assert(Result);
 }
 
 Test(FunctionCallerTests, OperatorsInstall)
 {
-    unique_ptr<FunctionCaller> Caller = make_unique<FunctionCaller>();
-    cr_assert(Caller != nullptr);
-    Caller->InstallOperators();
+    unique_ptr<FunctionCaller> caller = make_unique<FunctionCaller>();
+    cr_assert(caller != nullptr);
+    caller->InstallOperators();
     //cr_assert(Result);
 }

@@ -24,50 +24,51 @@
 
 namespace Silikego
 {
+	enum class Error
+	{
+		None,
+		Memory,
+		Syntax,
+		ZeroDivision,
+		FunctionName,
+		FunctionArguments,
+		Domain,
+		Range
+	};
+
 	enum class ValueStatus
 	{
-		INTEGER,       /* Success: The value is an integer. */
-		FLOAT,         /* Success: The valis is a double. */
-		MEMORY_ERR,    /* Error: An attempt to allocate memory
-		                    failed. */
-		SYNTAX_ERR,    /* Error: A syntax error was
-		                    encountered. */
-		ZERO_DIV_ERR,  /* Error: Division by zero was
-		                    attempted. */
-		BAD_FUNCTION,  /* Error: A function call could not be
-		                    resolved to a valid function. */
-		BAD_ARGUMENTS, /* Error: A function call was made with
-		                    a number of arguments that the
-		                    function can't accept. */
-		DOMAIN_ERR,    /* Error: A function call resulted in a
-		                    domain error. */
-		RANGE_ERR      /* Error: A function call resulted in a
-		                    range error. */
+		Error,
+		Integer,
+		Float,
 	};
 
 	class SILIKEGOCORE_EXPORT Value
 	{
 	public:
+		Value() = delete;
 
-		Value();
-		Value(ValueStatus NewStatus);
-		Value(short int newValue);
-		Value(int NewValue);
-		Value(long int NewValue);
-		Value(long long int NewValue);
-		Value(float NewValue);
-		Value(double NewValue);
+		Value(Error);
+		Value(short int);
+		Value(int);
+		Value(long int);
+		Value(long long int);
+		Value(float);
+		Value(double);
+
 		Value(const Value&);
 		~Value();
 
 		Value& operator=(const Value& other);
-		Value& Negate();
 
-		ValueStatus Status() const;
-		long long int Integer() const;
-		double Float() const;
-
-		bool IsNumber() const;
+		Value& negate();
+		ValueStatus status() const;
+		bool isInteger() const;
+		long long int asInteger() const;
+		bool isFloat() const;
+		double asFloat() const;
+		bool isError() const;
+		Error asError() const;
 	private:
 		class State;
 		State *S;

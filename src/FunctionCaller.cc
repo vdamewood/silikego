@@ -92,6 +92,6 @@ namespace Silikego
 	}
 	catch (const std::out_of_range &)
 	{
-		return ValueStatus::BAD_FUNCTION;
+		return Error::FunctionName;
 	}
 }

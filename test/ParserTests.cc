@@ -28,14 +28,14 @@ Test(ParserTests, NAME) \
 	SyntaxTreeNode tree = Silikego::ParseInfix(std::move(src)); \
     Value target{TARGET}; \
 	Value result{tree.Evaluate(caller)}; \
-    cr_assert(target.Status() == result.Status()); \
-    switch(result.Status()) \
+    cr_assert(target.status() == result.status()); \
+    switch(result.status()) \
     { \
-    case ValueStatus::INTEGER: \
-        cr_assert(target.Integer() == result.Integer()); \
+    case ValueStatus::Integer: \
+        cr_assert(target.asInteger() == result.asInteger()); \
         break; \
-    case ValueStatus::FLOAT: \
-        cr_assert(target.Float() == result.Float()); \
+    case ValueStatus::Float: \
+        cr_assert(target.asFloat() == result.asFloat()); \
         break; \
     default: \
         break; \

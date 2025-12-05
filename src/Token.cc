@@ -90,15 +90,6 @@ namespace Silikego
 		delete S;
 	}
 
-	/*&Token& Token::operator=(TokenType) { return *this; }
-	Token& Token::operator=(short int) { return *this; }
-	Token& Token::operator=(int) { return *this; }
-	Token& Token::operator=(long int) { return *this; }
-	Token& Token::operator=(long long int) { return *this; }
-	Token& Token::operator=(float) { return *this; }
-	Token& Token::operator=(double) { return *this; }
-	Token& Token::operator=(const std::string&) { return *this; }
-*/
 	Token& Token::operator=(const Token& RightSide)
 	{
 		*S = *RightSide.S;
