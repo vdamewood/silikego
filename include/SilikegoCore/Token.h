@@ -52,9 +52,11 @@ namespace Silikego
 		Token(const std::string&);
 
 		Token(const Token&);
+		Token(Token&&);
 		~Token();
 
 		Token& operator=(const Token&);
+		Token& operator=(Token&&);
 
 		TokenStatus status() const;
 		long long int integerValue() const;

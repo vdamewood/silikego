@@ -81,6 +81,8 @@ namespace Silikego
 		: impl(new Impl(placeholder)) { }
 	Token::Token(const Token& right_side)
 		: impl(new Impl(*right_side.impl)) { }
+	Token::Token(Token&& other)
+		: impl(other.impl) { other.impl = nullptr; }
 
 	Token::~Token()
 	{
@@ -90,6 +92,13 @@ namespace Silikego
 	Token& Token::operator=(const Token& RightSide)
 	{
 		*impl = *RightSide.impl;
+		return *this;
+	}
+
+	Token& Token::operator=(Token&& right_side)
+	{
+		impl = right_side.impl;
+		right_side.impl = nullptr;
 		return *this;
 	}
 
