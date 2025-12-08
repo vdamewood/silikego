@@ -15,13 +15,15 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
-#include <vector>
 #include <deque>
+#include <optional>
+#include <string>
 #include <variant>
+#include <vector>
 
 #include <SilikegoCore/SyntaxTree.h>
 #include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/Value.h>
 
 namespace
 {

@@ -17,10 +17,13 @@
 
 #include <cstdlib>
 #include <cctype>
-#include <cstring>
 #include <memory>
+#include <string>
+#include <utility>
 
+#include <SilikegoCore/DataSource.h>
 #include <SilikegoCore/Lexer.h>
+#include <SilikegoCore/Token.h>
 
 /* Values taken from Google Calculator 2011-07-06 */
 #define EULER 2.71828183

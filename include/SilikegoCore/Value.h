@@ -18,8 +18,6 @@
 #if !defined SILIKEGO_CORE_VALUE_H
 #define SILIKEGO_CORE_VALUE_H
 
-#include <string>
-
 #include <SilikegoCore/Api.h>
 
 namespace Silikego

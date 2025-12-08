@@ -19,9 +19,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <string>
-#include <sstream>
 #include <limits>
+#include <variant>
 
 #include <SilikegoCore/Value.h>
 

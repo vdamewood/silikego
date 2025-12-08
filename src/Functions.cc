@@ -20,6 +20,8 @@
 #include <ctime>
 #include <limits>
 
+#include <SilikegoCore/Value.h>
+
 #include "Functions.h"
 
 namespace Silikego

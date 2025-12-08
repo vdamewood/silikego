@@ -19,6 +19,7 @@
 #define SILIKEGO_CORE_SYNTAX_TREE_H
 
 #include <optional>
+#include <string>
 
 #include <SilikegoCore/Api.h>
 #include <SilikegoCore/FunctionCaller.h>

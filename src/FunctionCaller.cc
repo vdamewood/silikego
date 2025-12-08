@@ -17,8 +17,11 @@
 
 #include <unordered_map>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/Value.h>
 
 #include "Functions.h"
 

@@ -15,7 +15,8 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstring>
+#include <string>
+#include <variant>
 
 #include <SilikegoCore/Token.h>
 
