@@ -33,25 +33,25 @@ namespace Silikego
 	};
 
 	StringSource::StringSource(const char *NewSource)
-		: impl(new Impl(NewSource))
+		: _impl(new Impl(NewSource))
 	{
 	}
 
 	StringSource::StringSource(const std::string &NewSource)
-		: impl(new Impl(NewSource))
+		: _impl(new Impl(NewSource))
 	{
 	}
 
 	StringSource::~StringSource()
 	{
-		delete impl;
+		delete _impl;
 	}
 
 	bool StringSource::advance()
 	{
-		if (impl->Index != impl->Input.end())
+		if (_impl->Index != _impl->Input.end())
 		{
-			impl->Index++;
+			_impl->Index++;
 			return true;
 		}
 		else
@@ -62,8 +62,8 @@ namespace Silikego
 
 	char StringSource::current()
 	{
-		if (impl->Index != impl->Input.end())
-			return *impl->Index;
+		if (_impl->Index != _impl->Input.end())
+			return *_impl->Index;
 		else
 			return '\0';
 	}

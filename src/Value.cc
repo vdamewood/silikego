@@ -43,57 +43,57 @@ namespace Silikego
 	};
 
 	Value::Value(Error new_error)
-		: impl(new Impl(new_error)) { }
+		: _impl(new Impl(new_error)) { }
 	Value::Value(short new_integer)
-		: impl(new Impl(static_cast<long long int>(new_integer))) { }
+		: _impl(new Impl(static_cast<long long int>(new_integer))) { }
 	Value::Value(int new_integer)
-		: impl(new Impl(static_cast<long long int>(new_integer))) { }
+		: _impl(new Impl(static_cast<long long int>(new_integer))) { }
 	Value::Value(long int new_integer)
-		: impl(new Impl(static_cast<long long int>(new_integer))) { }
+		: _impl(new Impl(static_cast<long long int>(new_integer))) { }
 	Value::Value(long long int new_integer)
-		: impl(new Impl(new_integer)) { }
+		: _impl(new Impl(new_integer)) { }
 	Value::Value(float new_float)
-		: impl(new Impl(static_cast<double>(new_float))) { }
+		: _impl(new Impl(static_cast<double>(new_float))) { }
 	Value::Value(double new_float)
-		: impl(new Impl(new_float)) { }
+		: _impl(new Impl(new_float)) { }
 
 	Value::Value(const Value& source)
-		: impl(new Impl(*source.impl)) { }
+		: _impl(new Impl(*source._impl)) { }
 
 	Value::Value(Value&& source)
-		: impl(source.impl)
+		: _impl(source._impl)
 	{
-		source.impl = nullptr;
+		source._impl = nullptr;
 	}
 
 	Value::~Value()
 	{
-		delete impl;
+		delete _impl;
 	}
 
 	Value& Value::operator=(const Value& right_side)
 	{
-		impl->data = right_side.impl->data;
+		_impl->data = right_side._impl->data;
 		return *this;
 	}
 
 	Value& Value::operator=(Value&& right_side)
 	{
-		delete impl;
-		impl = right_side.impl;
-		right_side.impl = nullptr;
+		delete _impl;
+		_impl = right_side._impl;
+		right_side._impl = nullptr;
 		return *this;
 	}
 
 	Value& Value::negate()
 	{
-		switch (impl->data.index())
+		switch (_impl->data.index())
 		{
 		case (IntegerIndex):
-			std::get<IntegerIndex>(impl->data) *= -1;
+			std::get<IntegerIndex>(_impl->data) *= -1;
 			break;
 		case (FloatIndex):
-			std::get<FloatIndex>(impl->data) *= -1.0;
+			std::get<FloatIndex>(_impl->data) *= -1.0;
 			break;
 		default:
 			; // Do nothing. Silence warning.
@@ -103,7 +103,7 @@ namespace Silikego
 
 	ValueStatus Value::status() const
 	{
-		switch (impl->data.index())
+		switch (_impl->data.index())
 		{
 		case ErrorIndex:
 			return ValueStatus::Error;
@@ -118,17 +118,17 @@ namespace Silikego
 
 	bool Value::isInteger() const
 	{
-		return impl->data.index() == IntegerIndex;
+		return _impl->data.index() == IntegerIndex;
 	}
 
 	long long int Value::asInteger() const
 	{
-		switch (impl->data.index())
+		switch (_impl->data.index())
 		{
 		case IntegerIndex:
-			return std::get<IntegerIndex>(impl->data);
+			return std::get<IntegerIndex>(_impl->data);
 		case FloatIndex:
-			return static_cast<long long int>(std::get<FloatIndex>(impl->data));
+			return static_cast<long long int>(std::get<FloatIndex>(_impl->data));
 		default:
 			return 0;
 		}
@@ -136,17 +136,17 @@ namespace Silikego
 
 	bool Value::isFloat() const
 	{
-		return impl->data.index() == FloatIndex;
+		return _impl->data.index() == FloatIndex;
 	}
 
 	double Value::asFloat() const
 	{
-		switch (impl->data.index())
+		switch (_impl->data.index())
 		{
 		case IntegerIndex:
-			return static_cast<double>(std::get<IntegerIndex>(impl->data));
+			return static_cast<double>(std::get<IntegerIndex>(_impl->data));
 		case FloatIndex:
-			return std::get<FloatIndex>(impl->data);
+			return std::get<FloatIndex>(_impl->data);
 		default:
 			return std::numeric_limits<double>::quiet_NaN();
 		}
@@ -154,13 +154,13 @@ namespace Silikego
 
 	bool Value::isError() const
 	{
-		return impl->data.index() == ErrorIndex;
+		return _impl->data.index() == ErrorIndex;
 	}
 
 	Error Value::asError() const
 	{
-		return impl->data.index() == ErrorIndex
-			? std::get<ErrorIndex>(impl->data)
+		return _impl->data.index() == ErrorIndex
+			? std::get<ErrorIndex>(_impl->data)
 			: Error::None;
 	}
 }

@@ -36,18 +36,18 @@ namespace Silikego
 		> lookup;
 	};
 
-	FunctionCaller::FunctionCaller(): impl(new Impl) { }
+	FunctionCaller::FunctionCaller(): _impl(new Impl) { }
 
 	FunctionCaller::~FunctionCaller()
 	{
-		delete impl;
+		delete _impl;
 	}
 
 	void FunctionCaller::install(
 		const std::string& name,
 		FunctionPointer pointer)
 	{
-		impl->lookup[name] = pointer;
+		_impl->lookup[name] = pointer;
 	}
 
 	FunctionPointer FunctionCaller::fetch(
@@ -55,7 +55,7 @@ namespace Silikego
 	{
 		try
 		{
-			return impl->lookup.at(name);
+			return _impl->lookup.at(name);
 		}
 		catch (const std::out_of_range&)
 		{
@@ -68,7 +68,7 @@ namespace Silikego
 		std::vector<Value> args)
 	try
 	{
-		return impl->lookup.at(name)(args);
+		return _impl->lookup.at(name)(args);
 	}
 	catch (const std::out_of_range&)
 	{

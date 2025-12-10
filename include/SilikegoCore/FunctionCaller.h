@@ -52,7 +52,7 @@ namespace Silikego
 
 	private:
 		class Impl;
-		Impl* impl;
+		Impl* _impl;
 	};
 
 	SILIKEGOCORE_EXPORT void InstallOperators(FunctionCaller&);
