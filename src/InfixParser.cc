@@ -122,7 +122,7 @@ namespace Silikego
 	{
 		SyntaxTreeNode leftValue = GetRoll(lexer);
 		SyntaxTreeNode Rest = GetExponentRest(lexer);
-		if (Rest.isNothing())
+		if (Rest.status() == NodeStatus::Nothing)
 			return leftValue;
 
         SyntaxTreeNode result{"power"};
@@ -165,7 +165,7 @@ namespace Silikego
 		SyntaxTreeNode left_side = GetAtom(lexer);
 		SyntaxTreeNode rest = GetRollRest(lexer);
 
-		if (rest.isNothing())
+		if (rest.status() == NodeStatus::Nothing)
 			return left_side;
 
         SyntaxTreeNode result{"dice"};

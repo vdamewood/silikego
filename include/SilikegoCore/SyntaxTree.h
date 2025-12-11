@@ -27,6 +27,13 @@
 
 namespace Silikego
 {
+	enum class NodeStatus
+	{
+		Nothing,
+		Leaf,
+		Branch
+	};
+
 	class SILIKEGOCORE_EXPORT SyntaxTreeNode
 	{
 	public:
@@ -48,10 +55,8 @@ namespace Silikego
 		SyntaxTreeNode* child(int child_index);
 		bool collapse(FunctionCaller&);
 		Value evaluate(FunctionCaller&);
-		bool isBranch();
+		NodeStatus status();
 		bool isError();
-		bool isLeaf();
-		bool isNothing();
 		void negate();
 		std::optional<SyntaxTreeNode> pruneChild(int child_index);
 		bool pushLeft(SyntaxTreeNode&&);

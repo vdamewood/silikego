@@ -27,9 +27,9 @@
 
 namespace
 {
-	const int Nothing = 0;
-	const int Leaf = 1;
-	const int Branch = 2;
+	const int NothingIndex = 0;
+	const int LeafIndex = 1;
+	const int BranchIndex = 2;
 }
 
 namespace Silikego
@@ -58,14 +58,14 @@ namespace Silikego
 
 		int checkBounds(int index)
 		{
-			if (data.index() != Branch
-					|| index >= std::get<Branch>(data).children.size()
-					|| index < -std::get<Branch>(data).children.size()
+			if (data.index() != BranchIndex
+					|| index >= std::get<BranchIndex>(data).children.size()
+					|| index < -std::get<BranchIndex>(data).children.size()
 			)
 				return -1;
 
 			if (index < 0)
-				return index + std::get<Branch>(data).children.size();
+				return index + std::get<BranchIndex>(data).children.size();
 
 			return index;
 		}
@@ -113,24 +113,24 @@ namespace Silikego
 		// std::visit
 		switch (_impl->data.index())
 		{
-		case Nothing:
+		case NothingIndex:
 			return Error::Syntax;
-		case Leaf:
-			return std::get<Value>(_impl->data);
-		case Branch:
+		case LeafIndex:
+			return std::get<LeafIndex>(_impl->data);
+		case BranchIndex:
 		{
 			std::vector<Value> Arguments;
 
-			for (auto& i : std::get<NodeBranch>(_impl->data).children)
+			for (auto& i : std::get<BranchIndex>(_impl->data).children)
 			{
 				Value current = i.evaluate(caller);
-				if (current.isError())
+				if (current.status() == ValueStatus::Error)
 					return current;
 				Arguments.push_back(current);
 			}
 
-			Value result(caller.call(std::get<NodeBranch>(_impl->data).id, Arguments));
-			if (std::get<NodeBranch>(_impl->data).is_negated)
+			Value result(caller.call(std::get<BranchIndex>(_impl->data).id, Arguments));
+			if (std::get<BranchIndex>(_impl->data).is_negated)
 				result.negate();
 
 			return result;
@@ -142,7 +142,7 @@ namespace Silikego
 
 	bool SyntaxTreeNode::collapse(FunctionCaller& caller)
 	{
-		if(_impl->data.index() != Branch)
+		if(_impl->data.index() != BranchIndex)
 			return false;
 		
 		_impl->data = evaluate(caller);
@@ -154,55 +154,56 @@ namespace Silikego
 		// std::visit
 		switch(_impl->data.index())
 		{
-		case Nothing:
+		case NothingIndex:
 			break;
-		case Leaf:
-			std::get<Value>(_impl->data).negate();
+		case LeafIndex:
+			std::get<LeafIndex>(_impl->data).negate();
 			break;
-		case Branch:
-			std::get<NodeBranch>(_impl->data).is_negated
-				= !std::get<NodeBranch>(_impl->data).is_negated;
+		case BranchIndex:
+			std::get<BranchIndex>(_impl->data).is_negated
+				= !std::get<BranchIndex>(_impl->data).is_negated;
 			break;
 		}
 	}
 
 	bool SyntaxTreeNode::isError()
 	{
-		return (_impl->data.index() == Leaf)
-			? std::get<Value>(_impl->data).isError()
+		return (_impl->data.index() == LeafIndex)
+			? (std::get<LeafIndex>(_impl->data).status()
+				== ValueStatus::Error)
 			: false;
 	}
 
-	bool SyntaxTreeNode::isBranch()
+	NodeStatus SyntaxTreeNode::status()
 	{
-		return _impl->data.index() == Branch;
-	}
-
-	bool SyntaxTreeNode::isLeaf()
-	{
-		return _impl->data.index() == Leaf;
-	}
-
-	bool SyntaxTreeNode::isNothing()
-	{
-		return _impl->data.index() == Nothing;
+		switch (_impl->data.index())
+		{
+		case NothingIndex:
+			return NodeStatus::Nothing;
+		case LeafIndex:
+			return NodeStatus::Leaf;
+		case BranchIndex:
+			return NodeStatus::Branch;
+		default:
+			throw; // shouldn't happen
+		}
 	}
 
 	bool SyntaxTreeNode::pushLeft(SyntaxTreeNode&& new_child)
 	{
-		if (_impl->data.index() != Branch)
+		if (_impl->data.index() != BranchIndex)
 			return false;
 
-		std::get<NodeBranch>(_impl->data).children.push_front(new_child);
+		std::get<BranchIndex>(_impl->data).children.push_front(new_child);
 		return true;
 	}
 
 	bool SyntaxTreeNode::pushRight(SyntaxTreeNode&& new_child)
 	{
-		if (_impl->data.index() != Branch)
+		if (_impl->data.index() != BranchIndex)
 			return false;
 
-		std::get<NodeBranch>(_impl->data).children.push_back(new_child);
+		std::get<BranchIndex>(_impl->data).children.push_back(new_child);
 		return true;
 	}
 
@@ -211,7 +212,7 @@ namespace Silikego
 		if ((child_index = _impl->checkBounds(child_index)) < 0)
 			return nullptr;
 
-		return &std::get<Branch>(_impl->data).children[child_index];
+		return &std::get<BranchIndex>(_impl->data).children[child_index];
 	}
 
 	std::optional<SyntaxTreeNode> SyntaxTreeNode::pruneChild(int child_index)
@@ -219,7 +220,7 @@ namespace Silikego
 		if ((child_index = _impl->checkBounds(child_index)) < 0)
 			return std::nullopt;
 
-		auto& children = std::get<Branch>(_impl->data).children;
+		auto& children = std::get<BranchIndex>(_impl->data).children;
 		SyntaxTreeNode child = children[child_index];
 		children.erase(children.begin() + child_index);
 		return child;

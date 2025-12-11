@@ -116,11 +116,6 @@ namespace Silikego
 		}
 	}
 
-	bool Value::isInteger() const
-	{
-		return _impl->data.index() == IntegerIndex;
-	}
-
 	long long int Value::asInteger() const
 	{
 		switch (_impl->data.index())
@@ -134,11 +129,6 @@ namespace Silikego
 		}
 	}
 
-	bool Value::isFloat() const
-	{
-		return _impl->data.index() == FloatIndex;
-	}
-
 	double Value::asFloat() const
 	{
 		switch (_impl->data.index())
@@ -150,11 +140,6 @@ namespace Silikego
 		default:
 			return std::numeric_limits<double>::quiet_NaN();
 		}
-	}
-
-	bool Value::isError() const
-	{
-		return _impl->data.index() == ErrorIndex;
 	}
 
 	Error Value::asError() const

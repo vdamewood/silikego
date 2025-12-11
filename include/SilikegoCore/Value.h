@@ -63,11 +63,8 @@ namespace Silikego
 
 		Value& negate();
 		ValueStatus status() const;
-		bool isInteger() const;
 		long long int asInteger() const;
-		bool isFloat() const;
 		double asFloat() const;
-		bool isError() const;
 		Error asError() const;
 
 	private:

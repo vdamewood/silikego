@@ -31,7 +31,7 @@ namespace Silikego
 		if (Args.size() == 0)
 			return 0;
 
-		if (Args[0].isError())
+		if (Args[0].status() == ValueStatus::Error)
 			return Args[0];
 
 		Value rVal = Args[0];
@@ -75,7 +75,7 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
-		if (Args[0].isError())
+		if (Args[0].status() == ValueStatus::Error)
 			return Args[0];
 
 		Value rVal = Args[0];
@@ -119,7 +119,7 @@ namespace Silikego
 		if (!Args.size())
 			return 0;
 
-		if (Args[0].isError())
+		if (Args[0].status() == ValueStatus::Error)
 			return Args[0];
 
 		Value rVal = Args[0];
@@ -162,7 +162,7 @@ namespace Silikego
 		if (Args.size() < 2)
 			return Error::FunctionArguments;
 
-		if (Args[0].isError())
+		if (Args[0].status() == ValueStatus::Error)
 			return Args[0];
 
 		Value rVal = Args[0];
@@ -219,7 +219,7 @@ namespace Silikego
 		if (args.size() == 0)
 			return Error::ZeroDivision;
 
-		if (args[0].isError())
+		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
 		double result = args[0].asFloat();
