@@ -140,9 +140,13 @@ namespace Silikego
 		}
 	}
 
-	SyntaxTreeNode SyntaxTreeNode::collapse(FunctionCaller& caller)
+	bool SyntaxTreeNode::collapse(FunctionCaller& caller)
 	{
-		return evaluate(caller);
+		if(_impl->data.index() != Branch)
+			return false;
+		
+		_impl->data = evaluate(caller);
+		return true;
 	}
 
 	void SyntaxTreeNode::negate()
@@ -219,15 +223,5 @@ namespace Silikego
 		SyntaxTreeNode child = children[child_index];
 		children.erase(children.begin() + child_index);
 		return child;
-	}
-
-	bool SyntaxTreeNode::collapseChild(int child_index, FunctionCaller& caller)
-	{
-		if ((child_index = _impl->checkBounds(child_index)) < 0)
-			return false;
-
-		auto& children = std::get<Branch>(_impl->data).children;
-		children[child_index] = children[child_index].collapse(caller);
-		return true;
 	}
 }

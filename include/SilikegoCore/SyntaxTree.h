@@ -46,8 +46,7 @@ namespace Silikego
 		SyntaxTreeNode& operator=(SyntaxTreeNode&&);
 
 		SyntaxTreeNode* child(int child_index);
-		SyntaxTreeNode collapse(FunctionCaller& caller);
-		bool collapseChild(int ChildIndex, FunctionCaller& Caller);
+		bool collapse(FunctionCaller&);
 		Value evaluate(FunctionCaller&);
 		bool isBranch();
 		bool isError();
