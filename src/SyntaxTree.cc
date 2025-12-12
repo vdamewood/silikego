@@ -207,7 +207,7 @@ namespace Silikego
 		return true;
 	}
 
-	SyntaxTreeNode* SyntaxTreeNode::child(int child_index)
+	SyntaxTreeNode* SyntaxTreeNode::fetchChild(int child_index)
 	{
 		if ((child_index = _impl->checkBounds(child_index)) < 0)
 			return nullptr;

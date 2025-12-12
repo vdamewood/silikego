@@ -52,7 +52,7 @@ namespace Silikego
 		SyntaxTreeNode& operator=(const SyntaxTreeNode&);
 		SyntaxTreeNode& operator=(SyntaxTreeNode&&);
 
-		SyntaxTreeNode* child(int child_index);
+		SyntaxTreeNode* fetchChild(int child_index);
 		bool collapse(FunctionCaller&);
 		Value evaluate(FunctionCaller&);
 		NodeStatus status();
