@@ -285,7 +285,7 @@ namespace Silikego
 		}
 	}
 
-	Token& Lexer::token()
+	Token& Lexer::current()
 	{
 		return _impl->Token;
 	}

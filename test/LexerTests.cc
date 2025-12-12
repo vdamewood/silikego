@@ -18,7 +18,7 @@ Test(LexerTests, NAME) \
     Silikego::Lexer lex(std::move(source)); \
     for (int i = 0; i < tokens.size(); i++) \
     { \
-        Silikego::Token current = lex.token(); \
+        Silikego::Token current = lex.current(); \
         cr_assert(current.status() == tokens[i].status()); \
         switch(current.status()) \
         { \

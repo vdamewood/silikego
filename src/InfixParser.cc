@@ -47,7 +47,7 @@ namespace Silikego
 	{
 		Lexer lexer(std::move(NewSource));
 		SyntaxTreeNode result = GetExprssion(lexer);
-		if (lexer.token().status() != TokenStatus::EndOfInput)
+		if (lexer.current().status() != TokenStatus::EndOfInput)
 			return Error::Syntax;
 		return result;
 	}
@@ -59,13 +59,13 @@ namespace Silikego
 
 	static SyntaxTreeNode GetExprssionRest(Lexer& lexer, SyntaxTreeNode&& left_side)
 	{
-		if (lexer.token().status() != TokenStatus::Operator
-				|| (lexer.token().operatorValue() != '+'
-					&& lexer.token().operatorValue() != '-'))
+		if (lexer.current().status() != TokenStatus::Operator
+				|| (lexer.current().operatorValue() != '+'
+					&& lexer.current().operatorValue() != '-'))
 			return left_side;
 
 		const char *function_id;
-		switch (lexer.token().operatorValue())
+		switch (lexer.current().operatorValue())
 		{
 		case '+':
 			function_id = "add";
@@ -92,13 +92,13 @@ namespace Silikego
 
 	static SyntaxTreeNode GetTermRest(Lexer& lexer, SyntaxTreeNode&& left_side)
 	{
-		if (lexer.token().status() != TokenStatus::Operator
-				|| (lexer.token().operatorValue() != '*'
-					&& lexer.token().operatorValue() != '/'))
+		if (lexer.current().status() != TokenStatus::Operator
+				|| (lexer.current().operatorValue() != '*'
+					&& lexer.current().operatorValue() != '/'))
 			return left_side;
 
 		const char *function_id;
-		switch (lexer.token().operatorValue())
+		switch (lexer.current().operatorValue())
 		{
 			case '*':
 				function_id = "multiply";
@@ -133,20 +133,20 @@ namespace Silikego
 
 	static SyntaxTreeNode GetExponentRest(Lexer& lexer)
 	{
-		if (lexer.token().status() != TokenStatus::Operator
-				|| lexer.token().operatorValue() != '^')
+		if (lexer.current().status() != TokenStatus::Operator
+				|| lexer.current().operatorValue() != '^')
 			return SyntaxTreeNode();
 
 		lexer.advance();
 
-		switch (lexer.token().status())
+		switch (lexer.current().status())
 		{
 		case TokenStatus::Integer:
 		case TokenStatus::Float:
 		case TokenStatus::Id:
 			return GetExponent(lexer);
 		case TokenStatus::Operator:
-			switch(lexer.token().operatorValue())
+			switch(lexer.current().operatorValue())
 			{
 			case '-':
 			case '(':
@@ -176,15 +176,15 @@ namespace Silikego
 
 	static SyntaxTreeNode GetRollRest(Lexer& lexer)
 	{
-		if(lexer.token().status() != TokenStatus::Operator
-				|| lexer.token().operatorValue() != 'd')
+		if(lexer.current().status() != TokenStatus::Operator
+				|| lexer.current().operatorValue() != 'd')
 			return SyntaxTreeNode();
 
 		lexer.advance();
 
-		if (lexer.token().status() == TokenStatus::Integer)
+		if (lexer.current().status() == TokenStatus::Integer)
 		{
-			long long int result = lexer.token().integerValue();
+			long long int result = lexer.current().integerValue();
 			lexer.advance();
 			return result;
 		}
@@ -196,7 +196,7 @@ namespace Silikego
 
 	static SyntaxTreeNode GetAtom(Lexer& lexer)
 	{
-		switch(lexer.token().status())
+		switch(lexer.current().status())
 		{
 		case TokenStatus::Integer:
 		case TokenStatus::Float:
@@ -204,7 +204,7 @@ namespace Silikego
 		case TokenStatus::Id:
 			return GetFunctionCall(lexer);
 		case TokenStatus::Operator:
-			switch (lexer.token().operatorValue())
+			switch (lexer.current().operatorValue())
 			{
 			case '-':
 				return GetNumber(lexer);
@@ -213,8 +213,8 @@ namespace Silikego
 				lexer.advance();
 				SyntaxTreeNode value = GetExprssion(lexer);
 
-				if (lexer.token().status() == TokenStatus::Operator
-					&& lexer.token().operatorValue() == ')')
+				if (lexer.current().status() == TokenStatus::Operator
+					&& lexer.current().operatorValue() == ')')
 				{
 					lexer.advance();
 					return value;
@@ -232,14 +232,14 @@ namespace Silikego
 
 	static SyntaxTreeNode GetNumber(Lexer& lexer)
 	{
-		switch (lexer.token().status())
+		switch (lexer.current().status())
 		{
 		case TokenStatus::Integer:
 		case TokenStatus::Float:
 			return GetUnsignedNumber(lexer);
 		case TokenStatus::Operator:
 		{
-			if ( lexer.token().operatorValue() == '-')
+			if ( lexer.current().operatorValue() == '-')
 			{
 				lexer.advance();
 				SyntaxTreeNode number = GetUnsignedNumber(lexer);
@@ -257,17 +257,17 @@ namespace Silikego
 	{
 		SyntaxTreeNode rVal;
 
-		switch (lexer.token().status())
+		switch (lexer.current().status())
 		{
 		case TokenStatus::Integer:
 		{
-            long long int number = lexer.token().integerValue();
+            long long int number = lexer.current().integerValue();
 			lexer.advance();
 			return number;
 		}
 		case TokenStatus::Float:
 		{
-            double number = lexer.token().floatValue();
+            double number = lexer.current().floatValue();
 			lexer.advance();
 			return number;
 		}
@@ -278,22 +278,22 @@ namespace Silikego
 
 	static SyntaxTreeNode GetFunctionCall(Lexer& lexer)
 	{
-		if (lexer.token().status() != TokenStatus::Id)
+		if (lexer.current().status() != TokenStatus::Id)
 			return Error::Syntax;
 
-        std::string FunctionName = lexer.token().idValue();
+        std::string FunctionName = lexer.current().idValue();
         lexer.advance();
 
-		if (lexer.token().status() != TokenStatus::Operator
-				|| lexer.token().operatorValue() != '(')
+		if (lexer.current().status() != TokenStatus::Operator
+				|| lexer.current().operatorValue() != '(')
             return Error::Syntax;
 
         lexer.advance();
 
         SyntaxTreeNode function_call(GetArguments(lexer, FunctionName));
 
-		if (lexer.token().status() == TokenStatus::Operator
-				&& lexer.token().operatorValue() == ')')
+		if (lexer.current().status() == TokenStatus::Operator
+				&& lexer.current().operatorValue() == ')')
 		{
 	        lexer.advance();
     	    return function_call;
@@ -312,13 +312,13 @@ namespace Silikego
             branch.pushRight(std::move(current));
 
 			if (was_error || (
-					lexer.token().status() == TokenStatus::Operator
-					&& lexer.token().operatorValue() == ')'))
+					lexer.current().status() == TokenStatus::Operator
+					&& lexer.current().operatorValue() == ')'))
 			{
 				break;
 			}
-			else if (lexer.token().status() != TokenStatus::Operator
-					|| lexer.token().operatorValue() != ',')
+			else if (lexer.current().status() != TokenStatus::Operator
+					|| lexer.current().operatorValue() != ',')
 			{
                 branch.pushRight(Error::Syntax);
 				break;
