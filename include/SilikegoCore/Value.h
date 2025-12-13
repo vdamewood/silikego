@@ -58,6 +58,9 @@ namespace Silikego
 		Value(Value&&);
 		~Value();
 
+		Value& operator=(Error right_side);
+		Value& operator=(long long int right_side);
+		Value& operator=(double right_side);
 		Value& operator=(const Value&);
 		Value& operator=(Value&&);
 

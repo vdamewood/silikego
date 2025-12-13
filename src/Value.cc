@@ -71,6 +71,24 @@ namespace Silikego
 		delete _impl;
 	}
 
+	Value& Value::operator=(Error right_side)
+	{
+		_impl->data = right_side;
+		return *this;
+	}
+
+	Value& Value::operator=(long long int right_side)
+	{
+		_impl->data = right_side;
+		return *this;
+	}
+
+	Value& Value::operator=(double right_side)
+	{
+		_impl->data = right_side;
+		return *this;
+	}
+
 	Value& Value::operator=(const Value& right_side)
 	{
 		_impl->data = right_side._impl->data;
