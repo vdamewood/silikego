@@ -28,38 +28,30 @@ Test(SUITE, NAME) \
 #define TestFunctionForError(NAME, FUNCTION, ERROR, ...) \
     TestFunction(NAME, FUNCTION, \
         ValueStatus::Error, \
-        (result.asError() == ERROR), \
+        (static_cast<Silikeg::Error>(result) == ERROR), \
         __VA_ARGS__ \
 )
 
 #define TestFunctionForEpsilon(NAME, FUNCTION, RESULT, EPSILON, ...) \
     TestFunction(NAME, FUNCTION, \
-        ValueStatus::Float, \
-        (std::fabs(result.asFloat() - RESULT) <= EPSILON), \
+        ValueStatus::Real, \
+        (std::fabs(static_cast<double>(result) - RESULT) <= EPSILON), \
         __VA_ARGS__ \
 )
 
 #define TestFunctionForEquality(NAME, FUNCTION, RESULT, ...) \
     TestFunction(NAME, FUNCTION, \
         _Generic((RESULT), \
-            signed char:            ValueStatus::Integer, \
-            short int:              ValueStatus::Integer, \
             int:                    ValueStatus::Integer, \
-            long int:               ValueStatus::Integer, \
             long long int:          ValueStatus::Integer, \
-            float:                  ValueStatus::Float,   \
-            double:                 ValueStatus::Float,   \
-            default:                ValueStatus::Integer  \
+            float:                  ValueStatus::Real,    \
+            double:                 ValueStatus::Real    \
         ), \
         (_Generic((RESULT), \
-            signed char:            result.asInteger(), \
-            short int:              result.asInteger(), \
-            int:                    result.asInteger(), \
-            long int:               result.asInteger(), \
-            long long int:          result.asInteger(), \
-            float:                  result.asFloat(),   \
-            double:                 result.asFloat(),   \
-            default:                result.asInteger()  \
+            int:           static_cast<long long int>(result), \
+            long long int: static_cast<long long int>(result), \
+            float:         static_cast<double>(result),        \
+            double:        static_cast<double>(result)         \
         ) == RESULT), \
         __VA_ARGS__ \
 )

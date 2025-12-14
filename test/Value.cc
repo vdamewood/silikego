@@ -8,92 +8,35 @@ using Silikego::Error;
 using Silikego::Value;
 using Silikego::ValueStatus;
 
-Test(ValueTests, NewIntZero) {
-    Value value(0LL);
-    cr_assert(value.status() == ValueStatus::Integer);
-    cr_assert(value.asInteger() == 0LL);
+
+#define VALUE_TEST(TEST_NAME, VALUE) \
+Test(ValueTests, TEST_NAME) \
+{ \
+    Value test_value{VALUE}; \
+    cr_assert(test_value.status() == _Generic((VALUE), \
+        Silikego::Error: ValueStatus::Error, \
+        int:            ValueStatus::Integer, \
+        long long int:  ValueStatus::Integer, \
+        double:         ValueStatus::Real \
+    )); \
+    cr_assert(_Generic((VALUE), \
+        Silikego::Error: static_cast<Silikego::Error>(test_value), \
+        int:            static_cast<long long int>(test_value), \
+        long long int:  static_cast<long long int>(test_value), \
+        double:         static_cast<double>(test_value) \
+    ) == VALUE); \
 }
 
-Test(ValueTests, NewIntFortyTwo) {
-    Value value(42LL);
-    cr_assert(value.status() == ValueStatus::Integer);
-    cr_assert(value.asInteger() == 42LL);
-}
-
-Test(ValueTests, NewIntNegativeOne) {
-    Value value(-1LL);
-    cr_assert(value.status() == ValueStatus::Integer);
-    cr_assert(value.asInteger() == -1LL);
-}
-
-Test(ValueTests, NewFloatZero) {
-    Value value(0.0);
-    cr_assert(value.status() == ValueStatus::Float);
-    cr_assert(value.asInteger() == 0.0);
-}
-
-Test(ValueTests, NewFloatNegativeZero) {
-    Value value(-0.0);
-    cr_assert(value.status() == ValueStatus::Float);
-    cr_assert(value.asInteger() == -0.0);
-}
-
-Test(ValueTests, NewFloatEighth) {
-    Value value(0.125);
-    cr_assert(value.status() == ValueStatus::Float);
-    cr_assert(value.asFloat() == 0.125);
-}
-
-Test(ValueTests, NewFloatFortyTwo) {
-    Value value(42.0);
-    cr_assert(value.status() == ValueStatus::Float);
-    cr_assert(value.asInteger() == 42.0);
-}
-
-Test(ValueTests, NewFloatNegativeOne) {
-    Value value(-1.0);
-    cr_assert(value.status() == ValueStatus::Float);
-    cr_assert(value.asInteger() == -1.0);
-}
-
-Test(ValueTests, NewErrorMemory)
-{
-    Value value(Error::Memory);
-	cr_assert(value.status() == ValueStatus::Error);
-	cr_assert(value.asError() == Error::Memory);
-}
-
-Test(ValueTests, NewErrorSyntax)
-{
-    Value value(Error::Syntax);
-	cr_assert(value.status() == ValueStatus::Error);
-	cr_assert(value.asError() == Error::Syntax);
-}
-
-Test(ValueTests, NewErrorFunctionLookup)
-{
-    Value value(Error::FunctionName);
-	cr_assert(value.status() == ValueStatus::Error);
-	cr_assert(value.asError() == Error::FunctionName);
-}
-
-Test(ValueTests, NewErrorFunctionArguments)
-{
-    Value value(Error::FunctionArguments);
-	cr_assert(value.status() == ValueStatus::Error);
-	cr_assert(value.asError() == Error::FunctionArguments);
-}
-
-Test(ValueTests, NewErrorFunctionDomain)
-{
-    Value value(Error::Domain);
-	cr_assert(value.status() == ValueStatus::Error);
-	cr_assert(value.asError() == Error::Domain);
-}
-
-Test(ValueTests, NewErrorFunctionRange)
-{
-    Value value(Error::Range);
-	cr_assert(value.status() == ValueStatus::Error);
-	cr_assert(value.asError() == Error::Range);
-}
+VALUE_TEST(NewIntZero, 0LL)
+VALUE_TEST(NewIntFortyTwo, 42LL)
+VALUE_TEST(NewIntNegativeOne, -1LL)
+VALUE_TEST(NewRealZero, 0.0)
+VALUE_TEST(NewRealOneeighth, 0.125)
+VALUE_TEST(NewRealNegativeZero, -0.0)
+VALUE_TEST(NewRealFortyTwo, 42.0)
+VALUE_TEST(NewRealNegativeOne, -1.0)
+VALUE_TEST(NewErrorSyntax, Error::Syntax)
+VALUE_TEST(NewErrorFunctionLookup, Error::FunctionName)
+VALUE_TEST(NewErrorFunctionArguments, Error::FunctionArguments)
+VALUE_TEST(NewErrorDomain, Error::Domain)
+VALUE_TEST(NewErrorRange, Error::Range)

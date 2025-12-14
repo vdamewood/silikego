@@ -38,7 +38,7 @@ namespace Silikego
 	{
 		Error,
 		Integer,
-		Float,
+		Real,
 	};
 
 	class SILIKEGOCORE_EXPORT Value
@@ -46,29 +46,27 @@ namespace Silikego
 	public:
 		Value() = delete;
 
-		Value(Error);
-		Value(short int);
-		Value(int);
-		Value(long int);
-		Value(long long int);
-		Value(float);
-		Value(double);
-
-		Value(const Value&);
-		Value(Value&&);
+		Value(Error source);
+		Value(int source);
+		Value(long long int source);
+		Value(double source);
+		Value(const Value& source);
+		Value(Value&& source);
 		~Value();
 
-		Value& operator=(Error right_side);
-		Value& operator=(long long int right_side);
-		Value& operator=(double right_side);
-		Value& operator=(const Value&);
-		Value& operator=(Value&&);
+		operator Error() const;
+		operator long long int() const;
+		operator double() const;
 
-		Value& negate();
+		Value& operator=(Error source);
+		Value& operator=(int source);
+		Value& operator=(long long int source);
+		Value& operator=(double source);
+		Value& operator=(const Value& source);
+		Value& operator=(Value&& source);
+
 		ValueStatus status() const;
-		long long int asInteger() const;
-		double asFloat() const;
-		Error asError() const;
+		Value& negate();
 
 	private:
 		class Impl;

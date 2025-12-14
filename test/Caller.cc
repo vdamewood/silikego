@@ -11,13 +11,13 @@ using Silikego::FunctionPointer;
 Value GetFortyTwoInt(vector<Value> ArgV)
 {
     (void)ArgV;
-    return Value(42LL);
+    return Value{42LL};
 }
 
 Value GetFortyTwoFloat(vector<Value> ArgV)
 {
     (void)ArgV;
-    return Value(42.0);
+    return Value{42.0};
 }
 
 Test(FunctionCallerTests, NewCaller) {
@@ -38,12 +38,20 @@ Test(FunctionCallerTests, GetFloatFunction) {
     cr_assert(result == GetFortyTwoFloat);
 }
 
+Test(FunctionCallerTests, UseIntFunction) {
+    FunctionCaller caller;
+    caller.install("gftf", GetFortyTwoInt);
+    Value result = caller.call("gftf", vector<Value>());
+    cr_assert(result.status() == ValueStatus::Integer);
+    cr_assert(static_cast<double>(result) == 42LL);
+}
+
 Test(FunctionCallerTests, UseFloatFunction) {
     FunctionCaller caller;
     caller.install("gftf", GetFortyTwoFloat);
     Value result = caller.call("gftf", vector<Value>());
-    cr_assert(result.status() == ValueStatus::Float);
-    cr_assert(result.asFloat() == 42.0);
+    cr_assert(result.status() == ValueStatus::Real);
+    cr_assert(static_cast<double>(result) == 42.0);
 }
 
 Test(FunctionCallerTests, HandleBadFunction)
@@ -51,7 +59,7 @@ Test(FunctionCallerTests, HandleBadFunction)
     FunctionCaller caller;
     Value result = caller.call("bogus", vector<Value>());
     cr_assert(result.status() == ValueStatus::Error);
-    cr_assert(result.asError() == Error::FunctionName);
+    cr_assert(static_cast<Silikego::Error>(result) == Error::FunctionName);
 }
 
 Test(FunctionCallerTests, FunctionsInstall)

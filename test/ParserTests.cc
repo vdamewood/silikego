@@ -32,10 +32,10 @@ Test(ParserTests, NAME) \
     switch(result.status()) \
     { \
     case ValueStatus::Integer: \
-        cr_assert(target.asInteger() == result.asInteger()); \
+        cr_assert(static_cast<long long int>(target) == static_cast<long long int>(result)); \
         break; \
-    case ValueStatus::Float: \
-        cr_assert(target.asFloat() == result.asFloat()); \
+    case ValueStatus::Real: \
+        cr_assert(static_cast<double>(target) == static_cast<double>(result)); \
         break; \
     default: \
         break; \
