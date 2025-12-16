@@ -54,10 +54,6 @@ namespace Silikego
 		Value(Value&& source);
 		~Value();
 
-		operator Error() const;
-		operator long long int() const;
-		operator double() const;
-
 		Value& operator=(Error source);
 		Value& operator=(int source);
 		Value& operator=(long long int source);
@@ -66,6 +62,9 @@ namespace Silikego
 		Value& operator=(Value&& source);
 
 		ValueStatus status() const;
+		Error toError() const;
+		long long int toInteger() const;
+		double toReal() const;
 		Value& negate();
 
 	private:

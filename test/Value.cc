@@ -14,16 +14,16 @@ Test(ValueTests, TEST_NAME) \
 { \
     Value test_value{VALUE}; \
     cr_assert(test_value.status() == _Generic((VALUE), \
-        Silikego::Error: ValueStatus::Error, \
-        int:            ValueStatus::Integer, \
-        long long int:  ValueStatus::Integer, \
-        double:         ValueStatus::Real \
+        Silikego::Error:  ValueStatus::Error, \
+        int:              ValueStatus::Integer, \
+        long long int:    ValueStatus::Integer, \
+        double:           ValueStatus::Real \
     )); \
     cr_assert(_Generic((VALUE), \
-        Silikego::Error: static_cast<Silikego::Error>(test_value), \
-        int:            static_cast<long long int>(test_value), \
-        long long int:  static_cast<long long int>(test_value), \
-        double:         static_cast<double>(test_value) \
+        Silikego::Error: test_value.toError(),   \
+        int:             test_value.toInteger(), \
+        long long int:   test_value.toInteger(), \
+        double:          test_value.toReal()     \
     ) == VALUE); \
 }
 

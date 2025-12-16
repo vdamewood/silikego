@@ -40,16 +40,10 @@ namespace Silikego
 				return *i;
 
 			if(result.status() == ValueStatus::Integer
-				&& i->status() == ValueStatus::Integer)
-			{
-				result = static_cast<long long int>(result)
-					+ static_cast<long long int>(*i);
-			}
+					&& i->status() == ValueStatus::Integer)
+				result = result.toInteger() + i->toInteger();
 			else
-			{
-				result = static_cast<double>(result)
-					+ static_cast<double>(*i);
-			}
+				result = result.toReal() + i->toReal();
 		}
 		return result;
 	}
@@ -68,16 +62,10 @@ namespace Silikego
 				return *i;
 
 			if(result.status() == ValueStatus::Integer
-				&& i->status() == ValueStatus::Integer)
-			{
-				result = static_cast<long long int>(result)
-					- static_cast<long long int>(*i);
-			}
+					&& i->status() == ValueStatus::Integer)
+				result = result.toInteger() - i->toInteger();
 			else
-			{
-				result = static_cast<double>(result)
-					- static_cast<double>(*i);
-			}
+				result = result.toReal() - i->toReal();
 		}
 		return result;
 	}
@@ -96,16 +84,10 @@ namespace Silikego
 				return *i;
 
 			if(result.status() == ValueStatus::Integer
-				&& i->status() == ValueStatus::Integer)
-			{
-				result = static_cast<long long int>(result)
-					* static_cast<long long int>(*i);
-			}
+					&& i->status() == ValueStatus::Integer)
+				result = result.toInteger() * i->toInteger();
 			else
-			{
-				result = static_cast<double>(result)
-					* static_cast<double>(*i);
-			}
+				result = result.toReal() * i->toReal();
 		}
 		return result;
 	}
@@ -123,23 +105,17 @@ namespace Silikego
 			if (i->status() == ValueStatus::Error)
 				return *i;
 
-			if(static_cast<double>(*i) == 0.0)
+			if(i->toReal() == 0.0)
 				return Error::ZeroDivision;
 
 			if(result.status() == ValueStatus::Integer
-				&& i->status() == ValueStatus::Integer
-				&& static_cast<long long int>(result)
-					% static_cast<long long int>(*i)
-					== 0)
-			{
-				result = static_cast<long long int>(result)
-					/ static_cast<long long int>(*i);
-			}
+					&& i->status() == ValueStatus::Integer
+					&& result.toInteger()
+						% i->toInteger()
+						== 0)
+				result = result.toInteger() / i->toInteger();
 			else
-			{
-				result = static_cast<double>(result)
-					/ static_cast<double>(*i);
-			}
+				result = result.toReal() / i->toReal();
 		}
 		return result;
 	}
@@ -152,12 +128,12 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		double result = static_cast<double>(args[0]);
+		double result = args[0].toReal();
 		for (auto i = args.begin()+1; i != args.end(); i++)
 		{
 			if (i->status() == ValueStatus::Error)
 				return *i;
-			result = std::pow(result, *i);
+			result = std::pow(result, i->toReal());
 		}
 		return result;
 	}
@@ -173,8 +149,8 @@ namespace Silikego
 		if (args[1].status() == ValueStatus::Error)
 			return args[1];
 			
-		long long int count = static_cast<long long int>(args[0]);
-		long long int faces = static_cast<long long int>(args[1]);
+		long long int count = args[0].toInteger();
+		long long int faces = args[1].toInteger();
 
 		if (faces == 0)
 			return 0;
@@ -183,7 +159,7 @@ namespace Silikego
 		if (!has_seeded)
 		{
 			has_seeded = 1;
-			std::srand((unsigned int)std::time(nullptr));
+			std::srand(static_cast<unsigned int>(std::time(nullptr)));
 		}
 
 		long long int result = 0;
@@ -200,9 +176,9 @@ namespace Silikego
 		switch (args[0].status())
 		{
 		case ValueStatus::Integer:
-			return std::abs(static_cast<long long int>(args[0]));
+			return std::abs(args[0].toInteger());
 		case ValueStatus::Real:
-			return std::abs(static_cast<double>(args[0]));
+			return std::fabs(args[0].toReal());
 		default:
 			return args[0];
 		}
@@ -216,7 +192,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		double input = static_cast<double>(args[0]);
+		double input = args[0].toReal();
 		if (input < -1.0 || input > 1.0)
 			return Error::Domain;
 
@@ -231,7 +207,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		double input = static_cast<double>(args[0]);
+		double input = args[0].toReal();
 		if (input < -1.0 || input > 1.0)
 			return Error::Domain;
 
@@ -246,7 +222,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::atan(static_cast<double>(args[0]));
+		return std::atan(args[0].toReal());
 	}
 
 	Value Functions::ceil(std::vector<Value> args)
@@ -261,11 +237,11 @@ namespace Silikego
 			return args[0];
 		case ValueStatus::Real:
 		{
-			double result = std::ceil(static_cast<double>(args[0]));
+			double result = std::ceil(args[0].toReal());
 			if (result <= std::numeric_limits<long long int>::max()
 					&& result
 						>= std::numeric_limits<long long int>::min())
-				return static_cast<long long int>(result);
+				return result;
 			return result;
 		}
 		}
@@ -279,7 +255,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::cos(static_cast<double>(args[0]));
+		return std::cos(args[0].toReal());
 	}
 
 	Value Functions::cosh(std::vector<Value> args)
@@ -290,7 +266,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::cosh(static_cast<double>(args[0]));
+		return std::cosh(args[0].toReal());
 	}
 
 	Value Functions::exp(std::vector<Value> args)
@@ -301,7 +277,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::exp(static_cast<double>(args[0]));
+		return std::exp(args[0].toReal());
 	}
 
 	Value Functions::floor(std::vector<Value> args)
@@ -316,7 +292,7 @@ namespace Silikego
 			return args[0];
 		case ValueStatus::Real:
 		{
-			double result = std::floor(static_cast<double>(args[0]));
+			double result = std::floor(args[0].toReal());
 			if (result <= std::numeric_limits<long long int>::max()
 					&& result
 						>= std::numeric_limits<long long int>::min())
@@ -334,7 +310,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::log(static_cast<double>(args[0]));
+		return std::log(args[0].toReal());
 	}
 
 	Value Functions::log10(std::vector<Value> args)
@@ -345,7 +321,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::log10(static_cast<double>(args[0]));
+		return std::log10(args[0].toReal());
 	}
 
 	Value Functions::sin(std::vector<Value> args)
@@ -356,7 +332,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::sin(static_cast<double>(args[0]));
+		return std::sin(args[0].toReal());
 	}
 
 	Value Functions::sinh(std::vector<Value> args)
@@ -367,7 +343,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::sinh(static_cast<double>(args[0]));
+		return std::sinh(args[0].toReal());
 	}
 
 	Value Functions::sqrt(std::vector<Value> args)
@@ -378,10 +354,10 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		if (static_cast<double>(args[0]) < 0.0)
+		if (args[0].toReal() < 0.0)
 			return Error::Domain;
 
-		return std::sqrt(static_cast<double>(args[0]));
+		return std::sqrt(args[0].toReal());
 	}
 
 	Value Functions::tan(std::vector<Value> args)
@@ -392,7 +368,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::tan(static_cast<double>(args[0]));
+		return std::tan(args[0].toReal());
 	}
 
 	Value Functions::tanh(std::vector<Value> args)
@@ -403,6 +379,6 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::tanh(static_cast<double>(args[0]));
+		return std::tanh(args[0].toReal());
 	}
 }

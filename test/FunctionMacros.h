@@ -28,14 +28,14 @@ Test(SUITE, NAME) \
 #define TestFunctionForError(NAME, FUNCTION, ERROR, ...) \
     TestFunction(NAME, FUNCTION, \
         ValueStatus::Error, \
-        (static_cast<Silikeg::Error>(result) == ERROR), \
+        result.toError() == ERROR), \
         __VA_ARGS__ \
 )
 
 #define TestFunctionForEpsilon(NAME, FUNCTION, RESULT, EPSILON, ...) \
     TestFunction(NAME, FUNCTION, \
         ValueStatus::Real, \
-        (std::fabs(static_cast<double>(result) - RESULT) <= EPSILON), \
+        (std::fabs(result.toReal() - RESULT) <= EPSILON), \
         __VA_ARGS__ \
 )
 
@@ -48,10 +48,10 @@ Test(SUITE, NAME) \
             double:                 ValueStatus::Real    \
         ), \
         (_Generic((RESULT), \
-            int:           static_cast<long long int>(result), \
-            long long int: static_cast<long long int>(result), \
-            float:         static_cast<double>(result),        \
-            double:        static_cast<double>(result)         \
+            int:           result.toInteger(), \
+            long long int: result.toInteger(), \
+            float:         result.toReal(),    \
+            double:        result.toReal()     \
         ) == RESULT), \
         __VA_ARGS__ \
 )

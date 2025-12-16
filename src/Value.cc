@@ -68,43 +68,6 @@ namespace Silikego
 		delete _impl;
 	}
 
-	Value::operator Error() const
-	{
-		return _impl->data.index() == ErrorIndex
-			? std::get<ErrorIndex>(_impl->data)
-			: Error::None;
-	}
-
-	Value::operator long long int() const
-	{
-		switch (_impl->data.index())
-		{
-		case ErrorIndex:
-			return 0;
-		case IntegerIndex:
-			return std::get<IntegerIndex>(_impl->data);
-		case RealIndex:
-			return static_cast<long long int>(std::get<RealIndex>(_impl->data));
-		default:
-			throw;
-		}
-	}
-
-	Value::operator double() const
-	{
-		switch (_impl->data.index())
-		{
-		case ErrorIndex:
-			return std::numeric_limits<double>::quiet_NaN();
-		case IntegerIndex:
-			return static_cast<double>(std::get<IntegerIndex>(_impl->data));
-		case RealIndex:
-			return std::get<RealIndex>(_impl->data);
-		default:
-			return std::numeric_limits<double>::quiet_NaN();
-		}
-	}
-
 	Value& Value::operator=(Error source)
 	{
 		_impl->data = source;
@@ -155,6 +118,43 @@ namespace Silikego
 			return ValueStatus::Real;
 		default:
 			throw; // shouldn't happen
+		}
+	}
+
+	Error Value::toError() const
+	{
+		return _impl->data.index() == ErrorIndex
+			? std::get<ErrorIndex>(_impl->data)
+			: Error::None;
+	}
+
+	long long int Value::toInteger() const
+	{
+		switch (_impl->data.index())
+		{
+		case ErrorIndex:
+			return 0;
+		case IntegerIndex:
+			return std::get<IntegerIndex>(_impl->data);
+		case RealIndex:
+			return static_cast<long long int>(std::get<RealIndex>(_impl->data));
+		default:
+			throw;
+		}
+	}
+
+	double Value::toReal() const
+	{
+		switch (_impl->data.index())
+		{
+		case ErrorIndex:
+			return std::numeric_limits<double>::quiet_NaN();
+		case IntegerIndex:
+			return static_cast<double>(std::get<IntegerIndex>(_impl->data));
+		case RealIndex:
+			return std::get<RealIndex>(_impl->data);
+		default:
+			return std::numeric_limits<double>::quiet_NaN();
 		}
 	}
 
