@@ -22,14 +22,14 @@ Test(LexerTests, NAME) \
         cr_assert(current.status() == tokens[i].status()); \
         switch(current.status()) \
         { \
-        case TokenStatus::Operator: \
-            cr_assert(current.operatorValue() == tokens[i].operatorValue()); \
+        case TokenStatus::Character: \
+            cr_assert(current.character() == tokens[i].character()); \
             break; \
         case TokenStatus::Integer: \
-            cr_assert(current.integerValue() == tokens[i].integerValue()); \
+            cr_assert(current.integer() == tokens[i].integer()); \
             break; \
-        case TokenStatus::Float: \
-            cr_assert(current.floatValue() == tokens[i].floatValue()); \
+        case TokenStatus::Real: \
+            cr_assert(current.real() == tokens[i].real()); \
             break; \
         default: \
             break; \
@@ -49,7 +49,7 @@ TestLexer(AnInteger,
     EndOfInput()
 )
 
-TestLexer(AFloat,
+TestLexer(AReal,
     "32156.25",
     32156.25,
     EndOfInput()

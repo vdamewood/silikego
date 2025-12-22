@@ -23,9 +23,9 @@
 namespace
 {
 	const int UnsetIndex = 0;
-	const int OperatorIndex = 1;
+	const int CharacterIndex = 1;
 	const int IntegerIndex = 2;
-	const int FloatIndex = 3;
+	const int RealIndex = 3;
 	const int IdIndex = 4;
 	const int EndOfInputIndex = 5;
 };
@@ -36,12 +36,12 @@ namespace Silikego
 	{
 	public:
 		Impl() { }
-		Impl(char new_operator) : data(new_operator) { }
-		Impl(long long int new_value) : data(new_value) { }
-		Impl(double new_value) : data(new_value) { }
-		Impl(const std::string& new_id) : data(new_id) { }
-		Impl(EndOfInput placeholder) : data(placeholder) { }
-		Impl(const Impl& other) : data(other.data) { }
+		Impl(char source) : data{source} { }
+		Impl(long long int source) : data{source} { }
+		Impl(double source) : data{source} { }
+		Impl(const std::string& source) : data{source} { }
+		Impl(EndOfInput source) : data({source}) { }
+		Impl(const Impl& source) : data{source.data} { }
 
 		Impl& operator=(const Impl& right_side)
 		{
@@ -60,45 +60,78 @@ namespace Silikego
 	};
 
 	Token::Token()
-		: _impl(new Impl()) { }
-	Token::Token(char new_operator)
-		: _impl(new Impl(new_operator)) { }
-	Token::Token(short new_value)
-		: _impl(new Impl(static_cast<long long int>(new_value))) { }
-	Token::Token(int new_value)
-		: _impl(new Impl(static_cast<long long int>(new_value))) { }
-	Token::Token(long int new_value)
-		: _impl(new Impl(static_cast<long long int>(new_value))) { }
-	Token::Token(long long int new_value)
-		: _impl(new Impl(new_value)) { }
-	Token::Token(float new_value)
-		: _impl(new Impl(static_cast<double>(new_value))) { }
-	Token::Token(double new_value)
-		: _impl(new Impl(new_value)) { }
-	Token::Token(const std::string& new_id)
-		: _impl(new Impl(new_id)) { }
-	Token::Token(EndOfInput placeholder)
-		: _impl(new Impl(placeholder)) { }
-	Token::Token(const Token& right_side)
-		: _impl(new Impl(*right_side._impl)) { }
-	Token::Token(Token&& other)
-		: _impl(other._impl) { other._impl = nullptr; }
+		: _impl(new Impl) { }
+	Token::Token(char source)
+		: _impl(new Impl{source}) { }
+	Token::Token(int source)
+		: _impl(new Impl{static_cast<long long int>(source)}) { }
+	Token::Token(long long int source)
+		: _impl(new Impl{source}) { }
+	Token::Token(double source)
+		: _impl(new Impl{source}) { }
+	Token::Token(const std::string& source)
+		: _impl(new Impl{source}) { }
+	Token::Token(EndOfInput source)
+		: _impl(new Impl{source}) { }
+	Token::Token(const Token& source)
+		: _impl(new Impl{*source._impl}) { }
+	Token::Token(Token&& source)
+		: _impl{source._impl}
+	{
+		source._impl = nullptr;
+	}
 
 	Token::~Token()
 	{
 		delete _impl;
 	}
 
-	Token& Token::operator=(const Token& RightSide)
+	Token& Token::operator=(int source)
 	{
-		*_impl = *RightSide._impl;
+		_impl->data = source;
 		return *this;
 	}
 
-	Token& Token::operator=(Token&& right_side)
+	Token& Token::operator=(long long int source)
 	{
-		_impl = right_side._impl;
-		right_side._impl = nullptr;
+		_impl->data = source;
+		return *this;
+	}
+
+	Token& Token::operator=(double source)
+	{
+		_impl->data = source;
+		return *this;
+	}
+
+	Token& Token::operator=(char source)
+	{
+		_impl->data = source;
+		return *this;
+	}
+
+	Token& Token::operator=(const std::string& source)
+	{
+		_impl->data = source;
+		return *this;
+	}
+
+	Token& Token::operator=(const EndOfInput& source)
+	{
+		_impl->data = source;
+		return *this;
+	}
+
+	Token& Token::operator=(const Token& source)
+	{
+		*_impl = *source._impl;
+		return *this;
+	}
+
+	Token& Token::operator=(Token&& source)
+	{
+		_impl = source._impl;
+		source._impl = nullptr;
 		return *this;
 	}
 
@@ -108,12 +141,12 @@ namespace Silikego
 		{
 		case UnsetIndex:
 			return TokenStatus::Unset;
-		case OperatorIndex:
-			return TokenStatus::Operator;
+		case CharacterIndex:
+			return TokenStatus::Character;
 		case IntegerIndex:
 			return TokenStatus::Integer;
-		case FloatIndex:
-			return TokenStatus::Float;
+		case RealIndex:
+			return TokenStatus::Real;
 		case IdIndex:
 			return TokenStatus::Id;
 		case EndOfInputIndex:
@@ -123,22 +156,22 @@ namespace Silikego
 		}
 	}
 
-	char Token::operatorValue() const
+	char Token::character() const
 	{
-		return std::get<OperatorIndex>(_impl->data);
+		return std::get<CharacterIndex>(_impl->data);
 	}
 
-	long long int Token::integerValue() const
+	long long int Token::integer() const
 	{
 		return std::get<IntegerIndex>(_impl->data);
 	}
 
-	double Token::floatValue() const
+	double Token::real() const
 	{
-		return std::get<FloatIndex>(_impl->data);
+		return std::get<RealIndex>(_impl->data);
 	}
 
-	const std::string& Token::idValue() const
+	const std::string& Token::id() const
 	{
 		return std::get<IdIndex>(_impl->data);
 	}

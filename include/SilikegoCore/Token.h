@@ -28,8 +28,8 @@ namespace Silikego
 	{
 		Unset,
 		Integer,
-		Float,
-		Operator,
+		Real,
+		Character,
 		Id,
 		EndOfInput
 	};
@@ -38,35 +38,37 @@ namespace Silikego
 
 	class SILIKEGOCORE_EXPORT Token
 	{
+		class Impl;
+		Impl* _impl;
 	public:
 		Token();
 
-		Token(char);
-		Token(short int);
-		Token(int);
-		Token(long int);
-		Token(long long int);
-		Token(float);
-		Token(double);
+		Token(int source);
+		Token(long long int source);
+		Token(double source);
+		Token(char source);
+		Token(const std::string& source);
 		Token(EndOfInput);
-		Token(const std::string&);
 
-		Token(const Token&);
-		Token(Token&&);
+		Token(const Token& sourcce);
+		Token(Token&& source);
 		~Token();
 
-		Token& operator=(const Token&);
-		Token& operator=(Token&&);
+		Token& operator=(int source);
+		Token& operator=(long long int source);
+		Token& operator=(double source);
+		Token& operator=(char source);
+		Token& operator=(const std::string& source);
+		Token& operator=(const EndOfInput& source);
+
+		Token& operator=(const Token& source);
+		Token& operator=(Token&& source);
 
 		TokenStatus status() const;
-		long long int integerValue() const;
-		double floatValue() const;
-		char operatorValue() const;
-		const std::string& idValue() const;
-
-	private:
-		class Impl;
-		Impl* _impl;
+		long long int integer() const;
+		double real() const;
+		char character() const;
+		const std::string& id() const;
 	};
 };
 
