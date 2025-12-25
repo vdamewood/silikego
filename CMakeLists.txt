@@ -151,7 +151,7 @@ if(WIN32)
   	)
 	target_compile_definitions(SilikegoCore
 		PRIVATE
-			"SILIKEGO_CORE_ORIGINAL_FILENAME=\"$<TARGET_FILE_NAME:SilikegoCore>\""
+			"SILIKEGO_CORE_ORIGINAL_FILENAME=$<TARGET_FILE_NAME:SilikegoCore>"
 	)
 	target_sources(SilikegoCore
 		PRIVATE
