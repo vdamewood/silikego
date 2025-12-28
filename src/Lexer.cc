@@ -21,7 +21,7 @@
 #include <string>
 #include <utility>
 
-#include <SilikegoCore/DataSource.h>
+#include <SilikegoCore/Input.h>
 #include <SilikegoCore/Lexer.h>
 #include <SilikegoCore/Token.h>
 
@@ -74,17 +74,17 @@ namespace Silikego
 	class Lexer::Impl
 	{
 	public:
-		Impl(std::unique_ptr<DataSource> NewSource)
+		Impl(std::unique_ptr<Input> NewSource)
 			: Source(std::move(NewSource))
 		{
 		}
 
 		bool error = false;
-		std::unique_ptr<DataSource> Source;
+		std::unique_ptr<Input> Source;
 		Silikego::Token Token;
 	};
 
-	Lexer::Lexer(std::unique_ptr<DataSource> source) : _impl(new Impl(std::move(source)))
+	Lexer::Lexer(std::unique_ptr<Input> source) : _impl(new Impl(std::move(source)))
 	{
 		advance();
 	}
@@ -108,47 +108,47 @@ namespace Silikego
 		case DFA_END:
 			break;
 		case DFA_START:
-			if(isOperator(_impl->Source->current()))
+			if(isOperator(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_TERM_CHAR;
 			}
-			else if (_impl->Source->current() == 'd')
+			else if (_impl->Source->character() == 'd')
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_DICE;
 			}
-			else if (_impl->Source->current() == 'e')
+			else if (_impl->Source->character() == 'e')
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_E;
 			}
-			else if (_impl->Source->current() == 'p')
+			else if (_impl->Source->character() == 'p')
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_PI_1;
 			}
-			else if (std::isdigit(_impl->Source->current()))
+			else if (std::isdigit(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_INTEGER;
 			}
-			else if (std::isalpha(_impl->Source->current()))
+			else if (std::isalpha(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_ID;
 			}
-			else if (std::isspace(_impl->Source->current()))
+			else if (std::isspace(_impl->Source->character()))
 			{
 				_impl->Source->advance();
 			}
-			else if (_impl->Source->current() == '\0')
+			else if (_impl->Source->character() == '\0')
 			{
 				dfaState = DFA_TERM_EOI;
 			}
@@ -158,9 +158,9 @@ namespace Silikego
 			}
 			break;
 		case DFA_DICE:
-			if (std::isalpha(_impl->Source->current()))
+			if (std::isalpha(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_ID;
 			}
@@ -170,9 +170,9 @@ namespace Silikego
 			}
 			break;
 		case DFA_E:
-			if (std::isalnum(_impl->Source->current()))
+			if (std::isalnum(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_ID;
 			}
@@ -182,15 +182,15 @@ namespace Silikego
 			}
 			break;
 		case DFA_PI_1:
-			if (_impl->Source->current() == 'i')
+			if (_impl->Source->character() == 'i')
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_PI_2;
 			}
-			else if (isIdCharacter(_impl->Source->current()))
+			else if (isIdCharacter(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_ID;
 			}
@@ -200,9 +200,9 @@ namespace Silikego
 			}
 			break;
 		case DFA_PI_2:
-			if (isIdCharacter(_impl->Source->current()))
+			if (isIdCharacter(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_ID;
 			}
@@ -212,9 +212,9 @@ namespace Silikego
 			}
 			break;
 		case DFA_ID:
-			if (isalnum(_impl->Source->current()))
+			if (isalnum(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 			}
 			else
@@ -223,15 +223,15 @@ namespace Silikego
 			}
 			break;
 		case DFA_INTEGER:
-			if (_impl->Source->current() == '.')
+			if (_impl->Source->character() == '.')
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 				dfaState = DFA_FLOAT;
 			}
-			else if (std::isdigit(_impl->Source->current()))
+			else if (std::isdigit(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 			}
 			else
@@ -240,9 +240,9 @@ namespace Silikego
 			}
 			break;
 		case DFA_FLOAT:
-			if (std::isdigit(_impl->Source->current()))
+			if (std::isdigit(_impl->Source->character()))
 			{
-				lexeme += _impl->Source->current();
+				lexeme += _impl->Source->character();
 				_impl->Source->advance();
 			}
 			else

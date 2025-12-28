@@ -1,5 +1,5 @@
 #include <criterion/criterion.h>
-#include <SilikegoCore/StringSource.h>
+#include <SilikegoCore/StringInput.h>
 #include <SilikegoCore/Lexer.h>
 
 using Silikego::TokenStatus;
@@ -9,8 +9,8 @@ using Silikego::EndOfInput;
 Test(LexerTests, NAME) \
 { \
     std::string input(INSTRING); \
-    std::unique_ptr<Silikego::DataSource> source = \
-        std::make_unique<Silikego::StringSource>(input); \
+    std::unique_ptr<Silikego::Input> source = \
+        std::make_unique<Silikego::StringInput>(input); \
     std::vector<Silikego::Token> tokens \
     { \
         __VA_ARGS__ \

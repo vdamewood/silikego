@@ -1,4 +1,4 @@
-/* StringSource.cc: Class to input data from a string
+/* StringInput.h: Implementation of string as parser input stream
  * Copyright 2012-2025 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -18,40 +18,39 @@
 
 #include <string>
 
-#include <SilikegoCore/StringSource.h>
+#include <SilikegoCore/StringInput.h>
 
 namespace Silikego
 {
-	class StringSource::Impl
+	class StringInput::Impl
 	{
 	public:
-		Impl(const char* NewInput) : Input(NewInput) { }
-		Impl(const std::string &NewInput) : Input(NewInput) { }
+		Impl(const std::string &source) : inputString(source) { }
 
-		std::string Input;
-		std::string::iterator Index = Input.begin();
+		std::string inputString;
+		std::string::iterator index{inputString.begin()};
 	};
 
-	StringSource::StringSource(const char *NewSource)
-		: _impl(new Impl(NewSource))
+	StringInput::StringInput(const char* source)
+		: _impl(new Impl(source))
 	{
 	}
 
-	StringSource::StringSource(const std::string &NewSource)
-		: _impl(new Impl(NewSource))
+	StringInput::StringInput(const std::string &source)
+		: _impl(new Impl(source))
 	{
 	}
 
-	StringSource::~StringSource()
+	StringInput::~StringInput()
 	{
 		delete _impl;
 	}
 
-	bool StringSource::advance()
+	bool StringInput::advance()
 	{
-		if (_impl->Index != _impl->Input.end())
+		if (_impl->index != _impl->inputString.end())
 		{
-			_impl->Index++;
+			_impl->index++;
 			return true;
 		}
 		else
@@ -60,11 +59,11 @@ namespace Silikego
 		}
 	}
 
-	char StringSource::current()
+	char StringInput::character()
 	{
-		if (_impl->Index != _impl->Input.end())
-			return *_impl->Index;
+		if (_impl->index != _impl->inputString.end())
+			return *_impl->index;
 		else
 			return '\0';
 	}
-}
+};

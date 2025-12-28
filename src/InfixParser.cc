@@ -19,7 +19,7 @@
 #include <string>
 #include <utility>
 
-#include <SilikegoCore/DataSource.h>
+#include <SilikegoCore/Input.h>
 #include <SilikegoCore/Lexer.h>
 #include <SilikegoCore/InfixParser.h>
 #include <SilikegoCore/SyntaxTree.h>
@@ -43,9 +43,9 @@ namespace Silikego
 	static SyntaxTreeNode GetArguments(Lexer&, const std::string&);
 
 
-	SyntaxTreeNode ParseInfix(std::unique_ptr<DataSource> NewSource)
+	SyntaxTreeNode ParseInfix(std::unique_ptr<Input> input_source)
 	{
-		Lexer lexer(std::move(NewSource));
+		Lexer lexer(std::move(input_source));
 		SyntaxTreeNode result = GetExprssion(lexer);
 		if (lexer.current().status() != TokenStatus::EndOfInput)
 			return Error::Syntax;

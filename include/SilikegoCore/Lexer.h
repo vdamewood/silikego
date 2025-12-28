@@ -21,7 +21,7 @@
 #include <memory>
 
 #include <SilikegoCore/Api.h>
-#include <SilikegoCore/DataSource.h>
+#include <SilikegoCore/Input.h>
 #include <SilikegoCore/Token.h>
 
 namespace Silikego
@@ -31,7 +31,7 @@ namespace Silikego
 	public:
 		Lexer() = delete;
 	
-		Lexer(std::unique_ptr<DataSource>);
+		Lexer(std::unique_ptr<Input> source);
 
 		Lexer(const Lexer&) = delete;
 		Lexer(Lexer&&) = default;

@@ -1,6 +1,6 @@
 #include <criterion/criterion.h>
 #include <SilikegoCore/InfixParser.h>
-#include <SilikegoCore/StringSource.h>
+#include <SilikegoCore/StringInput.h>
 #include <SilikegoCore/SyntaxTree.h>
 
 #include <memory>
@@ -8,8 +8,8 @@
 
 using std::unique_ptr;
 
-using Silikego::DataSource;
-using Silikego::StringSource;
+using Silikego::Input;
+using Silikego::StringInput;
 using Silikego::FunctionCaller;
 using Silikego::SyntaxTreeNode;
 using Silikego::Value;
@@ -18,8 +18,8 @@ using Silikego::ValueStatus;
 #define ParserTest(NAME, INPUT, TARGET) \
 Test(ParserTests, NAME) \
 { \
-	std::string Input = INPUT; \
-	std::unique_ptr<DataSource> src = std::make_unique<StringSource>(Input); \
+	std::string In = INPUT; \
+	std::unique_ptr<Input> src = std::make_unique<StringInput>(In); \
 	cr_assert(src != NULL); \
 	FunctionCaller caller; \
     InstallOperators(caller); \

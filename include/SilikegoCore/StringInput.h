@@ -1,4 +1,4 @@
-/* StringSource.h: Class to input data from a string
+/* StringInput.h: Implementation of string as parser input stream
  * Copyright 2012-2025 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,38 +15,36 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_CORE_STRING_SOURCE_H
-#define SILIKEGO_CORE_STRING_SOURCE_H
+#if !defined SILIKEGO_CORE_STRING_INPUT_H
+#define SILIKEGO_CORE_STRING_INPUT_H
 
 #include <string>
 
 #include <SilikegoCore/Api.h>
-#include <SilikegoCore/DataSource.h>
+#include <SilikegoCore/Input.h>
 
 namespace Silikego
 {
-	class SILIKEGOCORE_EXPORT StringSource : public DataSource
+	class SILIKEGOCORE_EXPORT StringInput : public Input
 	{
-	public:
-		StringSource() = delete;
-
-		StringSource(const char *);
-		StringSource(const std::string &);
-
-		StringSource(const StringSource&) = delete;
-		StringSource(StringSource&&) = delete;
-		virtual ~StringSource() override;
-
-		StringSource& operator=(const StringSource&) = delete;
-		StringSource& operator=(StringSource&&) = delete;
-
-		virtual bool advance() override;
-		virtual char current() override;
-
-	private:
 		class Impl;
 		Impl* _impl;
+	public:
+		StringInput() = delete;
+
+		StringInput(const char* source);
+		StringInput(const std::string& source);
+
+		StringInput(const StringInput&) = delete;
+		StringInput(StringInput&&) = delete;
+		~StringInput() override;
+
+		StringInput& operator=(const StringInput&) = delete;
+		StringInput& operator=(StringInput&&) = delete;
+
+		bool advance() override;
+		char character() override;
 	};
 };
 
-#endif // SILIKEGO_CORE_STRING_SOURCE_H
+#endif // SILIKEGO_CORE_STRING_INPUT_H

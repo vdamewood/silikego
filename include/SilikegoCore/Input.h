@@ -1,4 +1,4 @@
-/* DataSource.h: Abstract interface for input data
+/* Input.h: Abstract interface for parser input stream
  * Copyright 2012-2025 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,28 +15,27 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_CORE_DATA_SOURCE_H
-#define SILIKEGO_CORE_DATA_SOURCE_H
+#if !defined SILIKEGO_CORE_INPUT_H
+#define SILIKEGO_CORE_INPUT_H
 
 #include <SilikegoCore/Api.h>
 
 namespace Silikego
 {
-	class SILIKEGOCORE_EXPORT DataSource
+	class SILIKEGOCORE_EXPORT Input
 	{
 	public:
-		DataSource() = default;
+		Input();
+		Input(const Input&) = delete;
+		Input(Input&&) = delete;
+		virtual ~Input();
 
-		DataSource(const DataSource&) = delete;
-		DataSource(DataSource&&) = delete;
-		virtual ~DataSource() = default;
-
-		DataSource& operator=(const DataSource&) = delete;
-		DataSource& operator=(DataSource&&) = delete;
+		Input& operator=(const Input&) = delete;
+		Input& operator=(Input&&) = delete;
 
 		virtual bool advance() = 0;
-		virtual char current() = 0;
+		virtual char character() = 0;
 	};
 };
 
-#endif // SILIKEGO_CORE_DATA_SOURCE_H
+#endif // SILIKEGO_CORE_INPUT_H

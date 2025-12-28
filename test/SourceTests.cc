@@ -1,24 +1,24 @@
 #include <criterion/criterion.h>
-#include <SilikegoCore/DataSource.h>
-#include <SilikegoCore/StringSource.h>
+#include <SilikegoCore/Input.h>
+#include <SilikegoCore/StringInput.h>
 
 #include <string>
 
 using std::string;
-using Silikego::StringSource;
+using Silikego::StringInput;
 
 #define SourceTest(NAME, STRING) \
 Test(StringSourceTests, NAME) \
 { \
     string input(STRING); \
-    std::unique_ptr<Silikego::DataSource> source = std::make_unique<StringSource>(input); \
+    std::unique_ptr<Silikego::Input> source = std::make_unique<StringInput>(input); \
 \
     for (int i = 0; i < input.size(); i++) \
     { \
-        cr_assert(source->current() == input[i]); \
+        cr_assert(source->character() == input[i]); \
         source->advance(); \
     } \
-    cr_assert(source->current() == '\0'); \
+    cr_assert(source->character() == '\0'); \
 }
 
 SourceTest(EmptryString, "")

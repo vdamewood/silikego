@@ -58,8 +58,8 @@ target_sources(SilikegoCore
 		src/Functions.cc
 		src/FunctionCaller.cc
 		src/SyntaxTree.cc
-		src/DataSource.cc
-		src/StringSource.cc
+		src/Input.cc
+		src/StringInput.cc
 		src/Token.cc
 		src/Lexer.cc
 		src/InfixParser.cc
@@ -91,8 +91,8 @@ set(PUBLIC_HEADERS
 	include/SilikegoCore/Value.h
 	include/SilikegoCore/FunctionCaller.h
 	include/SilikegoCore/SyntaxTree.h
-	include/SilikegoCore/DataSource.h
-	include/SilikegoCore/StringSource.h
+	include/SilikegoCore/Input.h
+	include/SilikegoCore/StringInput.h
 	include/SilikegoCore/Token.h
 	include/SilikegoCore/Lexer.h
 	include/SilikegoCore/InfixParser.h

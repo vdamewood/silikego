@@ -1,4 +1,4 @@
-/* DataSource.cc: Abstract interface for input data
+/* Input.cc: Abstract interface for parser input stream
  * Copyright 2012-2025 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,11 +15,17 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//#include <SilikegoCore/DataSource.h>
+#include <SilikegoCore/Input.h>
 
 namespace Silikego
 {
-	/*DataSource::~DataSource()
+	Input::Input()
 	{
-	}*/
+
+	}
+
+	Input::~Input()
+	{
+
+	}
 }
