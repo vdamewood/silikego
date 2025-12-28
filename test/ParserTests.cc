@@ -32,10 +32,10 @@ Test(ParserTests, NAME) \
     switch(result.status()) \
     { \
     case ValueStatus::Integer: \
-        cr_assert(target.toInteger() == result.toInteger()); \
+        cr_assert(target.integer() == result.integer()); \
         break; \
     case ValueStatus::Real: \
-        cr_assert(target.toReal() == result.toReal()); \
+        cr_assert(target.real() == result.real()); \
         break; \
     default: \
         break; \

@@ -41,9 +41,9 @@ namespace Silikego
 
 			if(result.status() == ValueStatus::Integer
 					&& i->status() == ValueStatus::Integer)
-				result = result.toInteger() + i->toInteger();
+				result = result.integer() + i->integer();
 			else
-				result = result.toReal() + i->toReal();
+				result = result.real() + i->real();
 		}
 		return result;
 	}
@@ -63,9 +63,9 @@ namespace Silikego
 
 			if(result.status() == ValueStatus::Integer
 					&& i->status() == ValueStatus::Integer)
-				result = result.toInteger() - i->toInteger();
+				result = result.integer() - i->integer();
 			else
-				result = result.toReal() - i->toReal();
+				result = result.real() - i->real();
 		}
 		return result;
 	}
@@ -85,9 +85,9 @@ namespace Silikego
 
 			if(result.status() == ValueStatus::Integer
 					&& i->status() == ValueStatus::Integer)
-				result = result.toInteger() * i->toInteger();
+				result = result.integer() * i->integer();
 			else
-				result = result.toReal() * i->toReal();
+				result = result.real() * i->real();
 		}
 		return result;
 	}
@@ -105,17 +105,17 @@ namespace Silikego
 			if (i->status() == ValueStatus::Error)
 				return *i;
 
-			if(i->toReal() == 0.0)
+			if(i->real() == 0.0)
 				return Error::ZeroDivision;
 
 			if(result.status() == ValueStatus::Integer
 					&& i->status() == ValueStatus::Integer
-					&& result.toInteger()
-						% i->toInteger()
+					&& result.integer()
+						% i->integer()
 						== 0)
-				result = result.toInteger() / i->toInteger();
+				result = result.integer() / i->integer();
 			else
-				result = result.toReal() / i->toReal();
+				result = result.real() / i->real();
 		}
 		return result;
 	}
@@ -128,12 +128,12 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		double result = args[0].toReal();
+		double result = args[0].real();
 		for (auto i = args.begin()+1; i != args.end(); i++)
 		{
 			if (i->status() == ValueStatus::Error)
 				return *i;
-			result = std::pow(result, i->toReal());
+			result = std::pow(result, i->real());
 		}
 		return result;
 	}
@@ -149,8 +149,8 @@ namespace Silikego
 		if (args[1].status() == ValueStatus::Error)
 			return args[1];
 			
-		long long int count = args[0].toInteger();
-		long long int faces = args[1].toInteger();
+		long long int count = args[0].integer();
+		long long int faces = args[1].integer();
 
 		if (faces == 0)
 			return 0;
@@ -176,9 +176,9 @@ namespace Silikego
 		switch (args[0].status())
 		{
 		case ValueStatus::Integer:
-			return std::abs(args[0].toInteger());
+			return std::abs(args[0].integer());
 		case ValueStatus::Real:
-			return std::fabs(args[0].toReal());
+			return std::fabs(args[0].real());
 		default:
 			return args[0];
 		}
@@ -192,7 +192,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		double input = args[0].toReal();
+		double input = args[0].real();
 		if (input < -1.0 || input > 1.0)
 			return Error::Domain;
 
@@ -207,7 +207,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		double input = args[0].toReal();
+		double input = args[0].real();
 		if (input < -1.0 || input > 1.0)
 			return Error::Domain;
 
@@ -222,7 +222,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::atan(args[0].toReal());
+		return std::atan(args[0].real());
 	}
 
 	Value Functions::ceil(std::vector<Value> args)
@@ -237,7 +237,7 @@ namespace Silikego
 			return args[0];
 		case ValueStatus::Real:
 		{
-			double result = std::ceil(args[0].toReal());
+			double result = std::ceil(args[0].real());
 			if (result <= std::numeric_limits<long long int>::max()
 					&& result
 						>= std::numeric_limits<long long int>::min())
@@ -255,7 +255,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::cos(args[0].toReal());
+		return std::cos(args[0].real());
 	}
 
 	Value Functions::cosh(std::vector<Value> args)
@@ -266,7 +266,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::cosh(args[0].toReal());
+		return std::cosh(args[0].real());
 	}
 
 	Value Functions::exp(std::vector<Value> args)
@@ -277,7 +277,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::exp(args[0].toReal());
+		return std::exp(args[0].real());
 	}
 
 	Value Functions::floor(std::vector<Value> args)
@@ -292,7 +292,7 @@ namespace Silikego
 			return args[0];
 		case ValueStatus::Real:
 		{
-			double result = std::floor(args[0].toReal());
+			double result = std::floor(args[0].real());
 			if (result <= std::numeric_limits<long long int>::max()
 					&& result
 						>= std::numeric_limits<long long int>::min())
@@ -310,7 +310,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::log(args[0].toReal());
+		return std::log(args[0].real());
 	}
 
 	Value Functions::log10(std::vector<Value> args)
@@ -321,7 +321,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::log10(args[0].toReal());
+		return std::log10(args[0].real());
 	}
 
 	Value Functions::sin(std::vector<Value> args)
@@ -332,7 +332,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::sin(args[0].toReal());
+		return std::sin(args[0].real());
 	}
 
 	Value Functions::sinh(std::vector<Value> args)
@@ -343,7 +343,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::sinh(args[0].toReal());
+		return std::sinh(args[0].real());
 	}
 
 	Value Functions::sqrt(std::vector<Value> args)
@@ -354,10 +354,10 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		if (args[0].toReal() < 0.0)
+		if (args[0].real() < 0.0)
 			return Error::Domain;
 
-		return std::sqrt(args[0].toReal());
+		return std::sqrt(args[0].real());
 	}
 
 	Value Functions::tan(std::vector<Value> args)
@@ -368,7 +368,7 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::tan(args[0].toReal());
+		return std::tan(args[0].real());
 	}
 
 	Value Functions::tanh(std::vector<Value> args)
@@ -379,6 +379,6 @@ namespace Silikego
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
-		return std::tanh(args[0].toReal());
+		return std::tanh(args[0].real());
 	}
 }

@@ -121,14 +121,14 @@ namespace Silikego
 		}
 	}
 
-	Error Value::toError() const
+	Error Value::error() const
 	{
 		return _impl->data.index() == ErrorIndex
 			? std::get<ErrorIndex>(_impl->data)
 			: Error::None;
 	}
 
-	long long int Value::toInteger() const
+	long long int Value::integer() const
 	{
 		switch (_impl->data.index())
 		{
@@ -143,7 +143,7 @@ namespace Silikego
 		}
 	}
 
-	double Value::toReal() const
+	double Value::real() const
 	{
 		switch (_impl->data.index())
 		{
@@ -158,7 +158,7 @@ namespace Silikego
 		}
 	}
 
-	Value& Value::negate()
+	void Value::negate()
 	{
 		switch (_impl->data.index())
 		{
@@ -171,6 +171,5 @@ namespace Silikego
 		default:
 			; // Do nothing. Silence warning.
 		}
-		return *this;
 	}
 }

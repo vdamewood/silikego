@@ -42,14 +42,12 @@ namespace Silikego
 		Impl* _impl;
 	public:
 		Token();
-
 		Token(int source);
 		Token(long long int source);
 		Token(double source);
 		Token(char source);
 		Token(const std::string& source);
 		Token(EndOfInput);
-
 		Token(const Token& sourcce);
 		Token(Token&& source);
 		~Token();
@@ -60,7 +58,6 @@ namespace Silikego
 		Token& operator=(char source);
 		Token& operator=(const std::string& source);
 		Token& operator=(const EndOfInput& source);
-
 		Token& operator=(const Token& source);
 		Token& operator=(Token&& source);
 

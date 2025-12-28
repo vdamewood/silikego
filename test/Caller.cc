@@ -43,7 +43,7 @@ Test(FunctionCallerTests, UseIntFunction) {
     caller.install("gftf", GetFortyTwoInt);
     Value result = caller.call("gftf", vector<Value>());
     cr_assert(result.status() == ValueStatus::Integer);
-    cr_assert(result.toInteger() == 42LL);
+    cr_assert(result.integer() == 42LL);
 }
 
 Test(FunctionCallerTests, UseFloatFunction) {
@@ -51,7 +51,7 @@ Test(FunctionCallerTests, UseFloatFunction) {
     caller.install("gftf", GetFortyTwoFloat);
     Value result = caller.call("gftf", vector<Value>());
     cr_assert(result.status() == ValueStatus::Real);
-    cr_assert(result.toReal() == 42.0);
+    cr_assert(result.real() == 42.0);
 }
 
 Test(FunctionCallerTests, HandleBadFunction)
@@ -59,7 +59,7 @@ Test(FunctionCallerTests, HandleBadFunction)
     FunctionCaller caller;
     Value result = caller.call("bogus", vector<Value>());
     cr_assert(result.status() == ValueStatus::Error);
-    cr_assert(result.toError() == Error::FunctionName);
+    cr_assert(result.error() == Error::FunctionName);
 }
 
 Test(FunctionCallerTests, FunctionsInstall)

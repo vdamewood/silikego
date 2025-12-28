@@ -43,9 +43,10 @@ namespace Silikego
 
 	class SILIKEGOCORE_EXPORT Value
 	{
+		class Impl;
+		Impl* _impl;
 	public:
-		Value() = delete;
-
+		Value();
 		Value(Error source);
 		Value(int source);
 		Value(long long int source);
@@ -62,14 +63,10 @@ namespace Silikego
 		Value& operator=(Value&& source);
 
 		ValueStatus status() const;
-		Error toError() const;
-		long long int toInteger() const;
-		double toReal() const;
-		Value& negate();
-
-	private:
-		class Impl;
-		Impl* _impl;
+		Error error() const;
+		long long int integer() const;
+		double real() const;
+		void negate();
 	};
 }
 

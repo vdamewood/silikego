@@ -35,7 +35,7 @@ Test(SUITE, NAME) \
 #define TestFunctionForEpsilon(NAME, FUNCTION, RESULT, EPSILON, ...) \
     TestFunction(NAME, FUNCTION, \
         ValueStatus::Real, \
-        (std::fabs(result.toReal() - RESULT) <= EPSILON), \
+        (std::fabs(result.real() - RESULT) <= EPSILON), \
         __VA_ARGS__ \
 )
 
@@ -48,10 +48,10 @@ Test(SUITE, NAME) \
             double:                 ValueStatus::Real    \
         ), \
         (_Generic((RESULT), \
-            int:           result.toInteger(), \
-            long long int: result.toInteger(), \
-            float:         result.toReal(),    \
-            double:        result.toReal()     \
+            int:           result.integer(), \
+            long long int: result.integer(), \
+            float:         result.real(),    \
+            double:        result.real()     \
         ) == RESULT), \
         __VA_ARGS__ \
 )

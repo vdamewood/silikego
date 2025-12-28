@@ -20,10 +20,10 @@ Test(ValueTests, TEST_NAME) \
         double:           ValueStatus::Real \
     )); \
     cr_assert(_Generic((VALUE), \
-        Silikego::Error: test_value.toError(),   \
-        int:             test_value.toInteger(), \
-        long long int:   test_value.toInteger(), \
-        double:          test_value.toReal()     \
+        Silikego::Error: test_value.error(),   \
+        int:             test_value.integer(), \
+        long long int:   test_value.integer(), \
+        double:          test_value.real()     \
     ) == VALUE); \
 }
 

@@ -11,7 +11,7 @@ Test(SyntaxTreeTests, NewIntZero) {
     Silikego::FunctionCaller caller;
     Value result = node.evaluate(caller);
     cr_assert(result.status() == ValueStatus::Integer);
-    cr_assert(result.toInteger() == 0LL);
+    cr_assert(result.integer() == 0LL);
 }
 
 Test(SyntaxTreeTests, NewFloatZero) {
@@ -20,5 +20,5 @@ Test(SyntaxTreeTests, NewFloatZero) {
     Silikego::FunctionCaller caller;
     Value result = node.evaluate(caller);
     cr_assert(result.status() == ValueStatus::Real);
-    cr_assert(result.toReal() == 0.0);
+    cr_assert(result.real() == 0.0);
 }
