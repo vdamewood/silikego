@@ -1,4 +1,4 @@
-/* InfixParser.h: Recursive-descent infix parser
+/* Evaluate.h: Functions to evaluate syntax trees with an engine
  * Copyright 2012-2025 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -15,19 +15,12 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined SILIKEGO_CORE_INFIX_PARSER_H
-#define SILIKEGO_CORE_INFIX_PARSER_H
-
-#include <memory>
-
 #include <SilikegoCore/Api.h>
-#include <SilikegoCore/Input.h>
 #include <SilikegoCore/Node.h>
+#include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/Value.h>
 
 namespace Silikego
 {
-	SILIKEGOCORE_EXPORT
-	Node ParseInfix(std::unique_ptr<Input> source_input);
+    SILIKEGOCORE_EXPORT Value Evaluate(const Node& node, FunctionCaller& engine);
 };
-
-#endif // SILIKEGO_CORE_INFIX_PARSER_H

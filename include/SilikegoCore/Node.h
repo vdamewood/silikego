@@ -1,4 +1,4 @@
-/* SyntaxTree.h: Abstract syntax tree classes
+/* Node.h: Abstract syntax tree classes
  * Copyright 2012-2025 Vincent Damewood
  *
  * This library is free software: you can redistribute it and/or modify
@@ -34,37 +34,47 @@ namespace Silikego
 		Branch
 	};
 
-	class SILIKEGOCORE_EXPORT SyntaxTreeNode
+	class SILIKEGOCORE_EXPORT Node
 	{
-	public:
-		SyntaxTreeNode();
-
-		SyntaxTreeNode(Error);
-		SyntaxTreeNode(long long int);
-		SyntaxTreeNode(double);
-		SyntaxTreeNode(Value);
-		SyntaxTreeNode(const std::string&);
-
-		SyntaxTreeNode(const SyntaxTreeNode&);
-		SyntaxTreeNode(SyntaxTreeNode&&);
-		~SyntaxTreeNode();
-
-		SyntaxTreeNode& operator=(const SyntaxTreeNode&);
-		SyntaxTreeNode& operator=(SyntaxTreeNode&&);
-
-		SyntaxTreeNode* fetchChild(int child_index);
-		bool collapse(FunctionCaller&);
-		Value evaluate(FunctionCaller&);
-		NodeStatus status();
-		bool isError();
-		void negate();
-		std::optional<SyntaxTreeNode> pruneChild(int child_index);
-		bool pushLeft(SyntaxTreeNode&&);
-		bool pushRight(SyntaxTreeNode&&);
-
-	private:
 		class Impl;
 		Impl* _impl;
+	public:
+		Node();
+
+		Node(Error source);
+		Node(int source);
+		Node(long long int source);
+		Node(double source);
+		Node(const Value& source);
+		Node(const std::string& source);
+
+		Node(const Node& source);
+		Node(Node&& source);
+		~Node();
+
+		Node& operator=(Error source);
+		Node& operator=(int source);
+		Node& operator=(long long int source);
+		Node& operator=(double source);
+		Node& operator=(const Value& source);
+		Node& operator=(const std::string& source);
+		Node& operator=(const Node& source);
+		Node& operator=(Node&& source);
+
+		NodeStatus status() const;
+		const Value& value() const;
+		const std::string& id() const;
+		bool isNegated() const;
+		void negate();
+		bool pushLeft(const Node&);
+		bool pushLeft(Node&&);
+		bool pushRight(const Node&);
+		bool pushRight(Node&&);
+		bool insert(int position, const Node&);
+		bool insert(int position, Node&&);
+		int countChildren() const;
+		const Node* fetchChild(int child_index) const;
+		std::optional<Node> pruneChild(int child_index);
 	};
 };
 

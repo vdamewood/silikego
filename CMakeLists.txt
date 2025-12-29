@@ -57,12 +57,13 @@ target_sources(SilikegoCore
 		src/Value.cc
 		src/Functions.cc
 		src/FunctionCaller.cc
-		src/SyntaxTree.cc
+		src/Node.cc
 		src/Input.cc
 		src/StringInput.cc
 		src/Token.cc
 		src/Lexer.cc
 		src/InfixParser.cc
+		src/Evaluate.cc
 )
 target_compile_features(SilikegoCore PUBLIC cxx_std_17)
 set_target_properties(SilikegoCore PROPERTIES
@@ -90,12 +91,13 @@ generate_export_header(SilikegoCore
 set(PUBLIC_HEADERS
 	include/SilikegoCore/Value.h
 	include/SilikegoCore/FunctionCaller.h
-	include/SilikegoCore/SyntaxTree.h
+	include/SilikegoCore/Node.h
 	include/SilikegoCore/Input.h
 	include/SilikegoCore/StringInput.h
 	include/SilikegoCore/Token.h
 	include/SilikegoCore/Lexer.h
 	include/SilikegoCore/InfixParser.h
+	include/SIlikegoCore/Evaluate.h
 	include/SilikegoCore/Version.h
 	${CMAKE_CURRENT_BINARY_DIR}/include/SilikegoCore/Api.h
 )

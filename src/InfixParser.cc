@@ -22,42 +22,42 @@
 #include <SilikegoCore/Input.h>
 #include <SilikegoCore/Lexer.h>
 #include <SilikegoCore/InfixParser.h>
-#include <SilikegoCore/SyntaxTree.h>
+#include <SilikegoCore/Node.h>
 #include <SilikegoCore/Token.h>
 #include <SilikegoCore/Value.h>
 
 namespace Silikego
 {
-	static SyntaxTreeNode GetExprssion(Lexer&);
-	static SyntaxTreeNode GetExprssionRest(Lexer&, SyntaxTreeNode&&);
-	static SyntaxTreeNode GetTerm(Lexer&);
-	static SyntaxTreeNode GetTermRest(Lexer&, SyntaxTreeNode&&);
-	static SyntaxTreeNode GetExponent(Lexer&);
-	static SyntaxTreeNode GetExponentRest(Lexer&);
-	static SyntaxTreeNode GetRoll(Lexer&);
-	static SyntaxTreeNode GetRollRest(Lexer&);
-	static SyntaxTreeNode GetAtom(Lexer&);
-	static SyntaxTreeNode GetNumber(Lexer&);
-	static SyntaxTreeNode GetUnsignedNumber(Lexer&);
-	static SyntaxTreeNode GetFunctionCall(Lexer&);
-	static SyntaxTreeNode GetArguments(Lexer&, const std::string&);
+	static Node GetExprssion(Lexer&);
+	static Node GetExprssionRest(Lexer&, Node&&);
+	static Node GetTerm(Lexer&);
+	static Node GetTermRest(Lexer&, Node&&);
+	static Node GetExponent(Lexer&);
+	static Node GetExponentRest(Lexer&);
+	static Node GetRoll(Lexer&);
+	static Node GetRollRest(Lexer&);
+	static Node GetAtom(Lexer&);
+	static Node GetNumber(Lexer&);
+	static Node GetUnsignedNumber(Lexer&);
+	static Node GetFunctionCall(Lexer&);
+	static Node GetArguments(Lexer&, const std::string&);
 
 
-	SyntaxTreeNode ParseInfix(std::unique_ptr<Input> input_source)
+	Node ParseInfix(std::unique_ptr<Input> input_source)
 	{
 		Lexer lexer(std::move(input_source));
-		SyntaxTreeNode result = GetExprssion(lexer);
+		Node result = GetExprssion(lexer);
 		if (lexer.current().status() != TokenStatus::EndOfInput)
 			return Error::Syntax;
 		return result;
 	}
 
-	static SyntaxTreeNode GetExprssion(Lexer& lexer)
+	static Node GetExprssion(Lexer& lexer)
 	{
 		return GetExprssionRest(lexer, GetTerm(lexer));
 	}
 
-	static SyntaxTreeNode GetExprssionRest(Lexer& lexer, SyntaxTreeNode&& left_side)
+	static Node GetExprssionRest(Lexer& lexer, Node&& left_side)
 	{
 		if (lexer.current().status() != TokenStatus::Character
 				|| (lexer.current().character() != '+'
@@ -79,18 +79,18 @@ namespace Silikego
 
 		lexer.advance();
 
-		SyntaxTreeNode branch{function_id};
+		Node branch{function_id};
 		branch.pushRight(std::move(left_side));
 		branch.pushRight(GetTerm(lexer));
 		return GetExprssionRest(lexer, std::move(branch));
 	}
 
-	static SyntaxTreeNode GetTerm(Lexer& lexer)
+	static Node GetTerm(Lexer& lexer)
 	{
 		return GetTermRest(lexer, GetExponent(lexer));
 	}
 
-	static SyntaxTreeNode GetTermRest(Lexer& lexer, SyntaxTreeNode&& left_side)
+	static Node GetTermRest(Lexer& lexer, Node&& left_side)
 	{
 		if (lexer.current().status() != TokenStatus::Character
 				|| (lexer.current().character() != '*'
@@ -112,30 +112,30 @@ namespace Silikego
 
 		lexer.advance();
 
-		SyntaxTreeNode branch{function_id};
+		Node branch{function_id};
 		branch.pushRight(std::move(left_side));
 		branch.pushRight(GetTerm(lexer));
 		return GetTermRest(lexer, std::move(branch));
 	}
 
-	static SyntaxTreeNode GetExponent(Lexer& lexer)
+	static Node GetExponent(Lexer& lexer)
 	{
-		SyntaxTreeNode leftValue = GetRoll(lexer);
-		SyntaxTreeNode Rest = GetExponentRest(lexer);
+		Node leftValue = GetRoll(lexer);
+		Node Rest = GetExponentRest(lexer);
 		if (Rest.status() == NodeStatus::Nothing)
 			return leftValue;
 
-        SyntaxTreeNode result{"power"};
+        Node result{"power"};
 		result.pushRight(std::move(leftValue));
 		result.pushRight(std::move(Rest));
 		return std::move(result);
 	}
 
-	static SyntaxTreeNode GetExponentRest(Lexer& lexer)
+	static Node GetExponentRest(Lexer& lexer)
 	{
 		if (lexer.current().status() != TokenStatus::Character
 				|| lexer.current().character() != '^')
-			return SyntaxTreeNode();
+			return Node();
 
 		lexer.advance();
 
@@ -160,25 +160,25 @@ namespace Silikego
 		return Error::Syntax;
 	}
 
-	static SyntaxTreeNode GetRoll(Lexer& lexer)
+	static Node GetRoll(Lexer& lexer)
 	{
-		SyntaxTreeNode left_side = GetAtom(lexer);
-		SyntaxTreeNode rest = GetRollRest(lexer);
+		Node left_side = GetAtom(lexer);
+		Node rest = GetRollRest(lexer);
 
 		if (rest.status() == NodeStatus::Nothing)
 			return left_side;
 
-        SyntaxTreeNode result{"dice"};
+        Node result{"dice"};
 		result.pushRight(std::move(left_side));
 		result.pushRight(std::move(rest));
         return std::move(result);
 	}
 
-	static SyntaxTreeNode GetRollRest(Lexer& lexer)
+	static Node GetRollRest(Lexer& lexer)
 	{
 		if(lexer.current().status() != TokenStatus::Character
 				|| lexer.current().character() != 'd')
-			return SyntaxTreeNode();
+			return Node();
 
 		lexer.advance();
 
@@ -194,7 +194,7 @@ namespace Silikego
 		}
 	}
 
-	static SyntaxTreeNode GetAtom(Lexer& lexer)
+	static Node GetAtom(Lexer& lexer)
 	{
 		switch(lexer.current().status())
 		{
@@ -211,7 +211,7 @@ namespace Silikego
 			case '(':
 			{
 				lexer.advance();
-				SyntaxTreeNode value = GetExprssion(lexer);
+				Node value = GetExprssion(lexer);
 
 				if (lexer.current().status() == TokenStatus::Character
 					&& lexer.current().character() == ')')
@@ -230,7 +230,7 @@ namespace Silikego
 		return Error::Syntax;
 	}
 
-	static SyntaxTreeNode GetNumber(Lexer& lexer)
+	static Node GetNumber(Lexer& lexer)
 	{
 		switch (lexer.current().status())
 		{
@@ -242,7 +242,7 @@ namespace Silikego
 			if ( lexer.current().character() == '-')
 			{
 				lexer.advance();
-				SyntaxTreeNode number = GetUnsignedNumber(lexer);
+				Node number = GetUnsignedNumber(lexer);
 				number.negate();
 				return number;
 			}
@@ -253,9 +253,9 @@ namespace Silikego
 		return Error::Syntax;
 	}
 
-	static SyntaxTreeNode GetUnsignedNumber(Lexer& lexer)
+	static Node GetUnsignedNumber(Lexer& lexer)
 	{
-		SyntaxTreeNode rVal;
+		Node rVal;
 
 		switch (lexer.current().status())
 		{
@@ -276,7 +276,7 @@ namespace Silikego
 		}
 	}
 
-	static SyntaxTreeNode GetFunctionCall(Lexer& lexer)
+	static Node GetFunctionCall(Lexer& lexer)
 	{
 		if (lexer.current().status() != TokenStatus::Id)
 			return Error::Syntax;
@@ -290,7 +290,7 @@ namespace Silikego
 
         lexer.advance();
 
-        SyntaxTreeNode function_call(GetArguments(lexer, FunctionName));
+        Node function_call(GetArguments(lexer, FunctionName));
 
 		if (lexer.current().status() == TokenStatus::Character
 				&& lexer.current().character() == ')')
@@ -302,13 +302,14 @@ namespace Silikego
 		return Error::Syntax;
 	}
 
-	static SyntaxTreeNode GetArguments(Lexer& lexer, const std::string& function_id)
+	static Node GetArguments(Lexer& lexer, const std::string& function_id)
 	{
-		SyntaxTreeNode branch{function_id};
+		Node branch{function_id};
 		while(true)
 		{
-			SyntaxTreeNode current = GetExprssion(lexer);
-            bool was_error = current.isError();
+			Node current = GetExprssion(lexer);
+            bool was_error = current.status() == NodeStatus::Leaf
+				&& current.value().status() == ValueStatus::Error;
             branch.pushRight(std::move(current));
 
 			if (was_error || (

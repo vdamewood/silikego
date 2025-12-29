@@ -1,7 +1,8 @@
 #include <criterion/criterion.h>
 #include <SilikegoCore/InfixParser.h>
 #include <SilikegoCore/StringInput.h>
-#include <SilikegoCore/SyntaxTree.h>
+#include <SilikegoCore/Node.h>
+#include <SilikegoCore/Evaluate.h>
 
 #include <memory>
 #include <string>
@@ -11,7 +12,7 @@ using std::unique_ptr;
 using Silikego::Input;
 using Silikego::StringInput;
 using Silikego::FunctionCaller;
-using Silikego::SyntaxTreeNode;
+using Silikego::Node;
 using Silikego::Value;
 using Silikego::ValueStatus;
 
@@ -25,9 +26,9 @@ Test(ParserTests, NAME) \
     InstallOperators(caller); \
     InstallFunctions(caller); \
 \
-	SyntaxTreeNode tree = Silikego::ParseInfix(std::move(src)); \
+	Node tree = Silikego::ParseInfix(std::move(src)); \
     Value target{TARGET}; \
-	Value result{tree.evaluate(caller)}; \
+	Value result{Silikego::Evaluate(tree, caller)}; \
     cr_assert(target.status() == result.status()); \
     switch(result.status()) \
     { \
