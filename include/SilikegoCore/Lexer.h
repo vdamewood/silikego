@@ -41,7 +41,7 @@ namespace Silikego
 		Lexer& operator=(Lexer&&) = default;
 
 		void advance();
-		Silikego::Token& current();
+		Silikego::Token& token();
 
 	private:
 		class Impl;

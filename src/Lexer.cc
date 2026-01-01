@@ -29,7 +29,8 @@
 #define EULER 2.71828183
 #define PI    3.14159265
 
-static int isOperator(int character)
+static inline bool
+IsOperator(int character)
 {
 	return
 	(
@@ -44,7 +45,8 @@ static int isOperator(int character)
 	);
 }
 
-static int isIdCharacter(int character)
+static inline bool
+IsIdCharacter(int character)
 {
 	return (std::isalnum(character) || character == '_');
 }
@@ -108,7 +110,7 @@ namespace Silikego
 		case DFA_END:
 			break;
 		case DFA_START:
-			if(isOperator(_impl->Source->character()))
+			if(IsOperator(_impl->Source->character()))
 			{
 				lexeme += _impl->Source->character();
 				_impl->Source->advance();
@@ -188,7 +190,7 @@ namespace Silikego
 				_impl->Source->advance();
 				dfaState = DFA_PI_2;
 			}
-			else if (isIdCharacter(_impl->Source->character()))
+			else if (IsIdCharacter(_impl->Source->character()))
 			{
 				lexeme += _impl->Source->character();
 				_impl->Source->advance();
@@ -200,7 +202,7 @@ namespace Silikego
 			}
 			break;
 		case DFA_PI_2:
-			if (isIdCharacter(_impl->Source->character()))
+			if (IsIdCharacter(_impl->Source->character()))
 			{
 				lexeme += _impl->Source->character();
 				_impl->Source->advance();
@@ -285,7 +287,7 @@ namespace Silikego
 		}
 	}
 
-	Token& Lexer::current()
+	Token& Lexer::token()
 	{
 		return _impl->Token;
 	}
