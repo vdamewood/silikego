@@ -35,7 +35,7 @@ namespace Silikego
 	public:
 		std::unordered_map<
 			std::string,
-			FunctionPointer
+			std::unique_ptr<Function>
 		> lookup;
 	};
 
@@ -48,17 +48,17 @@ namespace Silikego
 
 	void FunctionCaller::install(
 		const std::string& name,
-		FunctionPointer pointer)
+		std::unique_ptr<Function> pointer)
 	{
-		_impl->lookup[name] = pointer;
+		_impl->lookup[name] = std::move(pointer);
 	}
 
-	FunctionPointer FunctionCaller::fetch(
+	Function* FunctionCaller::fetch(
 		const std::string& name)
 	{
 		try
 		{
-			return _impl->lookup.at(name);
+			return _impl->lookup.at(name).get();
 		}
 		catch (const std::out_of_range&)
 		{
@@ -71,7 +71,7 @@ namespace Silikego
 		std::vector<Value> args)
 	try
 	{
-		return _impl->lookup.at(name)(args);
+		return (*_impl->lookup.at(name))(args);
 	}
 	catch (const std::out_of_range&)
 	{
@@ -80,31 +80,53 @@ namespace Silikego
 
 	void InstallOperators(FunctionCaller& caller)
 	{
-		caller.install("add", Functions::add);
-		caller.install("subtract", Functions::subtract);
-		caller.install("multiply", Functions::multiply);
-		caller.install("divide", Functions::divide);
-		caller.install("power", Functions::power);
-		caller.install("dice", Functions::dice);
+		caller.install("add",
+			std::make_unique<PureFunction>(Functions::add));
+		caller.install("subtract",
+			std::make_unique<PureFunction>(Functions::subtract));
+		caller.install("multiply",
+			std::make_unique<PureFunction>(Functions::multiply));
+		caller.install("divide",
+			std::make_unique<PureFunction>(Functions::divide));
+		caller.install("power",
+			std::make_unique<PureFunction>(Functions::power));
+		caller.install("dice",
+			std::make_unique<PureFunction>(Functions::dice));
 	}
 
 	void InstallFunctions(FunctionCaller& caller)
 	{
-		caller.install("abs", Functions::abs);
-		caller.install("acos", Functions::acos);
-		caller.install("asin", Functions::asin);
-		caller.install("atan", Functions::atan);
-		caller.install("ceil", Functions::ceil);
-		caller.install("cos", Functions::cos);
-		caller.install("cosh", Functions::cosh);
-		caller.install("exp", Functions::exp);
-		caller.install("floor", Functions::floor);
-		caller.install("log", Functions::log);
-		caller.install("log10", Functions::log10);
-		caller.install("sin", Functions::sin);
-		caller.install("sinh", Functions::sinh);
-		caller.install("sqrt", Functions::sqrt);
-		caller.install("tan", Functions::tan);
-		caller.install("tanh", Functions::tanh);
+		caller.install("abs",
+			std::make_unique<PureFunction>(Functions::abs));
+		caller.install("acos",
+			std::make_unique<PureFunction>(Functions::acos));
+		caller.install("asin",
+			std::make_unique<PureFunction>(Functions::asin));
+		caller.install("atan",
+			std::make_unique<PureFunction>(Functions::atan));
+		caller.install("ceil",
+			std::make_unique<PureFunction>(Functions::ceil));
+		caller.install("cos",
+			std::make_unique<PureFunction>(Functions::cos));
+		caller.install("cosh",
+			std::make_unique<PureFunction>(Functions::cosh));
+		caller.install("exp",
+			std::make_unique<PureFunction>(Functions::exp));
+		caller.install("floor",
+			std::make_unique<PureFunction>(Functions::floor));
+		caller.install("log",
+			std::make_unique<PureFunction>(Functions::log));
+		caller.install("log10",
+			std::make_unique<PureFunction>(Functions::log10));
+		caller.install("sin",
+			std::make_unique<PureFunction>(Functions::sin));
+		caller.install("sinh",
+			std::make_unique<PureFunction>(Functions::sinh));
+		caller.install("sqrt",
+			std::make_unique<PureFunction>(Functions::sqrt));
+		caller.install("tan",
+			std::make_unique<PureFunction>(Functions::tan));
+		caller.install("tanh",
+			std::make_unique<PureFunction>(Functions::tanh));
 	}
 }

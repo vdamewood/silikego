@@ -6,15 +6,16 @@ using Silikego::Error;
 using Silikego::Value;
 using Silikego::ValueStatus;
 using Silikego::FunctionCaller;
-using Silikego::FunctionPointer;
+using Silikego::Function;
+using Silikego::PureFunction;
 
-Value GetFortyTwoInt(vector<Value> ArgV)
+Value GetFortyTwoInt(const vector<Value>& ArgV)
 {
     (void)ArgV;
     return Value{42LL};
 }
 
-Value GetFortyTwoFloat(vector<Value> ArgV)
+Value GetFortyTwoFloat(const vector<Value>& ArgV)
 {
     (void)ArgV;
     return Value{42.0};
@@ -26,21 +27,23 @@ Test(FunctionCallerTests, NewCaller) {
 
 Test(FunctionCallerTests, GetIntFunction) {
     FunctionCaller caller;
-    caller.install("gfti", GetFortyTwoInt);
-    FunctionPointer result = caller.fetch("gfti");
-    cr_assert(result == GetFortyTwoInt);
+    Function *test = new PureFunction(GetFortyTwoInt);
+    caller.install("gfti", std::unique_ptr<Function>(test));
+    Function* result = caller.fetch("gfti");
+    cr_assert(test == result);
 }
 
 Test(FunctionCallerTests, GetFloatFunction) {
     FunctionCaller caller;
-    caller.install("gftf", GetFortyTwoFloat);
-    FunctionPointer result = caller.fetch("gftf");
-    cr_assert(result == GetFortyTwoFloat);
+    Function *test = new PureFunction(GetFortyTwoFloat);
+    caller.install("gftf", std::unique_ptr<Function>(test));
+    Function* result = caller.fetch("gftf");
+    cr_assert(test == result);
 }
 
 Test(FunctionCallerTests, UseIntFunction) {
     FunctionCaller caller;
-    caller.install("gftf", GetFortyTwoInt);
+    caller.install("gftf", std::make_unique<PureFunction>(GetFortyTwoInt));
     Value result = caller.call("gftf", vector<Value>());
     cr_assert(result.status() == ValueStatus::Integer);
     cr_assert(result.integer() == 42LL);
@@ -48,7 +51,7 @@ Test(FunctionCallerTests, UseIntFunction) {
 
 Test(FunctionCallerTests, UseFloatFunction) {
     FunctionCaller caller;
-    caller.install("gftf", GetFortyTwoFloat);
+    caller.install("gftf", std::make_unique<PureFunction>(GetFortyTwoFloat));
     Value result = caller.call("gftf", vector<Value>());
     cr_assert(result.status() == ValueStatus::Real);
     cr_assert(result.real() == 42.0);

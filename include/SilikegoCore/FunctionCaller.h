@@ -25,12 +25,13 @@
 #include <vector>
 
 #include <SilikegoCore/Api.h>
+#include <SilikegoCore/Function.h>
 #include <SilikegoCore/Value.h>
 
 
 namespace Silikego
 {
-	typedef Value (*FunctionPointer)(std::vector<Value>);
+	//typedef Value (*FunctionPointer)(std::vector<Value>);
 
 	class SILIKEGOCORE_EXPORT FunctionCaller
 	{
@@ -47,11 +48,11 @@ namespace Silikego
 		Value call(
 			const std::string &function_name,
 			std::vector<Value> arguments);
-		FunctionPointer fetch(
+		Function* fetch(
 			const std::string& function_name);
 		void install(
 			const std::string &function_name,
-			FunctionPointer function_pointer);
+			std::unique_ptr<Function> function_pointer);
 
 	private:
 		class Impl;

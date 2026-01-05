@@ -29,7 +29,7 @@
 
 namespace Silikego
 {
-	Value Functions::add(std::vector<Value> args)
+	Value Functions::add(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -51,7 +51,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::subtract(std::vector<Value> args)
+	Value Functions::subtract(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -73,7 +73,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::multiply(std::vector<Value> args)
+	Value Functions::multiply(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -95,7 +95,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::divide(std::vector<Value> args)
+	Value Functions::divide(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -123,7 +123,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::power(std::vector<Value> args)
+	Value Functions::power(const std::vector<Value>& args)
 	{
 		if (args.size() < 1)
 			return Error::FunctionArguments;
@@ -141,7 +141,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::dice(std::vector<Value> args)
+	Value Functions::dice(const std::vector<Value>& args)
 	{
 		if(args.size() != 2)
 			return Error::FunctionArguments;
@@ -171,7 +171,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::abs(std::vector<Value> args)
+	Value Functions::abs(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -187,7 +187,7 @@ namespace Silikego
 		}
 	}
 
-	Value Functions::acos(std::vector<Value> args)
+	Value Functions::acos(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -202,7 +202,7 @@ namespace Silikego
 		return std::acos(input);
 	}
 
-	Value Functions::asin(std::vector<Value> args)
+	Value Functions::asin(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -217,7 +217,7 @@ namespace Silikego
 		return std::asin(input);
 	}
 
-	Value Functions::atan(std::vector<Value> args)
+	Value Functions::atan(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -228,7 +228,7 @@ namespace Silikego
 		return std::atan(args[0].real());
 	}
 
-	Value Functions::ceil(std::vector<Value> args)
+	Value Functions::ceil(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -250,7 +250,7 @@ namespace Silikego
 		}
 	}
 
-	Value Functions::cos(std::vector<Value> args)
+	Value Functions::cos(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -261,7 +261,7 @@ namespace Silikego
 		return std::cos(args[0].real());
 	}
 
-	Value Functions::cosh(std::vector<Value> args)
+	Value Functions::cosh(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -272,7 +272,7 @@ namespace Silikego
 		return std::cosh(args[0].real());
 	}
 
-	Value Functions::exp(std::vector<Value> args)
+	Value Functions::exp(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -283,7 +283,7 @@ namespace Silikego
 		return std::exp(args[0].real());
 	}
 
-	Value Functions::floor(std::vector<Value> args)
+	Value Functions::floor(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -305,7 +305,7 @@ namespace Silikego
 		}
 	}
 
-	Value Functions::log(std::vector<Value> args)
+	Value Functions::log(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -316,7 +316,7 @@ namespace Silikego
 		return std::log(args[0].real());
 	}
 
-	Value Functions::log10(std::vector<Value> args)
+	Value Functions::log10(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -327,7 +327,7 @@ namespace Silikego
 		return std::log10(args[0].real());
 	}
 
-	Value Functions::sin(std::vector<Value> args)
+	Value Functions::sin(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -338,7 +338,7 @@ namespace Silikego
 		return std::sin(args[0].real());
 	}
 
-	Value Functions::sinh(std::vector<Value> args)
+	Value Functions::sinh(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -349,7 +349,7 @@ namespace Silikego
 		return std::sinh(args[0].real());
 	}
 
-	Value Functions::sqrt(std::vector<Value> args)
+	Value Functions::sqrt(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -363,7 +363,7 @@ namespace Silikego
 		return std::sqrt(args[0].real());
 	}
 
-	Value Functions::tan(std::vector<Value> args)
+	Value Functions::tan(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -374,7 +374,7 @@ namespace Silikego
 		return std::tan(args[0].real());
 	}
 
-	Value Functions::tanh(std::vector<Value> args)
+	Value Functions::tanh(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;

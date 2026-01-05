@@ -59,6 +59,8 @@ target_sources(SilikegoCore
 	PRIVATE
 		src/Functions.h
 		src/Value.cc
+		src/Function.cc
+		src/PureFunction.cc
 		src/Functions.cc
 		src/FunctionCaller.cc
 		src/Node.cc
@@ -94,6 +96,7 @@ generate_export_header(SilikegoCore
 
 set(PUBLIC_HEADERS
 	include/SilikegoCore/Value.h
+	include/SilikegoCore/Function.h
 	include/SilikegoCore/FunctionCaller.h
 	include/SilikegoCore/Node.h
 	include/SilikegoCore/Input.h

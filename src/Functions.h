@@ -29,28 +29,28 @@ namespace Silikego
 {
 	namespace Functions
 	{
-		Silikego::Value add(std::vector<Silikego::Value> Args);
-		Silikego::Value subtract(std::vector<Silikego::Value> Args);
-		Silikego::Value multiply(std::vector<Silikego::Value> Args);
-		Silikego::Value divide(std::vector<Silikego::Value> Args);
-		Silikego::Value power(std::vector<Silikego::Value> Args);
-		Silikego::Value dice(std::vector<Silikego::Value> Args);
-		Silikego::Value abs(std::vector<Silikego::Value> Args);
-		Silikego::Value acos(std::vector<Silikego::Value> Args);
-		Silikego::Value asin(std::vector<Silikego::Value> Args);
-		Silikego::Value atan(std::vector<Silikego::Value> Args);
-		Silikego::Value ceil(std::vector<Silikego::Value> Args);
-		Silikego::Value cos(std::vector<Silikego::Value> Args);
-		Silikego::Value cosh(std::vector<Silikego::Value> Args);
-		Silikego::Value exp(std::vector<Silikego::Value> Args);
-		Silikego::Value floor(std::vector<Silikego::Value> Args);
-		Silikego::Value log(std::vector<Silikego::Value> Args);
-		Silikego::Value log10(std::vector<Silikego::Value> Args);
-		Silikego::Value sin(std::vector<Silikego::Value> Args);
-		Silikego::Value sinh(std::vector<Silikego::Value> Args);
-		Silikego::Value sqrt(std::vector<Silikego::Value> Args);
-		Silikego::Value tan(std::vector<Silikego::Value> Args);;
-		Silikego::Value tanh(std::vector<Silikego::Value> Args);
+		Silikego::Value add(const std::vector<Silikego::Value>& Args);
+		Silikego::Value subtract(const std::vector<Silikego::Value>& Args);
+		Silikego::Value multiply(const std::vector<Silikego::Value>& Args);
+		Silikego::Value divide(const std::vector<Silikego::Value>& Args);
+		Silikego::Value power(const std::vector<Silikego::Value>& Args);
+		Silikego::Value dice(const std::vector<Silikego::Value>& Args);
+		Silikego::Value abs(const std::vector<Silikego::Value>& Args);
+		Silikego::Value acos(const std::vector<Silikego::Value>& Args);
+		Silikego::Value asin(const std::vector<Silikego::Value>& Args);
+		Silikego::Value atan(const std::vector<Silikego::Value>& Args);
+		Silikego::Value ceil(const std::vector<Silikego::Value>& Args);
+		Silikego::Value cos(const std::vector<Silikego::Value>& Args);
+		Silikego::Value cosh(const std::vector<Silikego::Value>& Args);
+		Silikego::Value exp(const std::vector<Silikego::Value>& Args);
+		Silikego::Value floor(const std::vector<Silikego::Value>& Args);
+		Silikego::Value log(const std::vector<Silikego::Value>& Args);
+		Silikego::Value log10(const std::vector<Silikego::Value>& Args);
+		Silikego::Value sin(const std::vector<Silikego::Value>& Args);
+		Silikego::Value sinh(const std::vector<Silikego::Value>& Args);
+		Silikego::Value sqrt(const std::vector<Silikego::Value>& Args);
+		Silikego::Value tan(const std::vector<Silikego::Value>& Args);;
+		Silikego::Value tanh(const std::vector<Silikego::Value>& Args);
 	};
 };
 #endif // SILIKEGO_FUNCTIONS_H
