@@ -11,13 +11,13 @@ using Silikego::ValueStatus;
 #define TestFunction(NAME, FUNCTION, STATUS, RESULT_EXPRESSION, ...) \
 Test(SUITE, NAME) \
 { \
-    Silikego::FunctionCaller caller; \
+    Silikego::Engine caller; \
     INSTALL_FUNCTION(caller); \
     std::vector<Silikego::Value> input \
     { \
         __VA_ARGS__ \
     }; \
-    Silikego::Value result = caller.call( \
+    Silikego::Value result = caller.callFunction( \
         FUNCTION, \
         input); \
     cr_assert(result.status() == STATUS, \

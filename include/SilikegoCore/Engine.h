@@ -18,8 +18,8 @@
 // <http://www.gnu.org/licenses/>.
 
 
-#if !defined SILIKEGO_CORE_FUNCTION_CALLER_H
-#define SILIKEGO_CORE_FUNCTION_CALLER_H
+#if !defined SILIKEGO_CORE_ENGINE_H
+#define SILIKEGO_CORE_ENGINE_H
 
 #include <string>
 #include <vector>
@@ -31,26 +31,24 @@
 
 namespace Silikego
 {
-	//typedef Value (*FunctionPointer)(std::vector<Value>);
-
-	class SILIKEGOCORE_EXPORT FunctionCaller
+	class SILIKEGOCORE_EXPORT Engine
 	{
 	public:
-		FunctionCaller();
+		Engine();
 
-		FunctionCaller(const FunctionCaller&) = delete;
-		FunctionCaller(FunctionCaller&&) = default;
-		~FunctionCaller();
+		Engine(const Engine&) = delete;
+		Engine(Engine&&) = default;
+		~Engine();
 
-		FunctionCaller& operator=(const FunctionCaller&) = delete;
-		FunctionCaller& operator=(FunctionCaller&&) = default;
+		Engine& operator=(const Engine&) = delete;
+		Engine& operator=(Engine&&) = default;
 
-		Value call(
+		Value callFunction(
 			const std::string &function_name,
 			std::vector<Value> arguments);
-		Function* fetch(
+		Function* fetchFunction(
 			const std::string& function_name);
-		void install(
+		void installFunction(
 			const std::string &function_name,
 			std::unique_ptr<Function> function_pointer);
 
@@ -59,7 +57,8 @@ namespace Silikego
 		Impl* _impl;
 	};
 
-	SILIKEGOCORE_EXPORT void InstallOperators(FunctionCaller&);
-	SILIKEGOCORE_EXPORT void InstallFunctions(FunctionCaller&);
+	SILIKEGOCORE_EXPORT void InstallOperators(Engine&);
+	SILIKEGOCORE_EXPORT void InstallMathFunctions(Engine&);
 };
-#endif // SILIKEGO_CORE_FUNCTION_CALLER_H
+
+#endif // SILIKEGO_CORE_ENGINE_H

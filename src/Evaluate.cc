@@ -22,7 +22,7 @@
 
 namespace Silikego
 {
- 	Value Evaluate(const Node& node, FunctionCaller& engine)
+ 	Value Evaluate(const Node& node, Engine& engine)
 	{
 		switch (node.status())
 		{
@@ -42,7 +42,7 @@ namespace Silikego
 				arguments.push_back(current);
 			}
 
-			Value result{engine.call(node.id(), arguments)};
+			Value result{engine.callFunction(node.id(), arguments)};
 			if (node.isNegated())
 				result.negate();
 

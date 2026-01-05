@@ -1,13 +1,13 @@
 #include <criterion/criterion.h>
-#include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/Engine.h>
 #include <math.h>
 #include <float.h>
 
 #define SUITE FunctionsTrigonometric
-#define INSTALL_FUNCTION InstallFunctions
+#define INSTALL_FUNCTION InstallMathFunctions
 #include "FunctionMacros.h"
 
-using Silikego::InstallFunctions;
+using Silikego::InstallMathFunctions;
 
 TestFunctionForEquality(SinZeroIsZero,
     "sin", 0.0,

@@ -18,12 +18,18 @@
 // <http://www.gnu.org/licenses/>.
 
 
+#if !defined SILIKEGO_CORE_EVALUATE_H
+#define SILIKEGO_CORE_EVALUATE_H
+
 #include <SilikegoCore/Api.h>
 #include <SilikegoCore/Node.h>
-#include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Value.h>
 
 namespace Silikego
 {
-    SILIKEGOCORE_EXPORT Value Evaluate(const Node& node, FunctionCaller& engine);
+SILIKEGOCORE_EXPORT
+    Value Evaluate(const Node& node, Engine& engine);
 };
+
+#endif // SILIKEGO_CORE_EVALUATE_H

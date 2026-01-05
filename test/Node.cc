@@ -9,7 +9,7 @@ using Silikego::ValueStatus;
 Test(NodeTests, NewIntZero) {
     Node node{0LL};
 
-    Silikego::FunctionCaller caller;
+    Silikego::Engine caller;
     Value result = Silikego::Evaluate(node, caller);
     cr_assert(result.status() == ValueStatus::Integer);
     cr_assert(result.integer() == 0LL);
@@ -18,7 +18,7 @@ Test(NodeTests, NewIntZero) {
 Test(NodeTests, NewFloatZero) {
     Node node{0.0};
 
-    Silikego::FunctionCaller caller;
+    Silikego::Engine caller;
     Value result = Silikego::Evaluate(node, caller);
     cr_assert(result.status() == ValueStatus::Real);
     cr_assert(result.real() == 0.0);

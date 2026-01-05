@@ -1,11 +1,11 @@
 #include <criterion/criterion.h>
-#include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/Engine.h>
 
 using std::vector;
 using Silikego::Error;
 using Silikego::Value;
 using Silikego::ValueStatus;
-using Silikego::FunctionCaller;
+using Silikego::Engine;
 using Silikego::Function;
 using Silikego::PureFunction;
 
@@ -21,58 +21,58 @@ Value GetFortyTwoFloat(const vector<Value>& ArgV)
     return Value{42.0};
 }
 
-Test(FunctionCallerTests, NewCaller) {
-    FunctionCaller caller;
+Test(EngineTests, NewCaller) {
+    Engine caller;
 }
 
-Test(FunctionCallerTests, GetIntFunction) {
-    FunctionCaller caller;
+Test(EngineTests, GetIntFunction) {
+    Engine caller;
     Function *test = new PureFunction(GetFortyTwoInt);
-    caller.install("gfti", std::unique_ptr<Function>(test));
-    Function* result = caller.fetch("gfti");
+    caller.installFunction("gfti", std::unique_ptr<Function>(test));
+    Function* result = caller.fetchFunction("gfti");
     cr_assert(test == result);
 }
 
-Test(FunctionCallerTests, GetFloatFunction) {
-    FunctionCaller caller;
+Test(EngineTests, GetFloatFunction) {
+    Engine caller;
     Function *test = new PureFunction(GetFortyTwoFloat);
-    caller.install("gftf", std::unique_ptr<Function>(test));
-    Function* result = caller.fetch("gftf");
+    caller.installFunction("gftf", std::unique_ptr<Function>(test));
+    Function* result = caller.fetchFunction("gftf");
     cr_assert(test == result);
 }
 
-Test(FunctionCallerTests, UseIntFunction) {
-    FunctionCaller caller;
-    caller.install("gftf", std::make_unique<PureFunction>(GetFortyTwoInt));
-    Value result = caller.call("gftf", vector<Value>());
+Test(EngineTests, UseIntFunction) {
+    Engine caller;
+    caller.installFunction("gftf", std::make_unique<PureFunction>(GetFortyTwoInt));
+    Value result = caller.callFunction("gftf", vector<Value>());
     cr_assert(result.status() == ValueStatus::Integer);
     cr_assert(result.integer() == 42LL);
 }
 
-Test(FunctionCallerTests, UseFloatFunction) {
-    FunctionCaller caller;
-    caller.install("gftf", std::make_unique<PureFunction>(GetFortyTwoFloat));
-    Value result = caller.call("gftf", vector<Value>());
+Test(EngineTests, UseFloatFunction) {
+    Engine caller;
+    caller.installFunction("gftf", std::make_unique<PureFunction>(GetFortyTwoFloat));
+    Value result = caller.callFunction("gftf", vector<Value>());
     cr_assert(result.status() == ValueStatus::Real);
     cr_assert(result.real() == 42.0);
 }
 
-Test(FunctionCallerTests, HandleBadFunction)
+Test(EngineTests, HandleBadFunction)
 {
-    FunctionCaller caller;
-    Value result = caller.call("bogus", vector<Value>());
+    Engine caller;
+    Value result = caller.callFunction("bogus", vector<Value>());
     cr_assert(result.status() == ValueStatus::Error);
     cr_assert(result.error() == Error::FunctionName);
 }
 
-Test(FunctionCallerTests, FunctionsInstall)
+Test(EngineTests, FunctionsInstall)
 {
-    FunctionCaller caller{};
-    InstallFunctions(caller);
+    Engine caller{};
+    InstallMathFunctions(caller);
 }
 
-Test(FunctionCallerTests, OperatorsInstall)
+Test(EngineTests, OperatorsInstall)
 {
-    FunctionCaller caller{};
+    Engine caller{};
     InstallOperators(caller);
 }

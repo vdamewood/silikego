@@ -11,7 +11,7 @@ using std::unique_ptr;
 
 using Silikego::Input;
 using Silikego::StringInput;
-using Silikego::FunctionCaller;
+using Silikego::Engine;
 using Silikego::Node;
 using Silikego::Value;
 using Silikego::ValueStatus;
@@ -22,9 +22,9 @@ Test(ParserTests, NAME) \
 	std::string In = INPUT; \
 	std::unique_ptr<Input> src = std::make_unique<StringInput>(In); \
 	cr_assert(src != NULL); \
-	FunctionCaller caller; \
+	Engine caller; \
     InstallOperators(caller); \
-    InstallFunctions(caller); \
+    InstallMathFunctions(caller); \
 \
 	Node tree = Silikego::ParseInfix(std::move(src)); \
     Value target{TARGET}; \

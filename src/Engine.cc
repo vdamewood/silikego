@@ -23,14 +23,14 @@
 #include <string>
 #include <vector>
 
-#include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Value.h>
 
 #include "Functions.h"
 
 namespace Silikego
 {
-	class FunctionCaller::Impl
+	class Engine::Impl
 	{
 	public:
 		std::unordered_map<
@@ -39,21 +39,21 @@ namespace Silikego
 		> lookup;
 	};
 
-	FunctionCaller::FunctionCaller(): _impl(new Impl) { }
+	Engine::Engine(): _impl(new Impl) { }
 
-	FunctionCaller::~FunctionCaller()
+	Engine::~Engine()
 	{
 		delete _impl;
 	}
 
-	void FunctionCaller::install(
+	void Engine::installFunction(
 		const std::string& name,
 		std::unique_ptr<Function> pointer)
 	{
 		_impl->lookup[name] = std::move(pointer);
 	}
 
-	Function* FunctionCaller::fetch(
+	Function* Engine::fetchFunction(
 		const std::string& name)
 	{
 		try
@@ -66,7 +66,7 @@ namespace Silikego
 		}
 	}
 
-	Value FunctionCaller::call(
+	Value Engine::callFunction(
 		const std::string& name,
 		std::vector<Value> args)
 	try
@@ -78,55 +78,55 @@ namespace Silikego
 		return Error::FunctionName;
 	}
 
-	void InstallOperators(FunctionCaller& caller)
+	void InstallOperators(Engine& engine)
 	{
-		caller.install("add",
+		engine.installFunction("add",
 			std::make_unique<PureFunction>(Functions::add));
-		caller.install("subtract",
+		engine.installFunction("subtract",
 			std::make_unique<PureFunction>(Functions::subtract));
-		caller.install("multiply",
+		engine.installFunction("multiply",
 			std::make_unique<PureFunction>(Functions::multiply));
-		caller.install("divide",
+		engine.installFunction("divide",
 			std::make_unique<PureFunction>(Functions::divide));
-		caller.install("power",
+		engine.installFunction("power",
 			std::make_unique<PureFunction>(Functions::power));
-		caller.install("dice",
+		engine.installFunction("dice",
 			std::make_unique<PureFunction>(Functions::dice));
 	}
 
-	void InstallFunctions(FunctionCaller& caller)
+	void InstallMathFunctions(Engine& engine)
 	{
-		caller.install("abs",
+		engine.installFunction("abs",
 			std::make_unique<PureFunction>(Functions::abs));
-		caller.install("acos",
+		engine.installFunction("acos",
 			std::make_unique<PureFunction>(Functions::acos));
-		caller.install("asin",
+		engine.installFunction("asin",
 			std::make_unique<PureFunction>(Functions::asin));
-		caller.install("atan",
+		engine.installFunction("atan",
 			std::make_unique<PureFunction>(Functions::atan));
-		caller.install("ceil",
+		engine.installFunction("ceil",
 			std::make_unique<PureFunction>(Functions::ceil));
-		caller.install("cos",
+		engine.installFunction("cos",
 			std::make_unique<PureFunction>(Functions::cos));
-		caller.install("cosh",
+		engine.installFunction("cosh",
 			std::make_unique<PureFunction>(Functions::cosh));
-		caller.install("exp",
+		engine.installFunction("exp",
 			std::make_unique<PureFunction>(Functions::exp));
-		caller.install("floor",
+		engine.installFunction("floor",
 			std::make_unique<PureFunction>(Functions::floor));
-		caller.install("log",
+		engine.installFunction("log",
 			std::make_unique<PureFunction>(Functions::log));
-		caller.install("log10",
+		engine.installFunction("log10",
 			std::make_unique<PureFunction>(Functions::log10));
-		caller.install("sin",
+		engine.installFunction("sin",
 			std::make_unique<PureFunction>(Functions::sin));
-		caller.install("sinh",
+		engine.installFunction("sinh",
 			std::make_unique<PureFunction>(Functions::sinh));
-		caller.install("sqrt",
+		engine.installFunction("sqrt",
 			std::make_unique<PureFunction>(Functions::sqrt));
-		caller.install("tan",
+		engine.installFunction("tan",
 			std::make_unique<PureFunction>(Functions::tan));
-		caller.install("tanh",
+		engine.installFunction("tanh",
 			std::make_unique<PureFunction>(Functions::tanh));
 	}
 }
