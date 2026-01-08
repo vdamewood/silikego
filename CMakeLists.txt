@@ -68,7 +68,7 @@ target_sources(SilikegoCore
 		src/StringInput.cc
 		src/Token.cc
 		src/Lexer.cc
-		src/InfixParser.cc
+		src/ParseInfix.cc
 		src/Evaluate.cc
 )
 target_compile_features(SilikegoCore PUBLIC cxx_std_17)
@@ -103,7 +103,7 @@ set(PUBLIC_HEADERS
 	include/SilikegoCore/StringInput.h
 	include/SilikegoCore/Token.h
 	include/SilikegoCore/Lexer.h
-	include/SilikegoCore/InfixParser.h
+	include/SilikegoCore/ParseInfix.h
 	include/SIlikegoCore/Evaluate.h
 	include/SilikegoCore/Version.h
 	${CMAKE_CURRENT_BINARY_DIR}/include/SilikegoCore/Api.h

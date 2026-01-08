@@ -24,7 +24,7 @@
 
 #include <SilikegoCore/Input.h>
 #include <SilikegoCore/Lexer.h>
-#include <SilikegoCore/InfixParser.h>
+#include <SilikegoCore/ParseInfix.h>
 #include <SilikegoCore/Node.h>
 #include <SilikegoCore/Token.h>
 #include <SilikegoCore/Value.h>

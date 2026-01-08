@@ -18,8 +18,8 @@
 // <http://www.gnu.org/licenses/>.
 
 
-#if !defined SILIKEGO_CORE_INFIX_PARSER_H
-#define SILIKEGO_CORE_INFIX_PARSER_H
+#if !defined SILIKEGO_CORE_PARSE_INFIX_H
+#define SILIKEGO_CORE_PARSE_INFIX_H
 
 #include <memory>
 
@@ -33,4 +33,4 @@ namespace Silikego
 	Node ParseInfix(std::unique_ptr<Input> source_input);
 };
 
-#endif // SILIKEGO_CORE_INFIX_PARSER_H
+#endif // SILIKEGO_CORE_PARSE_INFIX_H
