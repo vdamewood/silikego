@@ -3,6 +3,8 @@
 #include <SilikegoCore/StringInput.h>
 #include <SilikegoCore/Node.h>
 #include <SilikegoCore/Evaluate.h>
+#include <SilikegoCore/Math.h>
+#include <SilikegoCore/Operator.h>
 
 #include <memory>
 #include <string>

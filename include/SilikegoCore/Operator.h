@@ -17,45 +17,38 @@
 // License along with Silikego. If not, see
 // <http://www.gnu.org/licenses/>.
 
+#if !defined SILIKEGO_CORE_OPERATORS_H
+#define SILIKEGO_CORE_OPERATORS_H
 
-#if !defined SILIKEGO_CORE_ENGINE_H
-#define SILIKEGO_CORE_ENGINE_H
-
-#include <string>
 #include <vector>
 
 #include <SilikegoCore/Api.h>
-#include <SilikegoCore/Function.h>
+#include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Value.h>
-
 
 namespace Silikego
 {
-	class SILIKEGOCORE_EXPORT Engine
-	{
-	public:
-		Engine();
+SILIKEGOCORE_EXPORT
+	Silikego::Value OperatorAdd(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
+	Silikego::Value OperatorSubtract(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
+	Silikego::Value OperatorMultiply(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
+	Silikego::Value OperatorDivide(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
+	Silikego::Value OperatorPower(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
+	Silikego::Value OperatorDice(
+		const std::vector<Silikego::Value>& args);
 
-		Engine(const Engine&) = delete;
-		Engine(Engine&&) = default;
-		~Engine();
-
-		Engine& operator=(const Engine&) = delete;
-		Engine& operator=(Engine&&) = default;
-
-		Value callFunction(
-			const std::string &function_name,
-			std::vector<Value> arguments);
-		Function* fetchFunction(
-			const std::string& function_name);
-		void installFunction(
-			const std::string &function_name,
-			std::unique_ptr<Function> function_pointer);
-
-	private:
-		class Impl;
-		Impl* _impl;
-	};
+SILIKEGOCORE_EXPORT
+	void InstallOperators(Engine& destination);
 };
 
-#endif // SILIKEGO_CORE_ENGINE_H
+#endif // SILIKEGO_CORE_OPERATORS_H

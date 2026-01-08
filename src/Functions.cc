@@ -22,14 +22,15 @@
 #include <cstdlib>
 #include <ctime>
 #include <limits>
+#include <memory>
 
+#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Math.h>
 #include <SilikegoCore/Value.h>
-
-#include "Functions.h"
 
 namespace Silikego
 {
-	Value Functions::add(const std::vector<Value>& args)
+	Value OperatorAdd(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -51,7 +52,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::subtract(const std::vector<Value>& args)
+	Value OperatorSubtract(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -73,7 +74,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::multiply(const std::vector<Value>& args)
+	Value OperatorMultiply(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -95,7 +96,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::divide(const std::vector<Value>& args)
+	Value OperatorDivide(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -123,7 +124,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::power(const std::vector<Value>& args)
+	Value OperatorPower(const std::vector<Value>& args)
 	{
 		if (args.size() < 1)
 			return Error::FunctionArguments;
@@ -141,7 +142,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::dice(const std::vector<Value>& args)
+	Value OperatorDice(const std::vector<Value>& args)
 	{
 		if(args.size() != 2)
 			return Error::FunctionArguments;
@@ -171,7 +172,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value Functions::abs(const std::vector<Value>& args)
+	Value MathAbs(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -187,7 +188,7 @@ namespace Silikego
 		}
 	}
 
-	Value Functions::acos(const std::vector<Value>& args)
+	Value MathAcos(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -202,7 +203,7 @@ namespace Silikego
 		return std::acos(input);
 	}
 
-	Value Functions::asin(const std::vector<Value>& args)
+	Value MathAsin(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -217,7 +218,7 @@ namespace Silikego
 		return std::asin(input);
 	}
 
-	Value Functions::atan(const std::vector<Value>& args)
+	Value MathAtan(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -228,7 +229,7 @@ namespace Silikego
 		return std::atan(args[0].real());
 	}
 
-	Value Functions::ceil(const std::vector<Value>& args)
+	Value MathCeil(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -250,7 +251,7 @@ namespace Silikego
 		}
 	}
 
-	Value Functions::cos(const std::vector<Value>& args)
+	Value MathCos(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -261,7 +262,7 @@ namespace Silikego
 		return std::cos(args[0].real());
 	}
 
-	Value Functions::cosh(const std::vector<Value>& args)
+	Value MathCosh(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -272,7 +273,7 @@ namespace Silikego
 		return std::cosh(args[0].real());
 	}
 
-	Value Functions::exp(const std::vector<Value>& args)
+	Value MathExp(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -283,7 +284,7 @@ namespace Silikego
 		return std::exp(args[0].real());
 	}
 
-	Value Functions::floor(const std::vector<Value>& args)
+	Value MathFloor(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -305,7 +306,7 @@ namespace Silikego
 		}
 	}
 
-	Value Functions::log(const std::vector<Value>& args)
+	Value MathLog(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -316,7 +317,7 @@ namespace Silikego
 		return std::log(args[0].real());
 	}
 
-	Value Functions::log10(const std::vector<Value>& args)
+	Value MathLog10(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -327,7 +328,7 @@ namespace Silikego
 		return std::log10(args[0].real());
 	}
 
-	Value Functions::sin(const std::vector<Value>& args)
+	Value MathSin(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -338,7 +339,7 @@ namespace Silikego
 		return std::sin(args[0].real());
 	}
 
-	Value Functions::sinh(const std::vector<Value>& args)
+	Value MathSinh(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -349,7 +350,7 @@ namespace Silikego
 		return std::sinh(args[0].real());
 	}
 
-	Value Functions::sqrt(const std::vector<Value>& args)
+	Value MathSqrt(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -363,7 +364,7 @@ namespace Silikego
 		return std::sqrt(args[0].real());
 	}
 
-	Value Functions::tan(const std::vector<Value>& args)
+	Value MathTan(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -374,7 +375,7 @@ namespace Silikego
 		return std::tan(args[0].real());
 	}
 
-	Value Functions::tanh(const std::vector<Value>& args)
+	Value MathTanh(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
@@ -383,5 +384,57 @@ namespace Silikego
 			return args[0];
 
 		return std::tanh(args[0].real());
+	}
+
+	void InstallOperators(Engine& engine)
+	{
+		engine.installFunction("add",
+			std::make_unique<PureFunction>(OperatorAdd));
+		engine.installFunction("subtract",
+			std::make_unique<PureFunction>(OperatorSubtract));
+		engine.installFunction("multiply",
+			std::make_unique<PureFunction>(OperatorMultiply));
+		engine.installFunction("divide",
+			std::make_unique<PureFunction>(OperatorDivide));
+		engine.installFunction("power",
+			std::make_unique<PureFunction>(OperatorPower));
+		engine.installFunction("dice",
+			std::make_unique<PureFunction>(OperatorDice));
+	}
+
+	void InstallMathFunctions(Engine& engine)
+	{
+		engine.installFunction("abs",
+			std::make_unique<PureFunction>(MathAbs));
+		engine.installFunction("acos",
+			std::make_unique<PureFunction>(MathCos));
+		engine.installFunction("asin",
+			std::make_unique<PureFunction>(MathSin));
+		engine.installFunction("atan",
+			std::make_unique<PureFunction>(MathTan));
+		engine.installFunction("ceil",
+			std::make_unique<PureFunction>(MathCeil));
+		engine.installFunction("cos",
+			std::make_unique<PureFunction>(MathCos));
+		engine.installFunction("cosh",
+			std::make_unique<PureFunction>(MathCosh));
+		engine.installFunction("exp",
+			std::make_unique<PureFunction>(MathExp));
+		engine.installFunction("floor",
+			std::make_unique<PureFunction>(MathFloor));
+		engine.installFunction("log",
+			std::make_unique<PureFunction>(MathLog));
+		engine.installFunction("log10",
+			std::make_unique<PureFunction>(MathLog10));
+		engine.installFunction("sin",
+			std::make_unique<PureFunction>(MathSin));
+		engine.installFunction("sinh",
+			std::make_unique<PureFunction>(MathSinh));
+		engine.installFunction("sqrt",
+			std::make_unique<PureFunction>(MathSqrt));
+		engine.installFunction("tan",
+			std::make_unique<PureFunction>(MathTan));
+		engine.installFunction("tanh",
+			std::make_unique<PureFunction>(MathTanh));
 	}
 }

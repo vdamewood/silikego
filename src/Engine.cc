@@ -26,8 +26,6 @@
 #include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Value.h>
 
-#include "Functions.h"
-
 namespace Silikego
 {
 	class Engine::Impl
@@ -76,57 +74,5 @@ namespace Silikego
 	catch (const std::out_of_range&)
 	{
 		return Error::FunctionName;
-	}
-
-	void InstallOperators(Engine& engine)
-	{
-		engine.installFunction("add",
-			std::make_unique<PureFunction>(Functions::add));
-		engine.installFunction("subtract",
-			std::make_unique<PureFunction>(Functions::subtract));
-		engine.installFunction("multiply",
-			std::make_unique<PureFunction>(Functions::multiply));
-		engine.installFunction("divide",
-			std::make_unique<PureFunction>(Functions::divide));
-		engine.installFunction("power",
-			std::make_unique<PureFunction>(Functions::power));
-		engine.installFunction("dice",
-			std::make_unique<PureFunction>(Functions::dice));
-	}
-
-	void InstallMathFunctions(Engine& engine)
-	{
-		engine.installFunction("abs",
-			std::make_unique<PureFunction>(Functions::abs));
-		engine.installFunction("acos",
-			std::make_unique<PureFunction>(Functions::acos));
-		engine.installFunction("asin",
-			std::make_unique<PureFunction>(Functions::asin));
-		engine.installFunction("atan",
-			std::make_unique<PureFunction>(Functions::atan));
-		engine.installFunction("ceil",
-			std::make_unique<PureFunction>(Functions::ceil));
-		engine.installFunction("cos",
-			std::make_unique<PureFunction>(Functions::cos));
-		engine.installFunction("cosh",
-			std::make_unique<PureFunction>(Functions::cosh));
-		engine.installFunction("exp",
-			std::make_unique<PureFunction>(Functions::exp));
-		engine.installFunction("floor",
-			std::make_unique<PureFunction>(Functions::floor));
-		engine.installFunction("log",
-			std::make_unique<PureFunction>(Functions::log));
-		engine.installFunction("log10",
-			std::make_unique<PureFunction>(Functions::log10));
-		engine.installFunction("sin",
-			std::make_unique<PureFunction>(Functions::sin));
-		engine.installFunction("sinh",
-			std::make_unique<PureFunction>(Functions::sinh));
-		engine.installFunction("sqrt",
-			std::make_unique<PureFunction>(Functions::sqrt));
-		engine.installFunction("tan",
-			std::make_unique<PureFunction>(Functions::tan));
-		engine.installFunction("tanh",
-			std::make_unique<PureFunction>(Functions::tanh));
 	}
 }

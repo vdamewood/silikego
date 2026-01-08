@@ -1,5 +1,7 @@
 #include <criterion/criterion.h>
 #include <SilikegoCore/Engine.h>
+#include <SilikegoCore/Math.h>
+#include <SilikegoCore/Operator.h>
 
 #define SUITE FunctionOperatorTests
 #define INSTALL_FUNCTION InstallOperators
