@@ -28,7 +28,7 @@ Test(ParserTests, NAME) \
 \
 	Node tree = Silikego::ParseInfix(std::move(src)); \
     Value target{TARGET}; \
-	Value result{Silikego::Evaluate(tree, caller)}; \
+	Value result{Silikego::Evaluate(caller, tree)}; \
     cr_assert(target.status() == result.status()); \
     switch(result.status()) \
     { \

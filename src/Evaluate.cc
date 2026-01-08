@@ -22,7 +22,7 @@
 
 namespace Silikego
 {
- 	Value Evaluate(const Node& node, Engine& engine)
+ 	Value Evaluate(Engine& engine, const Node& node)
 	{
 		switch (node.status())
 		{
@@ -36,7 +36,7 @@ namespace Silikego
 
 			for (int i = 0; i < node.countChildren(); i++)
 			{
-				Value current = Evaluate(*node.fetchChild(i), engine);
+				Value current = Evaluate(engine, *node.fetchChild(i));
 				if (current.status() == ValueStatus::Error)
 					return current;
 				arguments.push_back(current);

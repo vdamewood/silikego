@@ -29,7 +29,7 @@
 namespace Silikego
 {
 SILIKEGOCORE_EXPORT
-    Value Evaluate(const Node& node, Engine& engine);
+    Value Evaluate(Engine& engine, const Node& node);
 };
 
 #endif // SILIKEGO_CORE_EVALUATE_H
