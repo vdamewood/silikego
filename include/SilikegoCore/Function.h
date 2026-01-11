@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -42,9 +42,11 @@ namespace Silikego
         Impl *_impl;
     public:
         PureFunction(Value (*function)(const std::vector<Value>& args));
-        Function* clone() override;
         ~PureFunction() override;
+
         Value operator()(const std::vector<Value>& args) override;
+
+        Function* clone() override;
     };
 };
 

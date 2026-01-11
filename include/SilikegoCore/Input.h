@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -20,6 +20,8 @@
 
 #if !defined SILIKEGO_CORE_INPUT_H
 #define SILIKEGO_CORE_INPUT_H
+
+#include <string>
 
 #include <SilikegoCore/Api.h>
 
@@ -38,6 +40,26 @@ namespace Silikego
 
 		virtual bool advance() = 0;
 		virtual char character() = 0;
+	};
+
+	class SILIKEGOCORE_EXPORT StringInput : public Input
+	{
+		class Impl;
+		Impl* _impl;
+	public:
+		StringInput() = delete;
+		StringInput(const char* source);
+		StringInput(const std::string& source);
+
+		StringInput(const StringInput&) = delete;
+		StringInput(StringInput&&) = delete;
+		~StringInput() override;
+
+		StringInput& operator=(const StringInput&) = delete;
+		StringInput& operator=(StringInput&&) = delete;
+
+		bool advance() override;
+		char character() override;
 	};
 };
 

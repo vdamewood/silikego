@@ -1,6 +1,5 @@
 #include <criterion/criterion.h>
 #include <SilikegoCore/Input.h>
-#include <SilikegoCore/StringInput.h>
 
 #include <string>
 

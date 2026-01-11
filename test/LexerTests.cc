@@ -1,5 +1,5 @@
 #include <criterion/criterion.h>
-#include <SilikegoCore/StringInput.h>
+#include <SilikegoCore/Input.h>
 #include <SilikegoCore/Lexer.h>
 
 using Silikego::TokenStatus;

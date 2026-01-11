@@ -21,14 +21,12 @@
 #include <deque>
 #include <optional>
 #include <string>
+#include <utility>
 #include <variant>
-#include <vector>
-#include <iostream>
+#include <sys/types.h>
 
 #include <SilikegoCore/Node.h>
-#include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Value.h>
-#include <SilikegoCore/Evaluate.h>
 
 namespace
 {
@@ -83,15 +81,10 @@ namespace Silikego
 		int checkBounds(int index)
 		{
 			if (data.index() != BranchIndex
-				|| index >= std::get<BranchIndex>(data).children.size()
-				|| index < -static_cast<ssize_t>(
-					std::get<BranchIndex>(data).children.size()))
+				|| index >= std::get<BranchIndex>(data).children.size())
 			{
 				return -1;
 			}
-
-			if (index < 0)
-				return index + std::get<BranchIndex>(data).children.size();
 
 			return index;
 		}

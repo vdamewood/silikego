@@ -131,7 +131,7 @@ namespace Silikego
         Node result{"power"};
 		result.pushRight(std::move(leftValue));
 		result.pushRight(std::move(Rest));
-		return std::move(result);
+		return result;
 	}
 
 	static Node GetExponentRest(Lexer& lexer)
@@ -174,7 +174,7 @@ namespace Silikego
         Node result{"dice"};
 		result.pushRight(std::move(left_side));
 		result.pushRight(std::move(rest));
-        return std::move(result);
+        return result;
 	}
 
 	static Node GetRollRest(Lexer& lexer)
@@ -329,6 +329,6 @@ namespace Silikego
 			}
 			lexer.advance();
 		}
-        return std::move(branch);
+        return branch;
 	}
 }

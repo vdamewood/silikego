@@ -18,12 +18,15 @@
 // <http://www.gnu.org/licenses/>.
 
 
-#include <unordered_map>
+#include <memory>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include <SilikegoCore/Engine.h>
+#include <SilikegoCore/Function.h>
 #include <SilikegoCore/Value.h>
 
 namespace Silikego

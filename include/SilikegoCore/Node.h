@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -25,7 +25,6 @@
 #include <string>
 
 #include <SilikegoCore/Api.h>
-#include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Value.h>
 
 namespace Silikego
@@ -43,14 +42,12 @@ namespace Silikego
 		Impl* _impl;
 	public:
 		Node();
-
 		Node(Error source);
 		Node(int source);
 		Node(long long int source);
 		Node(double source);
 		Node(const Value& source);
 		Node(const std::string& source);
-
 		Node(const Node& source);
 		Node(Node&& source);
 		~Node();
@@ -64,20 +61,20 @@ namespace Silikego
 		Node& operator=(const Node& source);
 		Node& operator=(Node&& source);
 
-		NodeStatus status() const;
-		const Value& value() const;
+		int countChildren() const;
+		const Node* fetchChild(int child_index) const;
 		const std::string& id() const;
+		bool insert(int position, const Node&);
+		bool insert(int position, Node&&);
 		bool isNegated() const;
 		void negate();
+		std::optional<Node> pruneChild(int child_index);
 		bool pushLeft(const Node&);
 		bool pushLeft(Node&&);
 		bool pushRight(const Node&);
 		bool pushRight(Node&&);
-		bool insert(int position, const Node&);
-		bool insert(int position, Node&&);
-		int countChildren() const;
-		const Node* fetchChild(int child_index) const;
-		std::optional<Node> pruneChild(int child_index);
+		NodeStatus status() const;
+		const Value& value() const;
 	};
 };
 

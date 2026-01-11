@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -28,33 +28,29 @@
 #include <SilikegoCore/Function.h>
 #include <SilikegoCore/Value.h>
 
-
 namespace Silikego
 {
 	class SILIKEGOCORE_EXPORT Engine
 	{
+		class Impl;
+		Impl* _impl;
 	public:
 		Engine();
-
 		Engine(const Engine&) = delete;
-		Engine(Engine&&) = default;
+		Engine(Engine&&) = delete;
 		~Engine();
 
 		Engine& operator=(const Engine&) = delete;
-		Engine& operator=(Engine&&) = default;
+		Engine& operator=(Engine&&) = delete;
 
 		Value callFunction(
-			const std::string &function_name,
-			std::vector<Value> arguments);
+			const std::string& name,
+			std::vector<Value> args);
 		Function* fetchFunction(
-			const std::string& function_name);
+			const std::string& name);
 		void installFunction(
-			const std::string &function_name,
-			std::unique_ptr<Function> function_pointer);
-
-	private:
-		class Impl;
-		Impl* _impl;
+			const std::string& name,
+			std::unique_ptr<Function> function);
 	};
 };
 
