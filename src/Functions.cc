@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -27,6 +27,15 @@
 #include <SilikegoCore/Operator.h>
 #include <SilikegoCore/Math.h>
 #include <SilikegoCore/Value.h>
+
+namespace
+{
+	// This is the largest value that can be represented by both a
+	// double and a long long int, assuming the long long int is a
+	// 64-bit, signed integer, and the double is an IEEE 754-compliant
+	// binary double-precision floating-point number.
+	const double CommonMax = 9223372036854774784.0;
+}
 
 namespace Silikego
 {
@@ -152,7 +161,7 @@ namespace Silikego
 
 		if (args[1].status() == ValueStatus::Error)
 			return args[1];
-			
+
 		long long int count = args[0].integer();
 		long long int faces = args[1].integer();
 
@@ -242,10 +251,8 @@ namespace Silikego
 		case ValueStatus::Real:
 		{
 			double result = std::ceil(args[0].real());
-			if (result <= std::numeric_limits<long long int>::max()
-					&& result
-						>= std::numeric_limits<long long int>::min())
-				return result;
+			if (result <= CommonMax && result >= -CommonMax)
+				return static_cast<long long int>(result);
 			return result;
 		}
 		}
@@ -255,7 +262,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -266,7 +273,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -277,7 +284,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -297,9 +304,7 @@ namespace Silikego
 		case ValueStatus::Real:
 		{
 			double result = std::floor(args[0].real());
-			if (result <= std::numeric_limits<long long int>::max()
-					&& result
-						>= std::numeric_limits<long long int>::min())
+			if (result <= CommonMax && result >= -CommonMax)
 				return static_cast<long long int>(result);
 			return result;
 		}
@@ -310,7 +315,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -321,7 +326,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -332,7 +337,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -343,7 +348,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -354,7 +359,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -368,7 +373,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
@@ -379,7 +384,7 @@ namespace Silikego
 	{
 		if (args.size() != 1)
 			return Error::FunctionArguments;
-		
+
 		if (args[0].status() == ValueStatus::Error)
 			return args[0];
 
