@@ -1,0 +1,171 @@
+// Copyright 2012-2026 Vincent Damewood
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+// This file is part of Silikego.
+
+// Silikego is free software: you can redistribute it and/or modify it
+// under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Silikego is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+
+// You should have received a copy of the GNU Lesser General Public
+// License along with Silikego. If not, see
+// <http://www.gnu.org/licenses/>.
+
+
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+
+#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Value.h>
+
+namespace Silikego
+{
+	Value OperatorAdd(const std::vector<Value>& args)
+	{
+		if (args.size() < 0)
+			return Error::FunctionArguments;
+
+		Value result = args[0];
+		if (result.status() == ValueStatus::Error)
+			return result;
+		for (auto i = args.begin()+1; i != args.end(); i++)
+		{
+			if (i->status() == ValueStatus::Error)
+				return *i;
+
+			if(result.status() == ValueStatus::Integer
+					&& i->status() == ValueStatus::Integer)
+				result = result.integer() + i->integer();
+			else
+				result = result.real() + i->real();
+		}
+		return result;
+	}
+
+	Value OperatorSubtract(const std::vector<Value>& args)
+	{
+		if (args.size() < 0)
+			return Error::FunctionArguments;
+
+		Value result = args[0];
+		if (result.status() == ValueStatus::Error)
+			return result;
+		for (auto i = args.begin()+1; i != args.end(); i++)
+		{
+			if (i->status() == ValueStatus::Error)
+				return *i;
+
+			if(result.status() == ValueStatus::Integer
+					&& i->status() == ValueStatus::Integer)
+				result = result.integer() - i->integer();
+			else
+				result = result.real() - i->real();
+		}
+		return result;
+	}
+
+	Value OperatorMultiply(const std::vector<Value>& args)
+	{
+		if (args.size() < 0)
+			return Error::FunctionArguments;
+
+		Value result = args[0];
+		if (result.status() == ValueStatus::Error)
+			return result;
+		for (auto i = args.begin()+1; i != args.end(); i++)
+		{
+			if (i->status() == ValueStatus::Error)
+				return *i;
+
+			if(result.status() == ValueStatus::Integer
+					&& i->status() == ValueStatus::Integer)
+				result = result.integer() * i->integer();
+			else
+				result = result.real() * i->real();
+		}
+		return result;
+	}
+
+	Value OperatorDivide(const std::vector<Value>& args)
+	{
+		if (args.size() < 0)
+			return Error::FunctionArguments;
+
+		Value result = args[0];
+		if (result.status() == ValueStatus::Error)
+			return result;
+		for (auto i = args.begin()+1; i != args.end(); i++)
+		{
+			if (i->status() == ValueStatus::Error)
+				return *i;
+
+			if(i->real() == 0.0)
+				return Error::ZeroDivision;
+
+			if(result.status() == ValueStatus::Integer
+					&& i->status() == ValueStatus::Integer
+					&& result.integer()
+						% i->integer()
+						== 0)
+				result = result.integer() / i->integer();
+			else
+				result = result.real() / i->real();
+		}
+		return result;
+	}
+
+	Value OperatorPower(const std::vector<Value>& args)
+	{
+		if (args.size() < 1)
+			return Error::FunctionArguments;
+
+		if (args[0].status() == ValueStatus::Error)
+			return args[0];
+
+		double result = args[0].real();
+		for (auto i = args.begin()+1; i != args.end(); i++)
+		{
+			if (i->status() == ValueStatus::Error)
+				return *i;
+			result = std::pow(result, i->real());
+		}
+		return result;
+	}
+
+	Value OperatorDice(const std::vector<Value>& args)
+	{
+		if(args.size() != 2)
+			return Error::FunctionArguments;
+
+		if (args[0].status() == ValueStatus::Error)
+			return args[0];
+
+		if (args[1].status() == ValueStatus::Error)
+			return args[1];
+
+		long long int count = args[0].integer();
+		long long int faces = args[1].integer();
+
+		if (faces == 0)
+			return 0;
+
+		static int has_seeded = 0;
+		if (!has_seeded)
+		{
+			has_seeded = 1;
+			std::srand(static_cast<unsigned int>(std::time(nullptr)));
+		}
+
+		long long int result = 0;
+		for (int i = 1; i <= count; i++)
+			result += (std::rand() % faces) + 1;
+		return result;
+	}
+}

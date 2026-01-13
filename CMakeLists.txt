@@ -57,10 +57,17 @@ add_library(SilikegoCore)
 add_library(Silikego::SilikegoCore ALIAS SilikegoCore)
 target_sources(SilikegoCore
 	PRIVATE
+		src/MathBasic.cc
+		src/MathHyp.cc
+		src/MathLogExp.cc
+		src/MathRounding.cc
+		src/MathTrig.cc
+		src/InstallMathFunctions.cc
+		src/Operator.cc
+		src/InstallOperators.cc
 		src/Value.cc
 		src/Function.cc
 		src/PureFunction.cc
-		src/Functions.cc
 		src/Engine.cc
 		src/Node.cc
 		src/Input.cc
