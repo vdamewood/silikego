@@ -32,6 +32,8 @@ namespace Silikego
 			std::make_unique<PureFunction>(MathSin));
 		engine.installFunction("atan",
 			std::make_unique<PureFunction>(MathTan));
+		engine.installFunction("cbrt",
+			std::make_unique<PureFunction>(MathCbrt));
 		engine.installFunction("ceil",
 			std::make_unique<PureFunction>(MathCeil));
 		engine.installFunction("cos",
@@ -42,8 +44,12 @@ namespace Silikego
 			std::make_unique<PureFunction>(MathExp));
 		engine.installFunction("floor",
 			std::make_unique<PureFunction>(MathFloor));
+		engine.installFunction("hypot",
+			std::make_unique<PureFunction>(MathHypot));
 		engine.installFunction("log",
 			std::make_unique<PureFunction>(MathLog));
+		engine.installFunction("log2",
+			std::make_unique<PureFunction>(MathLog2));
 		engine.installFunction("log10",
 			std::make_unique<PureFunction>(MathLog10));
 		engine.installFunction("round",

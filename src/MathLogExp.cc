@@ -25,6 +25,20 @@
 
 namespace Silikego
 {
+	Value MathCbrt(const std::vector<Value>& args)
+	{
+		if (args.size() != 1)
+			return Error::FunctionArguments;
+
+		if (args[0].status() == ValueStatus::Error)
+			return args[0];
+
+		if (args[0].real() < 0.0)
+			return Error::Domain;
+
+		return std::cbrt(args[0].real());
+	}
+
 	Value MathExp(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
@@ -36,6 +50,20 @@ namespace Silikego
 		return std::exp(args[0].real());
 	}
 
+	Value MathHypot(const std::vector<Value>& args)
+	{
+		if (args.size() != 2)
+			return Error::FunctionArguments;
+
+		if (args[0].status() == ValueStatus::Error)
+			return args[0];
+
+		if (args[1].status() == ValueStatus::Error)
+			return args[1];
+
+		return std::hypot(args[0].real(), args[1].real());
+	}
+
 	Value MathLog(const std::vector<Value>& args)
 	{
 		if (args.size() != 1)
@@ -45,6 +73,17 @@ namespace Silikego
 			return args[0];
 
 		return std::log(args[0].real());
+	}
+
+	Value MathLog2(const std::vector<Value>& args)
+	{
+		if (args.size() != 1)
+			return Error::FunctionArguments;
+
+		if (args[0].status() == ValueStatus::Error)
+			return args[0];
+
+		return std::log2(args[0].real());
 	}
 
 	Value MathLog10(const std::vector<Value>& args)

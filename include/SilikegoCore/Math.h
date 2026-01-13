@@ -41,6 +41,9 @@ SILIKEGOCORE_EXPORT
 	Silikego::Value MathAtan(
 		const std::vector<Silikego::Value>& args);
 SILIKEGOCORE_EXPORT
+	Silikego::Value MathCbrt(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
 	Silikego::Value MathCeil(
 		const std::vector<Silikego::Value>& args);
 SILIKEGOCORE_EXPORT
@@ -56,7 +59,13 @@ SILIKEGOCORE_EXPORT
 	Silikego::Value MathFloor(
 		const std::vector<Silikego::Value>& args);
 SILIKEGOCORE_EXPORT
+	Silikego::Value MathHypot(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
 	Silikego::Value MathLog(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
+	Silikego::Value MathLog2(
 		const std::vector<Silikego::Value>& args);
 SILIKEGOCORE_EXPORT
 	Silikego::Value MathLog10(
