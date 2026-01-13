@@ -73,4 +73,44 @@ namespace Silikego
 		}
 		}
 	}
+
+	Value MathRound(const std::vector<Value>& args)
+	{
+		if (args.size() != 1)
+			return Error::FunctionArguments;
+
+		switch(args[0].status())
+		{
+		case ValueStatus::Error:
+		case ValueStatus::Integer:
+			return args[0];
+		case ValueStatus::Real:
+		{
+			double result = std::round(args[0].real());
+			if (result <= CommonMax && result >= -CommonMax)
+				return static_cast<long long int>(result);
+			return result;
+		}
+		}
+	}
+
+	Value MathTrunc(const std::vector<Value>& args)
+	{
+		if (args.size() != 1)
+			return Error::FunctionArguments;
+
+		switch(args[0].status())
+		{
+		case ValueStatus::Error:
+		case ValueStatus::Integer:
+			return args[0];
+		case ValueStatus::Real:
+		{
+			double result = std::trunc(args[0].real());
+			if (result <= CommonMax && result >= -CommonMax)
+				return static_cast<long long int>(result);
+			return result;
+		}
+		}
+	}
 }

@@ -62,6 +62,9 @@ SILIKEGOCORE_EXPORT
 	Silikego::Value MathLog10(
 		const std::vector<Silikego::Value>& args);
 SILIKEGOCORE_EXPORT
+	Silikego::Value MathRound(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
 	Silikego::Value MathSin(
 		const std::vector<Silikego::Value>& args);
 SILIKEGOCORE_EXPORT
@@ -75,6 +78,9 @@ SILIKEGOCORE_EXPORT
 		const std::vector<Silikego::Value>& args);;
 SILIKEGOCORE_EXPORT
 	Silikego::Value MathTanh(
+		const std::vector<Silikego::Value>& args);
+SILIKEGOCORE_EXPORT
+	Silikego::Value MathTrunc(
 		const std::vector<Silikego::Value>& args);
 
 SILIKEGOCORE_EXPORT
