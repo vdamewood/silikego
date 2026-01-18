@@ -35,6 +35,6 @@ namespace Silikego
 		engine.installFunction("power",
 			std::make_unique<PureFunction>(OperatorPower));
 		engine.installFunction("dice",
-			std::make_unique<PureFunction>(OperatorDice));
+			std::make_unique<OperatorDice>(1));
 	}
 }

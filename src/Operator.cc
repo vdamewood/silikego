@@ -138,34 +138,4 @@ namespace Silikego
 		}
 		return result;
 	}
-
-	Value OperatorDice(const std::vector<Value>& args)
-	{
-		if(args.size() != 2)
-			return Error::FunctionArguments;
-
-		if (args[0].status() == ValueStatus::Error)
-			return args[0];
-
-		if (args[1].status() == ValueStatus::Error)
-			return args[1];
-
-		long long int count = args[0].integer();
-		long long int faces = args[1].integer();
-
-		if (faces == 0)
-			return 0;
-
-		static int has_seeded = 0;
-		if (!has_seeded)
-		{
-			has_seeded = 1;
-			std::srand(static_cast<unsigned int>(std::time(nullptr)));
-		}
-
-		long long int result = 0;
-		for (int i = 1; i <= count; i++)
-			result += (std::rand() % faces) + 1;
-		return result;
-	}
 }

@@ -43,9 +43,20 @@ SILIKEGOCORE_EXPORT
 SILIKEGOCORE_EXPORT
 	Silikego::Value OperatorPower(
 		const std::vector<Silikego::Value>& args);
-SILIKEGOCORE_EXPORT
-	Silikego::Value OperatorDice(
-		const std::vector<Silikego::Value>& args);
+
+	class SILIKEGOCORE_EXPORT OperatorDice : public Function
+    {
+        class Impl;
+        Impl* _impl;
+        OperatorDice(Impl* source);
+	public:
+        OperatorDice(unsigned long long int seed);
+        ~OperatorDice() override;
+
+        Value operator()(const std::vector<Value>& args) override;
+
+        Function* clone() override;
+    };
 
 SILIKEGOCORE_EXPORT
 	void InstallOperators(Engine& destination);

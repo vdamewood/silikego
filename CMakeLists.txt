@@ -64,6 +64,7 @@ target_sources(SilikegoCore
 		src/MathTrig.cc
 		src/InstallMathFunctions.cc
 		src/Operator.cc
+		src/OperatorDice.cc
 		src/InstallOperators.cc
 		src/Value.cc
 		src/Function.cc
