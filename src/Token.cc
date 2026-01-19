@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -25,12 +25,14 @@
 
 namespace
 {
-	const int UnsetIndex = 0;
-	const int CharacterIndex = 1;
-	const int IntegerIndex = 2;
-	const int RealIndex = 3;
-	const int IdIndex = 4;
-	const int EndOfInputIndex = 5;
+	enum TokenDataIndex {
+		UnsetIndex = 0,
+		CharacterIndex = 1,
+		IntegerIndex = 2,
+		RealIndex = 3,
+		IdIndex = 4,
+		EndOfInputIndex = 5
+	};
 };
 
 namespace Silikego
@@ -63,21 +65,21 @@ namespace Silikego
 	};
 
 	Token::Token()
-		: _impl(new Impl) { }
+		: _impl(new(std::nothrow) Impl) { }
 	Token::Token(char source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(int source)
-		: _impl(new Impl{static_cast<long long int>(source)}) { }
+		: _impl(new(std::nothrow) Impl{static_cast<long long int>(source)}) { }
 	Token::Token(long long int source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(double source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(const std::string& source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(EndOfInput source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(const Token& source)
-		: _impl(new Impl{*source._impl}) { }
+		: _impl(new(std::nothrow) Impl{*source._impl}) { }
 	Token::Token(Token&& source)
 		: _impl{source._impl}
 	{
@@ -127,19 +129,26 @@ namespace Silikego
 
 	Token& Token::operator=(const Token& source)
 	{
-		*_impl = *source._impl;
+		if (this != &source)
+			*_impl = *source._impl;
 		return *this;
 	}
 
 	Token& Token::operator=(Token&& source)
 	{
-		_impl = source._impl;
-		source._impl = nullptr;
+		if (this != &source)
+		{
+			_impl = source._impl;
+			source._impl = nullptr;
+		}
 		return *this;
 	}
 
 	TokenStatus Token::status() const
 	{
+		if (isEmpty())
+			return TokenStatus::Unset;
+
 		switch(_impl->data.index())
 		{
 		case UnsetIndex:
@@ -154,28 +163,39 @@ namespace Silikego
 			return TokenStatus::Id;
 		case EndOfInputIndex:
 			return TokenStatus::EndOfInput;
-		default:
-			throw; // shouldn't happen
 		}
+
+		return TokenStatus::Unset; // shouldn't happen.
 	}
 
 	char Token::character() const
 	{
+		if (isEmpty() || _impl->data.index() != CharacterIndex)
+			return '\0';
+
 		return std::get<CharacterIndex>(_impl->data);
 	}
 
 	long long int Token::integer() const
 	{
+		if (isEmpty() || _impl->data.index() != IntegerIndex)
+			return 0;
+
 		return std::get<IntegerIndex>(_impl->data);
 	}
 
 	double Token::real() const
 	{
+		if (isEmpty() || _impl->data.index() != RealIndex)
+			return std::numeric_limits<double>::quiet_NaN();
+
 		return std::get<RealIndex>(_impl->data);
 	}
 
-	const std::string& Token::id() const
+	const std::string* Token::id() const
 	{
-		return std::get<IdIndex>(_impl->data);
+		if (isEmpty() || _impl->data.index() != IdIndex)
+			return nullptr;
+		return &std::get<IdIndex>(_impl->data);
 	}
 }

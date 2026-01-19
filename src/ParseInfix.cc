@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -49,8 +49,11 @@ namespace Silikego
 	Node ParseInfix(std::unique_ptr<Input> input_source)
 	{
 		Lexer lexer(std::move(input_source));
+		if (lexer.isEmpty())
+			return Error::Internal;
+
 		Node result = GetExprssion(lexer);
-		if (lexer.token().status() != TokenStatus::EndOfInput)
+		if (lexer.token()->status() != TokenStatus::EndOfInput)
 			return Error::Syntax;
 		return result;
 	}
@@ -62,13 +65,13 @@ namespace Silikego
 
 	static Node GetExprssionRest(Lexer& lexer, Node&& left_side)
 	{
-		if (lexer.token().status() != TokenStatus::Character
-				|| (lexer.token().character() != '+'
-					&& lexer.token().character() != '-'))
+		if (lexer.token()->status() != TokenStatus::Character
+				|| (lexer.token()->character() != '+'
+					&& lexer.token()->character() != '-'))
 			return left_side;
 
 		const char *function_id;
-		switch (lexer.token().character())
+		switch (lexer.token()->character())
 		{
 		case '+':
 			function_id = "add";
@@ -95,13 +98,13 @@ namespace Silikego
 
 	static Node GetTermRest(Lexer& lexer, Node&& left_side)
 	{
-		if (lexer.token().status() != TokenStatus::Character
-				|| (lexer.token().character() != '*'
-					&& lexer.token().character() != '/'))
+		if (lexer.token()->status() != TokenStatus::Character
+				|| (lexer.token()->character() != '*'
+					&& lexer.token()->character() != '/'))
 			return left_side;
 
 		const char *function_id;
-		switch (lexer.token().character())
+		switch (lexer.token()->character())
 		{
 			case '*':
 				function_id = "multiply";
@@ -136,20 +139,20 @@ namespace Silikego
 
 	static Node GetExponentRest(Lexer& lexer)
 	{
-		if (lexer.token().status() != TokenStatus::Character
-				|| lexer.token().character() != '^')
+		if (lexer.token()->status() != TokenStatus::Character
+				|| lexer.token()->character() != '^')
 			return Node();
 
 		lexer.advance();
 
-		switch (lexer.token().status())
+		switch (lexer.token()->status())
 		{
 		case TokenStatus::Integer:
 		case TokenStatus::Real:
 		case TokenStatus::Id:
 			return GetExponent(lexer);
 		case TokenStatus::Character:
-			switch(lexer.token().character())
+			switch(lexer.token()->character())
 			{
 			case '-':
 			case '(':
@@ -179,15 +182,15 @@ namespace Silikego
 
 	static Node GetRollRest(Lexer& lexer)
 	{
-		if(lexer.token().status() != TokenStatus::Character
-				|| lexer.token().character() != 'd')
+		if(lexer.token()->status() != TokenStatus::Character
+				|| lexer.token()->character() != 'd')
 			return Node();
 
 		lexer.advance();
 
-		if (lexer.token().status() == TokenStatus::Integer)
+		if (lexer.token()->status() == TokenStatus::Integer)
 		{
-			long long int result = lexer.token().integer();
+			long long int result = lexer.token()->integer();
 			lexer.advance();
 			return result;
 		}
@@ -199,7 +202,7 @@ namespace Silikego
 
 	static Node GetAtom(Lexer& lexer)
 	{
-		switch(lexer.token().status())
+		switch(lexer.token()->status())
 		{
 		case TokenStatus::Integer:
 		case TokenStatus::Real:
@@ -207,7 +210,7 @@ namespace Silikego
 		case TokenStatus::Id:
 			return GetFunctionCall(lexer);
 		case TokenStatus::Character:
-			switch (lexer.token().character())
+			switch (lexer.token()->character())
 			{
 			case '-':
 				return GetNumber(lexer);
@@ -216,8 +219,8 @@ namespace Silikego
 				lexer.advance();
 				Node value = GetExprssion(lexer);
 
-				if (lexer.token().status() == TokenStatus::Character
-					&& lexer.token().character() == ')')
+				if (lexer.token()->status() == TokenStatus::Character
+					&& lexer.token()->character() == ')')
 				{
 					lexer.advance();
 					return value;
@@ -235,14 +238,14 @@ namespace Silikego
 
 	static Node GetNumber(Lexer& lexer)
 	{
-		switch (lexer.token().status())
+		switch (lexer.token()->status())
 		{
 		case TokenStatus::Integer:
 		case TokenStatus::Real:
 			return GetUnsignedNumber(lexer);
 		case TokenStatus::Character:
 		{
-			if ( lexer.token().character() == '-')
+			if ( lexer.token()->character() == '-')
 			{
 				lexer.advance();
 				Node number = GetUnsignedNumber(lexer);
@@ -260,17 +263,17 @@ namespace Silikego
 	{
 		Node rVal;
 
-		switch (lexer.token().status())
+		switch (lexer.token()->status())
 		{
 		case TokenStatus::Integer:
 		{
-            long long int number = lexer.token().integer();
+            long long int number = lexer.token()->integer();
 			lexer.advance();
 			return number;
 		}
 		case TokenStatus::Real:
 		{
-            double number = lexer.token().real();
+            double number = lexer.token()->real();
 			lexer.advance();
 			return number;
 		}
@@ -281,22 +284,22 @@ namespace Silikego
 
 	static Node GetFunctionCall(Lexer& lexer)
 	{
-		if (lexer.token().status() != TokenStatus::Id)
+		if (lexer.token()->status() != TokenStatus::Id)
 			return Error::Syntax;
 
-        std::string FunctionName = lexer.token().id();
+        std::string FunctionName = *lexer.token()->id();
         lexer.advance();
 
-		if (lexer.token().status() != TokenStatus::Character
-				|| lexer.token().character() != '(')
+		if (lexer.token()->status() != TokenStatus::Character
+				|| lexer.token()->character() != '(')
             return Error::Syntax;
 
         lexer.advance();
 
         Node function_call(GetArguments(lexer, FunctionName));
 
-		if (lexer.token().status() == TokenStatus::Character
-				&& lexer.token().character() == ')')
+		if (lexer.token()->status() == TokenStatus::Character
+				&& lexer.token()->character() == ')')
 		{
 	        lexer.advance();
     	    return function_call;
@@ -312,17 +315,17 @@ namespace Silikego
 		{
 			Node current = GetExprssion(lexer);
             bool was_error = current.status() == NodeStatus::Leaf
-				&& current.value().status() == ValueStatus::Error;
+				&& current.value()->status() == ValueStatus::Error;
             branch.pushRight(std::move(current));
 
 			if (was_error || (
-					lexer.token().status() == TokenStatus::Character
-					&& lexer.token().character() == ')'))
+					lexer.token()->status() == TokenStatus::Character
+					&& lexer.token()->character() == ')'))
 			{
 				break;
 			}
-			else if (lexer.token().status() != TokenStatus::Character
-					|| lexer.token().character() != ',')
+			else if (lexer.token()->status() != TokenStatus::Character
+					|| lexer.token()->character() != ',')
 			{
                 branch.pushRight(Error::Syntax);
 				break;

@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -24,12 +24,15 @@ namespace Silikego
 {
  	Value Evaluate(Engine& engine, const Node& node)
 	{
+		if (engine.isEmpty() || node.isEmpty())
+			return Error::Internal;
+
 		switch (node.status())
 		{
 		case NodeStatus::Nothing:
 			return Error::Syntax;
 		case NodeStatus::Leaf:
-            return node.value();
+            return *node.value();
 		case NodeStatus::Branch:
 		{
 			std::vector<Value> arguments;
@@ -42,7 +45,7 @@ namespace Silikego
 				arguments.push_back(current);
 			}
 
-			Value result{engine.callFunction(node.id(), arguments)};
+			Value result{engine.callFunction(*node.id(), arguments)};
 			if (node.isNegated())
 				result.negate();
 

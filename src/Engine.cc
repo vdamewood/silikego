@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -40,7 +40,7 @@ namespace Silikego
 		> lookup;
 	};
 
-	Engine::Engine(): _impl(new Impl) { }
+	Engine::Engine() : _impl(new(std::nothrow) Impl) { }
 
 	Engine::~Engine()
 	{
@@ -51,31 +51,31 @@ namespace Silikego
 		const std::string& name,
 		std::unique_ptr<Function> pointer)
 	{
+		if (isEmpty())
+			return;
+
 		_impl->lookup[name] = std::move(pointer);
 	}
 
 	Function* Engine::fetchFunction(
 		const std::string& name)
 	{
-		try
-		{
-			return _impl->lookup.at(name).get();
-		}
-		catch (const std::out_of_range&)
-		{
+		if (isEmpty() || _impl->lookup.count(name) == 0)
 			return nullptr;
-		}
+
+		return _impl->lookup[name].get();
 	}
 
 	Value Engine::callFunction(
 		const std::string& name,
 		std::vector<Value> args)
-	try
 	{
-		return (*_impl->lookup.at(name))(args);
-	}
-	catch (const std::out_of_range&)
-	{
-		return Error::FunctionName;
+		if (isEmpty())
+			return Error::Internal;
+
+		if (_impl->lookup.count(name) == 0)
+			return Error::FunctionName;
+
+		return (*_impl->lookup[name])(args);
 	}
 }

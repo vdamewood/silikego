@@ -24,6 +24,9 @@ namespace Silikego
 {
 	void InstallMathFunctions(Engine& engine)
 	{
+		if (engine.isEmpty())
+			return;
+
 		engine.installFunction("abs",
 			std::make_unique<PureFunction>(MathAbs));
 		engine.installFunction("acos",

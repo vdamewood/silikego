@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -28,9 +28,12 @@
 #include <SilikegoCore/Value.h>
 
 namespace {
-	const int ErrorIndex = 0;
-	const int IntegerIndex = 1;
-	const int RealIndex = 2;
+	enum DataIndex
+	{
+		ErrorIndex = 0,
+		IntegerIndex = 1,
+		RealIndex = 2
+	};
 }
 
 namespace Silikego
@@ -46,19 +49,19 @@ namespace Silikego
 	};
 
 	Value::Value(Error source)
-		: _impl(new Impl(source)) { }
+		: _impl(new(std::nothrow) Impl(source)) { }
 
 	Value::Value(int source)
-		: _impl(new Impl(static_cast<long long int>(source))) { }
-	
+		: _impl(new(std::nothrow) Impl(static_cast<long long int>(source))) { }
+
 	Value::Value(long long int source)
-		: _impl(new Impl(source)) { }
+		: _impl(new(std::nothrow) Impl(source)) { }
 
 	Value::Value(double source)
-		: _impl(new Impl(source)) { }
+		: _impl(new(std::nothrow) Impl(source)) { }
 
 	Value::Value(const Value& source)
-		: _impl(new Impl(*source._impl)) { }
+		: _impl(new(std::nothrow) Impl(*source._impl)) { }
 
 	Value::Value(Value&& source)
 		: _impl(source._impl)
@@ -103,14 +106,19 @@ namespace Silikego
 
 	Value& Value::operator=(Value&& source)
 	{
-		delete _impl;
-		_impl = source._impl;
-		source._impl = nullptr;
+		if (this != &source)
+		{
+			delete _impl;
+			_impl = source._impl;
+			source._impl = nullptr;
+		}
 		return *this;
 	}
 
 	ValueStatus Value::status() const
 	{
+		if (isEmpty())
+			return ValueStatus::Error;
 		switch (_impl->data.index())
 		{
 		case ErrorIndex:
@@ -119,13 +127,16 @@ namespace Silikego
 			return ValueStatus::Integer;
 		case RealIndex:
 			return ValueStatus::Real;
-		default:
-			throw; // shouldn't happen
 		}
+		// shouldn't happen
+		return ValueStatus::Error;
 	}
 
 	Error Value::error() const
 	{
+		if (isEmpty())
+			return Error::Internal;
+
 		return _impl->data.index() == ErrorIndex
 			? std::get<ErrorIndex>(_impl->data)
 			: Error::None;
@@ -133,6 +144,9 @@ namespace Silikego
 
 	long long int Value::integer() const
 	{
+		if (isEmpty())
+			return 0;
+
 		switch (_impl->data.index())
 		{
 		case ErrorIndex:
@@ -141,13 +155,16 @@ namespace Silikego
 			return std::get<IntegerIndex>(_impl->data);
 		case RealIndex:
 			return static_cast<long long int>(std::get<RealIndex>(_impl->data));
-		default:
-			throw;
 		}
+		// shouldn't happen
+		return 0;
 	}
 
 	double Value::real() const
 	{
+		if (isEmpty())
+			return std::numeric_limits<double>::quiet_NaN();
+
 		switch (_impl->data.index())
 		{
 		case ErrorIndex:
@@ -156,23 +173,26 @@ namespace Silikego
 			return static_cast<double>(std::get<IntegerIndex>(_impl->data));
 		case RealIndex:
 			return std::get<RealIndex>(_impl->data);
-		default:
-			return std::numeric_limits<double>::quiet_NaN();
 		}
+		// shouldn't happen
+		return std::numeric_limits<double>::quiet_NaN();
 	}
 
 	void Value::negate()
 	{
+		if (isEmpty())
+			return;
+
 		switch (_impl->data.index())
 		{
+		case ErrorIndex:
+			break;
 		case (IntegerIndex):
 			std::get<IntegerIndex>(_impl->data) *= -1;
 			break;
 		case (RealIndex):
 			std::get<RealIndex>(_impl->data) *= -1.0;
 			break;
-		default:
-			; // Do nothing. Silence warning.
 		}
 	}
 }

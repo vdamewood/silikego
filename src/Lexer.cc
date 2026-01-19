@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -89,7 +89,7 @@ namespace Silikego
 		Silikego::Token Token;
 	};
 
-	Lexer::Lexer(std::unique_ptr<Input> source) : _impl(new Impl(std::move(source)))
+	Lexer::Lexer(std::unique_ptr<Input> source) : _impl(new(std::nothrow) Impl(std::move(source)))
 	{
 		advance();
 	}
@@ -101,6 +101,9 @@ namespace Silikego
 
 	void Lexer::advance()
 	{
+		if (isEmpty())
+			return;
+
 		if (_impl->Token.status() == TokenStatus::EndOfInput || _impl->error)
 			return;
 
@@ -290,8 +293,11 @@ namespace Silikego
 		}
 	}
 
-	Token& Lexer::token()
+	Token* Lexer::token()
 	{
-		return _impl->Token;
+		if (isEmpty())
+			return nullptr;
+
+		return &_impl->Token;
 	}
 }
