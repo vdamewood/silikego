@@ -112,6 +112,7 @@ set(PUBLIC_HEADERS
 	include/SilikegoCore/ParseInfix.h
 	include/SIlikegoCore/Evaluate.h
 	include/SilikegoCore/Version.h
+	include/SilikegoCore/SilikegoCore.h
 	${CMAKE_CURRENT_BINARY_DIR}/include/SilikegoCore/Api.h
 )
 if (SILIKEGO_CORE_BUILD_FRAMEWORK)
