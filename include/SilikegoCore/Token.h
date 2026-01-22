@@ -64,11 +64,16 @@ namespace Silikego
 		Token& operator=(const Token& source);
 		Token& operator=(Token&& source);
 
+		inline bool isEmpty() const
+		{
+			return _impl == nullptr;
+		};
+
 		TokenStatus status() const;
 		long long int integer() const;
 		double real() const;
 		char character() const;
-		const std::string& id() const;
+		const std::string* id() const;
 	};
 };
 

@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -25,12 +25,14 @@
 
 namespace
 {
-	const int UnsetIndex = 0;
-	const int CharacterIndex = 1;
-	const int IntegerIndex = 2;
-	const int RealIndex = 3;
-	const int IdIndex = 4;
-	const int EndOfInputIndex = 5;
+	enum DataIndex {
+		UnsetIndex = 0,
+		CharacterIndex = 1,
+		IntegerIndex = 2,
+		RealIndex = 3,
+		IdIndex = 4,
+		EndOfInputIndex = 5
+	};
 };
 
 namespace Silikego

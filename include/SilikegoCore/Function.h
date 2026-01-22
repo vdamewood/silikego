@@ -31,9 +31,13 @@ namespace Silikego
     class SILIKEGOCORE_EXPORT Function
     {
     public:
+        Function();
+		Function(const Function&) = delete;
+		Function(Function&&) = delete;
         virtual ~Function();
         virtual Function* clone() = 0;
         virtual Value operator()(const std::vector<Value>& args) = 0;
+        virtual bool isEmpty() const = 0;
     };
 
     class SILIKEGOCORE_EXPORT PureFunction : public Function
@@ -43,10 +47,11 @@ namespace Silikego
     public:
         PureFunction(Value (*function)(const std::vector<Value>& args));
         ~PureFunction() override;
+        Function* clone() override;
 
         Value operator()(const std::vector<Value>& args) override;
 
-        Function* clone() override;
+        bool isEmpty() const override;
     };
 };
 

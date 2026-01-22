@@ -28,6 +28,7 @@ namespace Silikego
 	enum class Error
 	{
 		None,
+		Internal,
 		Memory,
 		Syntax,
 		ZeroDivision,
@@ -64,6 +65,11 @@ namespace Silikego
 		Value& operator=(double source);
 		Value& operator=(const Value& source);
 		Value& operator=(Value&& source);
+
+		inline bool isEmpty() const
+		{
+			return _impl == nullptr;
+		};
 
 		ValueStatus status() const;
 		Error error() const;

@@ -61,9 +61,14 @@ namespace Silikego
 		Node& operator=(const Node& source);
 		Node& operator=(Node&& source);
 
-		int countChildren() const;
+		inline bool isEmpty() const
+		{
+			return _impl == nullptr;
+		};
+
+		size_t countChildren() const;
 		const Node* fetchChild(int child_index) const;
-		const std::string& id() const;
+		const std::string* id() const;
 		bool insert(int position, const Node&);
 		bool insert(int position, Node&&);
 		bool isNegated() const;
@@ -74,7 +79,7 @@ namespace Silikego
 		bool pushRight(const Node&);
 		bool pushRight(Node&&);
 		NodeStatus status() const;
-		const Value& value() const;
+		const Value* value() const;
 	};
 };
 

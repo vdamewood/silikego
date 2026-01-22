@@ -40,11 +40,16 @@ namespace Silikego
 		Lexer(Lexer&&) = delete;
 		~Lexer();
 
+		inline bool isEmpty() const
+		{
+			return _impl == nullptr;
+		};
+
 		Lexer& operator=(const Lexer&) = delete;
 		Lexer& operator=(Lexer&&) = delete;
 
 		void advance();
-		Silikego::Token& token();
+		Silikego::Token* token();
 	};
 };
 

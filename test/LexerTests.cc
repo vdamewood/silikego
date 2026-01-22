@@ -18,18 +18,18 @@ Test(LexerTests, NAME) \
     Silikego::Lexer lex(std::move(source)); \
     for (int i = 0; i < tokens.size(); i++) \
     { \
-        Silikego::Token current = lex.token(); \
-        cr_assert(current.status() == tokens[i].status()); \
-        switch(current.status()) \
+        Silikego::Token* current = lex.token(); \
+        cr_assert(current->status() == tokens[i].status()); \
+        switch(current->status()) \
         { \
         case TokenStatus::Character: \
-            cr_assert(current.character() == tokens[i].character()); \
+            cr_assert(current->character() == tokens[i].character()); \
             break; \
         case TokenStatus::Integer: \
-            cr_assert(current.integer() == tokens[i].integer()); \
+            cr_assert(current->integer() == tokens[i].integer()); \
             break; \
         case TokenStatus::Real: \
-            cr_assert(current.real() == tokens[i].real()); \
+            cr_assert(current->real() == tokens[i].real()); \
             break; \
         default: \
             break; \

@@ -43,6 +43,11 @@ namespace Silikego
 		Engine& operator=(const Engine&) = delete;
 		Engine& operator=(Engine&&) = delete;
 
+		inline bool isEmpty() const
+		{
+			return _impl == nullptr;
+		};
+
 		Value callFunction(
 			const std::string& name,
 			std::vector<Value> args);

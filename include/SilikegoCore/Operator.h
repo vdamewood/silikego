@@ -52,11 +52,12 @@ SILIKEGOCORE_EXPORT
 	public:
         OperatorDice(unsigned long long int seed);
         ~OperatorDice() override;
+        Function* clone() override;
 
         Value operator()(const std::vector<Value>& args) override;
 
-        Function* clone() override;
-    };
+        bool isEmpty() const override;
+	};
 
 SILIKEGOCORE_EXPORT
 	void InstallOperators(Engine& destination);

@@ -38,6 +38,8 @@ namespace Silikego
 		Input& operator=(const Input&) = delete;
 		Input& operator=(Input&&) = delete;
 
+		virtual bool isEmpty() const = 0;
+
 		virtual bool advance() = 0;
 		virtual char character() = 0;
 	};
@@ -57,6 +59,8 @@ namespace Silikego
 
 		StringInput& operator=(const StringInput&) = delete;
 		StringInput& operator=(StringInput&&) = delete;
+
+        bool isEmpty() const override;
 
 		bool advance() override;
 		char character() override;
