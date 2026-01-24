@@ -29,7 +29,6 @@ namespace Silikego
 	{
 		None,
 		NullObject,
-		Memory,
 		Syntax,
 		ZeroDivision,
 		FunctionName,
