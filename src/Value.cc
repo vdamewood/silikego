@@ -76,44 +76,58 @@ namespace Silikego
 
 	Value& Value::operator=(Error source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Value& Value::operator=(int source)
 	{
-		_impl->data = static_cast<long long int>(source);
+		if (isEmpty())
+			_impl = new(std::nothrow)
+				Impl{static_cast<long long int>(source)};
+		else
+			_impl->data = static_cast<long long int>(source);
 		return *this;
 	}
 
 	Value& Value::operator=(long long int source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Value& Value::operator=(double source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Value& Value::operator=(const Value& source)
 	{
-		if (this == &source)
-			return *this;
-
-		_impl->data = source._impl->data;
-		return *this;
-	}
-
-	Value& Value::operator=(Value&& source)
-	{
 		if (this != &source)
 		{
 			delete _impl;
-			_impl = source._impl;
-			source._impl = nullptr;
+			_impl = new(std::nothrow) Impl{*source._impl};
+		}
+		return *this;
+	}
+
+	Value& Value::operator=(Value&& right_side)
+	{
+		if (this != &right_side)
+		{
+			delete _impl;
+			_impl = right_side._impl;
+			right_side._impl = nullptr;
 		}
 		return *this;
 	}

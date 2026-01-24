@@ -93,53 +93,75 @@ namespace Silikego
 
 	Token& Token::operator=(int source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{static_cast<long long int>(source)};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Token& Token::operator=(long long int source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Token& Token::operator=(double source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Token& Token::operator=(char source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Token& Token::operator=(const std::string& source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Token& Token::operator=(const EndOfInput& source)
 	{
-		_impl->data = source;
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{source};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Token& Token::operator=(const Token& source)
 	{
 		if (this != &source)
-			*_impl = *source._impl;
+		{
+			delete _impl;
+			_impl = new(std::nothrow) Impl{*source._impl};
+		}
 		return *this;
 	}
 
-	Token& Token::operator=(Token&& source)
+	Token& Token::operator=(Token&& right_side)
 	{
-		if (this != &source)
+		if (this != &right_side)
 		{
-			_impl = source._impl;
-			source._impl = nullptr;
+			delete _impl;
+			_impl = right_side._impl;
+			right_side._impl = nullptr;
 		}
 		return *this;
 	}

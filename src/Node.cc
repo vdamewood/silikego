@@ -116,37 +116,55 @@ namespace Silikego
 
 	Node& Node::operator=(Error source)
 	{
-		_impl->data = Value{source};
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{Value{source}};
+		else
+			_impl->data = Value{source};
 		return *this;
 	}
 
 	Node& Node::operator=(int source)
 	{
-		_impl->data = Value{source};
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{Value{source}};
+		else
+			_impl->data = Value{source};
 		return *this;
 	}
 
 	Node& Node::operator=(long long int source)
 	{
-		_impl->data = Value{source};
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{Value{source}};
+		else
+			_impl->data = Value{source};
 		return *this;
 	}
 
 	Node& Node::operator=(double source)
 	{
-		_impl->data = Value{source};
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{Value{source}};
+		else
+			_impl->data = Value{source};
 		return *this;
 	}
 
 	Node& Node::operator=(const Value& source)
 	{
-		_impl->data = Value{source};
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{Value{source}};
+		else
+			_impl->data = source;
 		return *this;
 	}
 
 	Node& Node::operator=(const std::string& source)
 	{
-		_impl->data = Branch{source};
+		if (isEmpty())
+			_impl = new(std::nothrow) Impl{Branch{source}};
+		else
+			_impl->data = Branch{source};
 		return *this;
 	}
 
@@ -155,7 +173,7 @@ namespace Silikego
 		if (this != &source)
 		{
 			delete _impl;
-			_impl = new(std::nothrow) Impl(*source._impl);
+			_impl = new(std::nothrow) Impl{*source._impl};
 		}
 		return *this;
 	}
@@ -164,6 +182,7 @@ namespace Silikego
 	{
 		if (this != &right_side)
 		{
+			delete _impl;
 			_impl = right_side._impl;
 			right_side._impl = nullptr;
 		}
