@@ -44,11 +44,6 @@ namespace Silikego
 	{
 	}
 
-	OperationDice::OperationDice(Impl *source)
-		: _impl(source)
-	{
-	}
-
 	Value OperationDice::operator()(const std::vector<Value>& args)
 	{
 		if(args.size() != 2)

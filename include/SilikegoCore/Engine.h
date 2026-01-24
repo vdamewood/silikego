@@ -49,12 +49,12 @@ namespace Silikego
 		};
 
 		Value callFunction(
-			const std::string& name,
+			const std::string& function_name,
 			std::vector<Value> args);
 		Function* fetchFunction(
-			const std::string& name);
+			const std::string& function_name);
 		bool installFunction(
-			const std::string& name,
+			const std::string& function_name,
 			std::unique_ptr<Function> function);
 	};
 };

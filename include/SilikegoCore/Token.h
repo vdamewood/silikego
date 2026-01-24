@@ -55,14 +55,14 @@ namespace Silikego
 		Token(Token&& source);
 		~Token();
 
-		Token& operator=(int source);
-		Token& operator=(long long int source);
-		Token& operator=(double source);
-		Token& operator=(char source);
-		Token& operator=(const std::string& source);
-		Token& operator=(const EndOfInput& source);
-		Token& operator=(const Token& source);
-		Token& operator=(Token&& source);
+		Token& operator=(int right_side);
+		Token& operator=(long long int right_side);
+		Token& operator=(double right_side);
+		Token& operator=(char right_side);
+		Token& operator=(const std::string& right_side);
+		Token& operator=(const EndOfInput& right_side);
+		Token& operator=(const Token& right_side);
+		Token& operator=(Token&& sright_side);
 
 		inline bool isEmpty() const
 		{

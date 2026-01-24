@@ -290,12 +290,12 @@ namespace Silikego
 		return true;
 	}
 
-	bool Node::insert(int position, const Node& new_child)
+	bool Node::insert(size_t position, const Node& new_child)
 	{
 		return insert(position, Node{new_child});
 	}
 
-	bool Node::insert(int position, Node&& new_child)
+	bool Node::insert(size_t position, Node&& new_child)
 	{
 		if (isEmpty() || _impl->OutOfBounds(position))
 			return false;
@@ -315,7 +315,7 @@ namespace Silikego
 		return std::get<BranchIndex>(_impl->data).children.size();
 	}
 
-	const Node* Node::fetchChild(int child_index) const
+	const Node* Node::fetchChild(size_t child_index) const
 	{
 		if (isEmpty() || _impl->OutOfBounds(child_index))
 			return nullptr;

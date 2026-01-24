@@ -18,8 +18,8 @@
 // <http://www.gnu.org/licenses/>.
 
 
-#if !defined SILIKEGO_CORE_SYNTAX_TREE_H
-#define SILIKEGO_CORE_SYNTAX_TREE_H
+#if !defined SILIKEGO_CORE_NODE_H
+#define SILIKEGO_CORE_NODE_H
 
 #include <optional>
 #include <string>
@@ -67,20 +67,20 @@ namespace Silikego
 		};
 
 		size_t countChildren() const;
-		const Node* fetchChild(int child_index) const;
+		const Node* fetchChild(size_t child_index) const;
 		const std::string* id() const;
-		bool insert(int position, const Node& new_child);
-		bool insert(int position, Node&& new_child);
+		bool insert(size_t position, const Node& new_child);
+		bool insert(size_t position, Node&& new_child);
 		bool isNegated() const;
 		void negate();
 		std::optional<Node> pruneChild(size_t child_index);
-		bool pushLeft(const Node&);
-		bool pushLeft(Node&&);
-		bool pushRight(const Node&);
-		bool pushRight(Node&&);
+		bool pushLeft(const Node& new_child);
+		bool pushLeft(Node&& new_child);
+		bool pushRight(const Node& new_child);
+		bool pushRight(Node&& new_child);
 		NodeStatus status() const;
 		const Value* value() const;
 	};
 };
 
-#endif // SILIKEGO_CORE_SYNTAX_TREE_H
+#endif // SILIKEGO_CORE_NODE_H

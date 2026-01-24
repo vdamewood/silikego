@@ -58,12 +58,12 @@ namespace Silikego
 		Value(Value&& source);
 		~Value();
 
-		Value& operator=(Error source);
-		Value& operator=(int source);
-		Value& operator=(long long int source);
-		Value& operator=(double source);
-		Value& operator=(const Value& source);
-		Value& operator=(Value&& source);
+		Value& operator=(Error right_side);
+		Value& operator=(int right_side);
+		Value& operator=(long long int right_side);
+		Value& operator=(double right_side);
+		Value& operator=(const Value& right_side);
+		Value& operator=(Value&& right_side);
 
 		inline bool isEmpty() const
 		{

@@ -28,19 +28,23 @@
 
 namespace Silikego
 {
-SILIKEGOCORE_EXPORT
+	SILIKEGOCORE_EXPORT
 	Silikego::Value OperationAdd(
 		const std::vector<Silikego::Value>& args);
-SILIKEGOCORE_EXPORT
+
+	SILIKEGOCORE_EXPORT
 	Silikego::Value OperationSubtract(
 		const std::vector<Silikego::Value>& args);
-SILIKEGOCORE_EXPORT
+
+	SILIKEGOCORE_EXPORT
 	Silikego::Value OperationMultiply(
 		const std::vector<Silikego::Value>& args);
-SILIKEGOCORE_EXPORT
+
+	SILIKEGOCORE_EXPORT
 	Silikego::Value OperationDivide(
 		const std::vector<Silikego::Value>& args);
-SILIKEGOCORE_EXPORT
+
+	SILIKEGOCORE_EXPORT
 	Silikego::Value OperationPower(
 		const std::vector<Silikego::Value>& args);
 
@@ -48,7 +52,6 @@ SILIKEGOCORE_EXPORT
     {
         class Impl;
         Impl* _impl;
-        OperationDice(Impl* source);
 	public:
         OperationDice(unsigned long long int seed);
         ~OperationDice() override;
