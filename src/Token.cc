@@ -65,21 +65,21 @@ namespace Silikego
 	};
 
 	Token::Token()
-		: _impl(new Impl) { }
+		: _impl(new(std::nothrow) Impl) { }
 	Token::Token(char source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(int source)
-		: _impl(new Impl{static_cast<long long int>(source)}) { }
+		: _impl(new(std::nothrow) Impl{static_cast<long long int>(source)}) { }
 	Token::Token(long long int source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(double source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(const std::string& source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(EndOfInput source)
-		: _impl(new Impl{source}) { }
+		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(const Token& source)
-		: _impl(new Impl{*source._impl}) { }
+		: _impl(new(std::nothrow) Impl{*source._impl}) { }
 	Token::Token(Token&& source)
 		: _impl{source._impl}
 	{
@@ -129,25 +129,26 @@ namespace Silikego
 
 	Token& Token::operator=(const Token& source)
 	{
-		if (this == &source)
-			return *this;
-
-		*_impl = *source._impl;
+		if (this != &source)
+			*_impl = *source._impl;
 		return *this;
 	}
 
 	Token& Token::operator=(Token&& source)
 	{
-		if (this == &source)
-			return *this;
-
-		_impl = source._impl;
-		source._impl = nullptr;
+		if (this != &source)
+		{
+			_impl = source._impl;
+			source._impl = nullptr;
+		}
 		return *this;
 	}
 
 	TokenStatus Token::status() const
 	{
+		if (isEmpty())
+			return TokenStatus::Unset;
+
 		switch(_impl->data.index())
 		{
 		case UnsetIndex:
@@ -162,13 +163,16 @@ namespace Silikego
 			return TokenStatus::Id;
 		case EndOfInputIndex:
 			return TokenStatus::EndOfInput;
-		default:
-			throw; // shouldn't happen
 		}
+
+		return TokenStatus::Unset; // shouldn't happen.
 	}
 
 	char Token::character() const
 	{
+		if (isEmpty() || _impl->data.index() != CharacterIndex)
+			return '\0';
+
 		return std::get<CharacterIndex>(_impl->data);
 	}
 
@@ -177,7 +181,7 @@ namespace Silikego
 		if (isEmpty() || _impl->data.index() != IntegerIndex)
 			return 0LL;
 
-			return std::get<IntegerIndex>(_impl->data);
+		return std::get<IntegerIndex>(_impl->data);
 	}
 
 	double Token::real() const

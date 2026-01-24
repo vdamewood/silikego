@@ -89,7 +89,7 @@ namespace Silikego
 		Silikego::Token Token;
 	};
 
-	Lexer::Lexer(std::unique_ptr<Input> source) : _impl(new Impl(std::move(source)))
+	Lexer::Lexer(std::unique_ptr<Input> source) : _impl(new(std::nothrow) Impl(std::move(source)))
 	{
 		advance();
 	}
@@ -101,6 +101,9 @@ namespace Silikego
 
 	void Lexer::advance()
 	{
+		if (isEmpty())
+			return;
+
 		if (_impl->Token.status() == TokenStatus::EndOfInput || _impl->error)
 			return;
 

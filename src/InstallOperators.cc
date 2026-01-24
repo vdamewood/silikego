@@ -24,6 +24,9 @@ namespace Silikego
 {
 	void InstallOperators(Engine& engine)
 	{
+		if (engine.isEmpty())
+			return;
+
 		engine.installFunction("add",
 			std::make_unique<PureFunction>(OperatorAdd));
 		engine.installFunction("subtract",

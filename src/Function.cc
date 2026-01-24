@@ -21,13 +21,6 @@
 
 namespace Silikego
 {
-    Function::Function()
-    {
-
-    }
-
-    Function::~Function()
-    {
-
-    }
+    Function::Function() { }
+    Function::~Function() { }
 };

@@ -35,12 +35,12 @@ namespace Silikego
 	};
 
 	StringInput::StringInput(const char* source)
-		: _impl(new Impl(source))
+		: _impl(new(std::nothrow) Impl(source))
 	{
 	}
 
 	StringInput::StringInput(const std::string &source)
-		: _impl(new Impl(source))
+		: _impl(new(std::nothrow) Impl(source))
 	{
 	}
 

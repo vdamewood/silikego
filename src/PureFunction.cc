@@ -34,7 +34,7 @@ namespace Silikego
 
     PureFunction::PureFunction(
         Value (*source)(const std::vector<Value>& args))
-        : _impl(new Impl(source))
+        : _impl(new(std::nothrow) Impl(source))
     {
 
     }
@@ -44,11 +44,6 @@ namespace Silikego
         delete _impl;
     }
 
-	bool PureFunction::isEmpty() const
-	{
-		return _impl == nullptr;
-	}
-
     Function* PureFunction::clone()
     {
         return new PureFunction(_impl->function);
@@ -57,5 +52,10 @@ namespace Silikego
     Value PureFunction::operator()(const std::vector<Value>& args)
     {
         return _impl->function(args);
+    }
+
+    bool PureFunction::isEmpty() const
+    {
+        return _impl == nullptr;
     }
 };

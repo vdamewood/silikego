@@ -24,6 +24,9 @@ namespace Silikego
 {
  	Value Evaluate(Engine& engine, const Node& node)
 	{
+		if (engine.isEmpty() || node.isEmpty())
+			return Error::NullObject;
+
 		switch (node.status())
 		{
 		case NodeStatus::Nothing:

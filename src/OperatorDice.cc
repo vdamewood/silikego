@@ -50,18 +50,13 @@ namespace Silikego
 	};
 
 	OperatorDice::OperatorDice(unsigned long long int seed)
-		: _impl(new Impl(seed))
+		: _impl(new(std::nothrow) Impl(seed))
 	{
 	}
 
 	OperatorDice::OperatorDice(Impl *source)
 		: _impl(source)
 	{
-	}
-
-	bool OperatorDice::isEmpty() const
-	{
-		return _impl == nullptr;
 	}
 
 	Value OperatorDice::operator()(const std::vector<Value>& args)
@@ -96,11 +91,16 @@ namespace Silikego
 
 	Function* OperatorDice::clone()
 	{
-	    return new OperatorDice(new Impl(*this->_impl));
+	    return new OperatorDice(new(std::nothrow) Impl(*this->_impl));
 	}
 
 	OperatorDice::~OperatorDice()
 	{
 		delete _impl;
 	}
+
+	bool OperatorDice::isEmpty() const
+    {
+        return _impl == nullptr;
+    }
 };

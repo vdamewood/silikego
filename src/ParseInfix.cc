@@ -49,6 +49,9 @@ namespace Silikego
 	Node ParseInfix(std::unique_ptr<Input> input_source)
 	{
 		Lexer lexer(std::move(input_source));
+		if (lexer.isEmpty())
+			return Error::NullObject;
+
 		Node result = GetExprssion(lexer);
 		if (lexer.token()->status() != TokenStatus::EndOfInput)
 			return Error::Syntax;
