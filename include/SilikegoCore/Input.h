@@ -49,16 +49,9 @@ namespace Silikego
 		class Impl;
 		Impl* _impl;
 	public:
-		StringInput() = delete;
 		StringInput(const char* source);
 		StringInput(const std::string& source);
-
-		StringInput(const StringInput&) = delete;
-		StringInput(StringInput&&) = delete;
 		~StringInput() override;
-
-		StringInput& operator=(const StringInput&) = delete;
-		StringInput& operator=(StringInput&&) = delete;
 
         bool isEmpty() const override;
 
