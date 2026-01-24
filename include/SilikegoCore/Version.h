@@ -28,11 +28,11 @@ namespace Silikego::Version
     SILIKEGOCORE_EXPORT extern const unsigned int Major;
     SILIKEGOCORE_EXPORT extern const unsigned int Minor;
     SILIKEGOCORE_EXPORT extern const unsigned int Patch;
-    SILIKEGOCORE_EXPORT extern const char *PrereleaseSuffix;
-    SILIKEGOCORE_EXPORT extern const char *PackageSuffix;
-    SILIKEGOCORE_EXPORT extern const char *String;
-    SILIKEGOCORE_EXPORT extern const char *StringWithPackage;
-    SILIKEGOCORE_EXPORT extern const char *Copyright;
+    SILIKEGOCORE_EXPORT extern const char PrereleaseSuffix[];
+    SILIKEGOCORE_EXPORT extern const char PackageSuffix[];
+    SILIKEGOCORE_EXPORT extern const char String[];
+    SILIKEGOCORE_EXPORT extern const char StringWithPackage[];
+    SILIKEGOCORE_EXPORT extern const char Copyright[];
 };
 
 #endif /* SILIKEGO_CORE_VERSION_H */
