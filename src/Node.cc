@@ -323,7 +323,7 @@ namespace Silikego
 		return &std::get<BranchIndex>(_impl->data).children[child_index];
 	}
 
-	std::optional<Node> Node::pruneChild(int child_index)
+	std::optional<Node> Node::pruneChild(size_t child_index)
 	{
 		if (isEmpty() || _impl->OutOfBounds(child_index))
 			return std::nullopt;

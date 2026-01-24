@@ -47,14 +47,15 @@ namespace Silikego
 		delete _impl;
 	}
 
-	void Engine::installFunction(
+	bool Engine::installFunction(
 		const std::string& name,
 		std::unique_ptr<Function> pointer)
 	{
 		if (isEmpty())
-			return;
+			return false;
 
 		_impl->lookup[name] = std::move(pointer);
+		return true;
 	}
 
 	Function* Engine::fetchFunction(

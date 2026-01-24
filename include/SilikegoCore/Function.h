@@ -40,6 +40,7 @@ namespace Silikego
         Function& operator=(Function&&) = delete;
 
         virtual Value operator()(const std::vector<Value>& args) = 0;
+
         virtual bool isEmpty() const = 0;
     };
 

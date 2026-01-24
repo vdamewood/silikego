@@ -69,11 +69,11 @@ namespace Silikego
 		size_t countChildren() const;
 		const Node* fetchChild(int child_index) const;
 		const std::string* id() const;
-		bool insert(int position, const Node&);
-		bool insert(int position, Node&&);
+		bool insert(int position, const Node& new_child);
+		bool insert(int position, Node&& new_child);
 		bool isNegated() const;
 		void negate();
-		std::optional<Node> pruneChild(int child_index);
+		std::optional<Node> pruneChild(size_t child_index);
 		bool pushLeft(const Node&);
 		bool pushLeft(Node&&);
 		bool pushRight(const Node&);

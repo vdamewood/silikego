@@ -50,7 +50,7 @@ namespace Silikego
 		Token(double source);
 		Token(char source);
 		Token(const std::string& source);
-		Token(EndOfInput);
+		Token(EndOfInput end_of_input);
 		Token(const Token& sourcce);
 		Token(Token&& source);
 		~Token();

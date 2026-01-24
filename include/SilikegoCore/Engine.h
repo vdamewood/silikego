@@ -53,7 +53,7 @@ namespace Silikego
 			std::vector<Value> args);
 		Function* fetchFunction(
 			const std::string& name);
-		void installFunction(
+		bool installFunction(
 			const std::string& name,
 			std::unique_ptr<Function> function);
 	};
