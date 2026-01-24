@@ -49,6 +49,11 @@ namespace Silikego
 		delete _impl;
 	}
 
+	bool StringInput::isEmpty() const
+	{
+		return _impl == nullptr;
+	}
+
 	bool StringInput::advance()
 	{
 		if (_impl->index != _impl->inputString.end())

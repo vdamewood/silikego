@@ -129,12 +129,18 @@ namespace Silikego
 
 	Token& Token::operator=(const Token& source)
 	{
+		if (this == &source)
+			return *this;
+
 		*_impl = *source._impl;
 		return *this;
 	}
 
 	Token& Token::operator=(Token&& source)
 	{
+		if (this == &source)
+			return *this;
+
 		_impl = source._impl;
 		source._impl = nullptr;
 		return *this;
@@ -168,16 +174,25 @@ namespace Silikego
 
 	long long int Token::integer() const
 	{
-		return std::get<IntegerIndex>(_impl->data);
+		if (isEmpty() || _impl->data.index() != IntegerIndex)
+			return 0LL;
+
+			return std::get<IntegerIndex>(_impl->data);
 	}
 
 	double Token::real() const
 	{
+		if (isEmpty() || _impl->data.index() != RealIndex)
+			return std::numeric_limits<double>::quiet_NaN();
+
 		return std::get<RealIndex>(_impl->data);
 	}
 
-	const std::string& Token::id() const
+	const std::string* Token::id() const
 	{
-		return std::get<IdIndex>(_impl->data);
+		if (isEmpty() || _impl->data.index() != IdIndex)
+			return nullptr;
+
+		return &std::get<IdIndex>(_impl->data);
 	}
 }

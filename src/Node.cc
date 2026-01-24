@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -152,6 +152,9 @@ namespace Silikego
 
 	Node& Node::operator=(const Node& source)
 	{
+		if (this == &source)
+			return *this;
+
 		delete _impl;
 		_impl = new Impl(*source._impl);
 		return *this;
@@ -159,14 +162,20 @@ namespace Silikego
 
 	Node& Node::operator=(Node&& right_side)
 	{
+		if (this == &right_side)
+			return *this;
+
 		_impl = right_side._impl;
-		right_side._impl = new Impl;
+		right_side._impl = nullptr;
 		return *this;
 	}
 
-	const std::string& Node::id() const
+	const std::string* Node::id() const
 	{
-		return std::get<BranchIndex>(_impl->data).id;
+		if (isEmpty() || _impl->data.index() != BranchIndex)
+			return nullptr;
+
+		return &std::get<BranchIndex>(_impl->data).id;
 	}
 
 	bool Node::isNegated() const
@@ -222,9 +231,12 @@ namespace Silikego
 		}
 	}
 
-	const Value& Node::value() const
+	const Value* Node::value() const
 	{
-		return std::get<LeafIndex>(_impl->data);
+		if (isEmpty() || _impl->data.index() != LeafIndex)
+			return nullptr;
+
+		return &std::get<LeafIndex>(_impl->data);
 	}
 
 	bool Node::pushLeft(const Node& new_child)
@@ -259,7 +271,7 @@ namespace Silikego
 	{
 		return insert(position, Node{new_child});
 	}
-	
+
 	bool Node::insert(int position, Node&& new_child)
 	{
 		position = _impl->checkBounds(position);
@@ -273,11 +285,11 @@ namespace Silikego
 		return true;
 	}
 
-	int Node::countChildren() const
+	size_t Node::countChildren() const
 	{
 		if (_impl->data.index() != BranchIndex)
 			return 0;
-		
+
 		return std::get<BranchIndex>(_impl->data).children.size();
 	}
 

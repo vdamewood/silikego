@@ -59,6 +59,11 @@ namespace Silikego
 	{
 	}
 
+	bool OperatorDice::isEmpty() const
+	{
+		return _impl == nullptr;
+	}
+
 	Value OperatorDice::operator()(const std::vector<Value>& args)
 	{
 		if(args.size() != 2)

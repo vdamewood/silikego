@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -50,7 +50,7 @@ namespace Silikego
 
 	Value::Value(int source)
 		: _impl(new Impl(static_cast<long long int>(source))) { }
-	
+
 	Value::Value(long long int source)
 		: _impl(new Impl(source)) { }
 
@@ -97,12 +97,18 @@ namespace Silikego
 
 	Value& Value::operator=(const Value& source)
 	{
+		if (this == &source)
+			return *this;
+
 		_impl->data = source._impl->data;
 		return *this;
 	}
 
 	Value& Value::operator=(Value&& source)
 	{
+		if (this == &source)
+			return *this;
+
 		delete _impl;
 		_impl = source._impl;
 		source._impl = nullptr;

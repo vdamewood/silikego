@@ -28,7 +28,7 @@ namespace Silikego
 	enum class Error
 	{
 		None,
-		Internal,
+		NullObject,
 		Memory,
 		Syntax,
 		ZeroDivision,
