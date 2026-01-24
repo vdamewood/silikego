@@ -18,26 +18,26 @@
 // <http://www.gnu.org/licenses/>.
 
 
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 
 namespace Silikego
 {
-	void InstallOperators(Engine& engine)
+	void InstallOperations(Engine& engine)
 	{
 		if (engine.isEmpty())
 			return;
 
 		engine.installFunction("add",
-			std::make_unique<PureFunction>(OperatorAdd));
+			std::make_unique<PureFunction>(OperationAdd));
 		engine.installFunction("subtract",
-			std::make_unique<PureFunction>(OperatorSubtract));
+			std::make_unique<PureFunction>(OperationSubtract));
 		engine.installFunction("multiply",
-			std::make_unique<PureFunction>(OperatorMultiply));
+			std::make_unique<PureFunction>(OperationMultiply));
 		engine.installFunction("divide",
-			std::make_unique<PureFunction>(OperatorDivide));
+			std::make_unique<PureFunction>(OperationDivide));
 		engine.installFunction("power",
-			std::make_unique<PureFunction>(OperatorPower));
+			std::make_unique<PureFunction>(OperationPower));
 		engine.installFunction("dice",
-			std::make_unique<OperatorDice>(1));
+			std::make_unique<OperationDice>(1));
 	}
 }

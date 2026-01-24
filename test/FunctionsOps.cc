@@ -1,13 +1,13 @@
 #include <criterion/criterion.h>
 #include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Math.h>
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 
-#define SUITE FunctionOperatorTests
-#define INSTALL_FUNCTION InstallOperators
+#define SUITE FunctionOperationTests
+#define INSTALL_FUNCTION InstallOperations
 #include "FunctionMacros.h"
 
-using Silikego::InstallOperators;
+using Silikego::InstallOperations;
 
 TestFunctionForEquality(TwoPlusThreeIsFive,
     "add", 5,

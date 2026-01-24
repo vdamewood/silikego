@@ -23,11 +23,11 @@
 #include <ctime>
 
 #include <SilikegoCore/Function.h>
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 
 namespace Silikego
 {
-	class OperatorDice::Impl
+	class OperationDice::Impl
 	{
 	public:
 		std::mt19937_64 twister;
@@ -39,17 +39,17 @@ namespace Silikego
 		}
 	};
 
-	OperatorDice::OperatorDice(unsigned long long int seed)
+	OperationDice::OperationDice(unsigned long long int seed)
 		: _impl(new(std::nothrow) Impl(seed))
 	{
 	}
 
-	OperatorDice::OperatorDice(Impl *source)
+	OperationDice::OperationDice(Impl *source)
 		: _impl(source)
 	{
 	}
 
-	Value OperatorDice::operator()(const std::vector<Value>& args)
+	Value OperationDice::operator()(const std::vector<Value>& args)
 	{
 		if(args.size() != 2)
 			return Error::FunctionArguments;
@@ -79,12 +79,12 @@ namespace Silikego
 		return result;
 	}
 
-	OperatorDice::~OperatorDice()
+	OperationDice::~OperationDice()
 	{
 		delete _impl;
 	}
 
-	bool OperatorDice::isEmpty() const
+	bool OperationDice::isEmpty() const
     {
         return _impl == nullptr;
     }

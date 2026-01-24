@@ -22,12 +22,12 @@
 #include <cstdlib>
 #include <ctime>
 
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 #include <SilikegoCore/Value.h>
 
 namespace Silikego
 {
-	Value OperatorAdd(const std::vector<Value>& args)
+	Value OperationAdd(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -49,7 +49,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value OperatorSubtract(const std::vector<Value>& args)
+	Value OperationSubtract(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -71,7 +71,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value OperatorMultiply(const std::vector<Value>& args)
+	Value OperationMultiply(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -93,7 +93,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value OperatorDivide(const std::vector<Value>& args)
+	Value OperationDivide(const std::vector<Value>& args)
 	{
 		if (args.size() < 0)
 			return Error::FunctionArguments;
@@ -121,7 +121,7 @@ namespace Silikego
 		return result;
 	}
 
-	Value OperatorPower(const std::vector<Value>& args)
+	Value OperationPower(const std::vector<Value>& args)
 	{
 		if (args.size() < 1)
 			return Error::FunctionArguments;

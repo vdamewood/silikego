@@ -1,9 +1,9 @@
 #include <criterion/criterion.h>
 #include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Math.h>
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 #include <SilikegoCore/Math.h>
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 
 #include <math.h>
 #include <float.h>

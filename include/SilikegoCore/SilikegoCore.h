@@ -27,7 +27,7 @@
 #include <SilikegoCore/Lexer.h>
 #include <SilikegoCore/Math.h>
 #include <SilikegoCore/Node.h>
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 #include <SilikegoCore/ParseInfix.h>
 #include <SilikegoCore/Token.h>
 #include <SilikegoCore/Value.h>

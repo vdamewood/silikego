@@ -63,9 +63,9 @@ target_sources(SilikegoCore
 		src/MathRounding.cc
 		src/MathTrig.cc
 		src/InstallMathFunctions.cc
-		src/Operator.cc
-		src/OperatorDice.cc
-		src/InstallOperators.cc
+		src/Operation.cc
+		src/OperationDice.cc
+		src/InstallOperations.cc
 		src/Value.cc
 		src/Function.cc
 		src/PureFunction.cc

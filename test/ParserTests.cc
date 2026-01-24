@@ -4,7 +4,7 @@
 #include <SilikegoCore/Node.h>
 #include <SilikegoCore/Evaluate.h>
 #include <SilikegoCore/Math.h>
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 
 #include <memory>
 #include <string>
@@ -25,7 +25,7 @@ Test(ParserTests, NAME) \
 	std::unique_ptr<Input> src = std::make_unique<StringInput>(In); \
 	cr_assert(src != NULL); \
 	Engine caller; \
-    InstallOperators(caller); \
+    InstallOperations(caller); \
     InstallMathFunctions(caller); \
 \
 	Node tree = Silikego::ParseInfix(std::move(src)); \

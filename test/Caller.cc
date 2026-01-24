@@ -1,7 +1,7 @@
 #include <criterion/criterion.h>
 #include <SilikegoCore/Engine.h>
 #include <SilikegoCore/Math.h>
-#include <SilikegoCore/Operator.h>
+#include <SilikegoCore/Operation.h>
 
 using std::vector;
 using Silikego::Error;
@@ -73,8 +73,8 @@ Test(EngineTests, FunctionsInstall)
     InstallMathFunctions(caller);
 }
 
-Test(EngineTests, OperatorsInstall)
+Test(EngineTests, OperationsInstall)
 {
     Engine caller{};
-    InstallOperators(caller);
+    InstallOperations(caller);
 }
