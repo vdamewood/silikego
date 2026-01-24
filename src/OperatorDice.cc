@@ -30,22 +30,12 @@ namespace Silikego
 	class OperatorDice::Impl
 	{
 	public:
-		std::mt19937_64 engine;
+		std::mt19937_64 twister;
 		Impl(unsigned long long seed)
 		{
 			if (seed == 0)
 				seed = std::time(nullptr);
-			engine.seed(seed);
-		}
-
-		Impl(const Impl& source)
-		{
-			engine = source.engine;
-		}
-
-		unsigned long long genrand()
-		{
-			return engine();
+			twister.seed(seed);
 		}
 	};
 
@@ -85,13 +75,8 @@ namespace Silikego
 
 		long long int result = 0;
 		for (int i = 1; i <= count; i++)
-			result += (_impl->genrand() % faces) + 1;
+			result += (_impl->twister() % faces) + 1;
 		return result;
-	}
-
-	Function* OperatorDice::clone()
-	{
-	    return new OperatorDice(new(std::nothrow) Impl(*this->_impl));
 	}
 
 	OperatorDice::~OperatorDice()

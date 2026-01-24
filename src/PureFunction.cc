@@ -44,11 +44,6 @@ namespace Silikego
         delete _impl;
     }
 
-    Function* PureFunction::clone()
-    {
-        return new PureFunction(_impl->function);
-    }
-
     Value PureFunction::operator()(const std::vector<Value>& args)
     {
         return _impl->function(args);

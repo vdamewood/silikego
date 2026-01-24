@@ -52,7 +52,6 @@ SILIKEGOCORE_EXPORT
 	public:
         OperatorDice(unsigned long long int seed);
         ~OperatorDice() override;
-        Function* clone() override;
 
         Value operator()(const std::vector<Value>& args) override;
 

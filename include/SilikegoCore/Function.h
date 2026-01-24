@@ -39,7 +39,6 @@ namespace Silikego
         Function& operator=(const Function&) = delete;
         Function& operator=(Function&&) = delete;
 
-        virtual Function* clone() = 0;
         virtual Value operator()(const std::vector<Value>& args) = 0;
         virtual bool isEmpty() const = 0;
     };
@@ -51,7 +50,6 @@ namespace Silikego
     public:
         PureFunction(Value (*function)(const std::vector<Value>& args));
         ~PureFunction() override;
-        Function* clone() override;
 
         Value operator()(const std::vector<Value>& args) override;
 
