@@ -78,15 +78,10 @@ namespace Silikego
 			}
 		}
 
-		int checkBounds(int index)
+		bool OutOfBounds(size_t index)
 		{
-			if (data.index() != BranchIndex
-				|| index >= std::get<BranchIndex>(data).children.size())
-			{
-				return -1;
-			}
-
-			return index;
+			return data.index() != BranchIndex
+				|| index >= std::get<BranchIndex>(data).children.size();
 		}
 
 		std::variant<std::monostate, Value, Branch> data;
@@ -302,11 +297,7 @@ namespace Silikego
 
 	bool Node::insert(int position, Node&& new_child)
 	{
-		if (isEmpty() || _impl->data.index() != BranchIndex)
-			return false;
-
-			position = _impl->checkBounds(position);
-		if (position < 0)
+		if (isEmpty() || _impl->OutOfBounds(position))
 			return false;
 
 		std::get<BranchIndex>(_impl->data).children.insert(
@@ -326,10 +317,7 @@ namespace Silikego
 
 	const Node* Node::fetchChild(int child_index) const
 	{
-		if (isEmpty())
-			return nullptr;
-
-		if ((child_index = _impl->checkBounds(child_index)) < 0)
+		if (isEmpty() || _impl->OutOfBounds(child_index))
 			return nullptr;
 
 		return &std::get<BranchIndex>(_impl->data).children[child_index];
@@ -337,10 +325,7 @@ namespace Silikego
 
 	std::optional<Node> Node::pruneChild(int child_index)
 	{
-		if (isEmpty())
-			return std::nullopt;
-
-		if ((child_index = _impl->checkBounds(child_index)) < 0)
+		if (isEmpty() || _impl->OutOfBounds(child_index))
 			return std::nullopt;
 
 		auto& children = std::get<BranchIndex>(_impl->data).children;
