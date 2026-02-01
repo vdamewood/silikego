@@ -51,7 +51,7 @@ namespace Silikego
 		if (!input_source)
 			return Error::NullObject;
 
-		Lexer lexer(std::move(input_source));
+		Lexer lexer(std::move(input_source), true);
 		if (lexer.isEmpty())
 			return Error::NullObject;
 

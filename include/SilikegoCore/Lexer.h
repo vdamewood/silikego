@@ -34,7 +34,7 @@ namespace Silikego
 		class Impl;
 		Impl* _impl;
 	public:
-		Lexer(std::unique_ptr<Input> source);
+		Lexer(std::unique_ptr<Input> source, bool support_dice);
 		Lexer(const Lexer&) = delete;
 		Lexer(Lexer&&) = delete;
 		~Lexer();

@@ -79,17 +79,20 @@ namespace Silikego
 	class Lexer::Impl
 	{
 	public:
-		Impl(std::unique_ptr<Input> NewSource)
-			: Source(std::move(NewSource))
+		Impl(std::unique_ptr<Input> NewSource, bool support_dice) :
+			Source(std::move(NewSource)),
+			supportDice(support_dice)
 		{
 		}
 
 		bool error = false;
 		std::unique_ptr<Input> Source;
 		Silikego::Token Token;
+		bool supportDice;
 	};
 
-	Lexer::Lexer(std::unique_ptr<Input> source) : _impl(new(std::nothrow) Impl(std::move(source)))
+	Lexer::Lexer(std::unique_ptr<Input> source, bool support_dice) :
+		_impl(new(std::nothrow) Impl(std::move(source), support_dice))
 	{
 		advance();
 	}
@@ -122,7 +125,7 @@ namespace Silikego
 				_impl->Source->advance();
 				dfaState = DFA_TERM_CHAR;
 			}
-			else if (_impl->Source->character() == 'd')
+			else if (_impl->supportDice && _impl->Source->character() == 'd')
 			{
 				lexeme += _impl->Source->character();
 				_impl->Source->advance();
