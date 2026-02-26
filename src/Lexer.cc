@@ -28,9 +28,10 @@
 #include <SilikegoCore/Lexer.h>
 #include <SilikegoCore/Token.h>
 
-/* Values taken from Google Calculator 2011-07-06 */
-#define EULER 2.71828183
-#define PI    3.14159265
+// Taken from The Art of Computer Programming, Volume 2, Third Edition
+// By Donald E. Knuth
+static const double Pi =    0x3.243f6a8885a30p0;
+static const double Euler = 0x2.b7e151628aed2p0;
 
 static inline bool
 IsOperator(int character)
@@ -270,11 +271,11 @@ namespace Silikego
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_E:
-			_impl->Token = EULER;
+			_impl->Token = Euler;
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_PI:
-			_impl->Token = PI;
+			_impl->Token = Pi;
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_CHAR:
