@@ -267,7 +267,7 @@ namespace Silikego
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_FLOAT:
-			_impl->Token = std::atof(lexeme.c_str());
+			_impl->Token = std::strtof(lexeme.c_str(), 0);
 			dfaState = DFA_END;
 			break;
 		case DFA_TERM_E:
