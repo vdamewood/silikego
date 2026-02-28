@@ -23,18 +23,6 @@
 
 #include <SilikegoCore/Token.h>
 
-namespace
-{
-	enum DataIndex {
-		UnsetIndex = 0,
-		CharacterIndex = 1,
-		IntegerIndex = 2,
-		RealIndex = 3,
-		IdIndex = 4,
-		EndOfInputIndex = 5
-	};
-};
-
 namespace Silikego
 {
 	class Token::Impl
@@ -173,23 +161,24 @@ namespace Silikego
 		if (isEmpty())
 			return TokenStatus::Unset;
 
-		switch(_impl->data.index())
+		return std::visit([](auto&& data)
 		{
-		case UnsetIndex:
-			return TokenStatus::Unset;
-		case CharacterIndex:
-			return TokenStatus::Character;
-		case IntegerIndex:
-			return TokenStatus::Integer;
-		case RealIndex:
-			return TokenStatus::Real;
-		case IdIndex:
-			return TokenStatus::Id;
-		case EndOfInputIndex:
-			return TokenStatus::EndOfInput;
-		}
-
-		return TokenStatus::Unset; // shouldn't happen.
+			using T = std::decay_t<decltype(data)>;
+			if constexpr (std::is_same_v<T, std::monostate>)
+				return TokenStatus::Unset;
+			else if constexpr (std::is_same_v<T, char>)
+				return TokenStatus::Character;
+			else if constexpr (std::is_same_v<T, long long int>)
+				return TokenStatus::Integer;
+			else if constexpr (std::is_same_v<T, double>)
+				return TokenStatus::Real;
+			else if constexpr (std::is_same_v<T, std::string>)
+				return TokenStatus::Id;
+			else if constexpr (std::is_same_v<T, EndOfInput>)
+				return TokenStatus::EndOfInput;
+			else
+				return TokenStatus::Unset;
+		}, _impl->data);
 	}
 
 	char Token::character() const
