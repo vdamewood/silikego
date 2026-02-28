@@ -68,11 +68,12 @@ namespace Silikego
 				break;
 			case BranchIndex:
 			{
-				data = Branch{std::get<BranchIndex>(source.data).id};
-				std::get<BranchIndex>(data).is_negated
-					= std::get<BranchIndex>(source.data).is_negated;
-				for(const auto& i : std::get<BranchIndex>(source.data).children)
-					std::get<BranchIndex>(data).children.push_back(i);
+				data = Branch{std::get<Branch>(source.data).id};
+				std::get<Branch>(data).is_negated
+					= std::get<Branch>(source.data).is_negated;
+				for(const auto& i
+						: std::get<Branch>(source.data).children)
+					std::get<Branch>(data).children.push_back(i);
 				break;
 			}
 			}
@@ -80,20 +81,26 @@ namespace Silikego
 
 		bool OutOfBounds(size_t index)
 		{
-			return data.index() != BranchIndex
-				|| index >= std::get<BranchIndex>(data).children.size();
+			return (!std::holds_alternative<Branch>(data))
+				|| index >= std::get<Branch>(data).children.size();
 		}
 
 		std::variant<std::monostate, Value, Branch> data;
 	}; // Impl
 
-	Node::Node(): _impl(new(std::nothrow) Impl()) {}
-	Node::Node(int source): _impl(new(std::nothrow) Impl(Value(source))) {}
-	Node::Node(long long int new_value): _impl(new(std::nothrow) Impl(Value(new_value))) {}
-	Node::Node(double new_value): _impl(new(std::nothrow) Impl(Value(new_value))) {}
-	Node::Node(Error new_error): _impl(new(std::nothrow) Impl(Value(new_error))) {}
-	Node::Node(const Value& source): _impl(new(std::nothrow) Impl(source)) {}
-	Node::Node(const std::string& new_id): _impl(new(std::nothrow) Impl(Branch(new_id))) {}
+	Node::Node() : _impl(new(std::nothrow) Impl()) {}
+	Node::Node(int source)
+		: _impl(new(std::nothrow) Impl(Value(source))) {}
+	Node::Node(long long int new_value)
+		: _impl(new(std::nothrow) Impl(Value(new_value))) {}
+	Node::Node(double new_value)
+		: _impl(new(std::nothrow) Impl(Value(new_value))) {}
+	Node::Node(Error new_error)
+		: _impl(new(std::nothrow) Impl(Value(new_error))) {}
+	Node::Node(const Value& source)
+		: _impl(new(std::nothrow) Impl(source)) {}
+	Node::Node(const std::string& new_id)
+		: _impl(new(std::nothrow) Impl(Branch(new_id))) {}
 
 	Node::Node(const Node& new_node)
 		: _impl(new(std::nothrow) Impl(*new_node._impl))
@@ -186,10 +193,10 @@ namespace Silikego
 
 	const std::string* Node::id() const
 	{
-		if (isEmpty() || _impl->data.index() != BranchIndex)
+		if (isEmpty() || !std::holds_alternative<Branch>(_impl->data))
 			return nullptr;
 
-		return &std::get<BranchIndex>(_impl->data).id;
+		return &std::get<Branch>(_impl->data).id;
 	}
 
 	bool Node::isNegated() const
@@ -200,17 +207,17 @@ namespace Silikego
 		switch (_impl->data.index())
 		{
 		case LeafIndex:
-			switch (std::get<LeafIndex>(_impl->data).status())
+			switch (std::get<Value>(_impl->data).status())
 			{
 			case ValueStatus::Integer:
-				return std::get<LeafIndex>(_impl->data).integer() < 0;
+				return std::get<Value>(_impl->data).integer() < 0;
 			case ValueStatus::Real:
-				return std::get<LeafIndex>(_impl->data).real() < 0.0;
+				return std::get<Value>(_impl->data).real() < 0.0;
 			default:
 				return false;
 			}
 		case BranchIndex:
-			return std::get<BranchIndex>(_impl->data).is_negated;
+			return std::get<Branch>(_impl->data).is_negated;
 		default:
 			return false;
 		}
@@ -227,11 +234,11 @@ namespace Silikego
 		case NothingIndex:
 			break;
 		case LeafIndex:
-			std::get<LeafIndex>(_impl->data).negate();
+			std::get<Value>(_impl->data).negate();
 			break;
 		case BranchIndex:
-			std::get<BranchIndex>(_impl->data).is_negated
-				= !std::get<BranchIndex>(_impl->data).is_negated;
+			std::get<Branch>(_impl->data).is_negated
+				= !std::get<Branch>(_impl->data).is_negated;
 			break;
 		}
 	}
@@ -256,10 +263,10 @@ namespace Silikego
 
 	const Value* Node::value() const
 	{
-		if (isEmpty() || _impl->data.index() != LeafIndex)
+		if (isEmpty() || !std::holds_alternative<Value>(_impl->data))
 			return nullptr;
 
-		return &std::get<LeafIndex>(_impl->data);
+		return &std::get<Value>(_impl->data);
 	}
 
 	bool Node::pushLeft(const Node& new_child)
@@ -269,10 +276,11 @@ namespace Silikego
 
 	bool Node::pushLeft(Node&& new_child)
 	{
-		if (isEmpty() || _impl->data.index() != BranchIndex)
+		if (isEmpty() || !std::holds_alternative<Branch>(_impl->data))
 			return false;
 
-		std::get<BranchIndex>(_impl->data).children.push_front(new_child);
+		std::get<Branch>(_impl->data)
+			.children.push_front(new_child);
 		return true;
 	}
 
@@ -283,10 +291,11 @@ namespace Silikego
 
 	bool Node::pushRight(Node&& new_child)
 	{
-		if (isEmpty() || _impl->data.index() != BranchIndex)
+		if (isEmpty() || !std::holds_alternative<Branch>(_impl->data))
 			return false;
 
-		std::get<BranchIndex>(_impl->data).children.push_back(new_child);
+		std::get<Branch>(_impl->data)
+			.children.push_back(new_child);
 		return true;
 	}
 
@@ -300,8 +309,9 @@ namespace Silikego
 		if (isEmpty() || _impl->OutOfBounds(position))
 			return false;
 
-		std::get<BranchIndex>(_impl->data).children.insert(
-			std::get<BranchIndex>(_impl->data).children.begin() + position,
+		std::get<Branch>(_impl->data).children.insert(
+			std::get<Branch>(_impl->data)
+				.children.begin() + position,
 			std::move(new_child));
 
 		return true;
@@ -309,10 +319,10 @@ namespace Silikego
 
 	size_t Node::countChildren() const
 	{
-		if (isEmpty() || _impl->data.index() != BranchIndex)
+		if (isEmpty() || !std::holds_alternative<Branch>(_impl->data))
 			return 0;
 
-		return std::get<BranchIndex>(_impl->data).children.size();
+		return std::get<Branch>(_impl->data).children.size();
 	}
 
 	const Node* Node::fetchChild(size_t child_index) const
@@ -320,7 +330,8 @@ namespace Silikego
 		if (isEmpty() || _impl->OutOfBounds(child_index))
 			return nullptr;
 
-		return &std::get<BranchIndex>(_impl->data).children[child_index];
+		return &std::get<Branch>(_impl->data)
+			.children[child_index];
 	}
 
 	std::optional<Node> Node::pruneChild(size_t child_index)
@@ -328,7 +339,7 @@ namespace Silikego
 		if (isEmpty() || _impl->OutOfBounds(child_index))
 			return std::nullopt;
 
-		auto& children = std::get<BranchIndex>(_impl->data).children;
+		auto& children = std::get<Branch>(_impl->data).children;
 		Node child = children[child_index];
 		children.erase(children.begin() + child_index);
 		return child;

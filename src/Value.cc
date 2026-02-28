@@ -52,7 +52,8 @@ namespace Silikego
 		: _impl(new(std::nothrow) Impl(source)) { }
 
 	Value::Value(int source)
-		: _impl(new(std::nothrow) Impl(static_cast<long long int>(source))) { }
+		: _impl(new(std::nothrow)
+			Impl(static_cast<long long int>(source))) { }
 
 	Value::Value(long long int source)
 		: _impl(new(std::nothrow) Impl(source)) { }
@@ -154,8 +155,8 @@ namespace Silikego
 		if (isEmpty())
 			return Error::NullObject;
 
-		return _impl->data.index() == ErrorIndex
-			? std::get<ErrorIndex>(_impl->data)
+		return std::holds_alternative<Error>(_impl->data)
+			? std::get<Error>(_impl->data)
 			: Error::None;
 	}
 
@@ -169,9 +170,10 @@ namespace Silikego
 		case ErrorIndex:
 			return 0;
 		case IntegerIndex:
-			return std::get<IntegerIndex>(_impl->data);
+			return std::get<long long int>(_impl->data);
 		case RealIndex:
-			return static_cast<long long int>(std::get<RealIndex>(_impl->data));
+			return static_cast<long long int>(
+				std::get<double>(_impl->data));
 		}
 		// shouldn't happen
 		return 0;
@@ -187,9 +189,10 @@ namespace Silikego
 		case ErrorIndex:
 			return std::numeric_limits<double>::quiet_NaN();
 		case IntegerIndex:
-			return static_cast<double>(std::get<IntegerIndex>(_impl->data));
+			return static_cast<double>(
+				std::get<long long int>(_impl->data));
 		case RealIndex:
-			return std::get<RealIndex>(_impl->data);
+			return std::get<double>(_impl->data);
 		}
 		// shouldn't happen
 		return std::numeric_limits<double>::quiet_NaN();
@@ -204,11 +207,11 @@ namespace Silikego
 		{
 		case ErrorIndex:
 			break;
-		case (IntegerIndex):
-			std::get<IntegerIndex>(_impl->data) *= -1;
+		case IntegerIndex:
+			std::get<long long int>(_impl->data) *= -1;
 			break;
-		case (RealIndex):
-			std::get<RealIndex>(_impl->data) *= -1.0;
+		case RealIndex:
+			std::get<double>(_impl->data) *= -1.0;
 			break;
 		}
 	}

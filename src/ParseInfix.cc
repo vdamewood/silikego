@@ -311,7 +311,9 @@ namespace Silikego
 		return Error::Syntax;
 	}
 
-	static Node GetArguments(Lexer& lexer, const std::string& function_id)
+	static Node GetArguments(
+		Lexer& lexer,
+		const std::string& function_id)
 	{
 		Node branch{function_id};
 		while(true)

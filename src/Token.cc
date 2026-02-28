@@ -69,7 +69,8 @@ namespace Silikego
 	Token::Token(char source)
 		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(int source)
-		: _impl(new(std::nothrow) Impl{static_cast<long long int>(source)}) { }
+		: _impl(new(std::nothrow)
+			Impl{static_cast<long long int>(source)}) { }
 	Token::Token(long long int source)
 		: _impl(new(std::nothrow) Impl{source}) { }
 	Token::Token(double source)
@@ -94,7 +95,8 @@ namespace Silikego
 	Token& Token::operator=(int source)
 	{
 		if (isEmpty())
-			_impl = new(std::nothrow) Impl{static_cast<long long int>(source)};
+			_impl = new(std::nothrow)
+				Impl{static_cast<long long int>(source)};
 		else
 			_impl->data = source;
 		return *this;
@@ -192,33 +194,36 @@ namespace Silikego
 
 	char Token::character() const
 	{
-		if (isEmpty() || _impl->data.index() != CharacterIndex)
+		if (isEmpty() || !std::holds_alternative<char>(_impl->data)
+)
 			return '\0';
 
-		return std::get<CharacterIndex>(_impl->data);
+		return std::get<char>(_impl->data);
 	}
 
 	long long int Token::integer() const
 	{
-		if (isEmpty() || _impl->data.index() != IntegerIndex)
+		if (isEmpty() || !std::holds_alternative<long long int>(
+				_impl->data))
 			return 0LL;
 
-		return std::get<IntegerIndex>(_impl->data);
+		return std::get<long long int>(_impl->data);
 	}
 
 	double Token::real() const
 	{
-		if (isEmpty() || _impl->data.index() != RealIndex)
+		if (isEmpty() || !std::holds_alternative<double>(_impl->data))
 			return std::numeric_limits<double>::quiet_NaN();
 
-		return std::get<RealIndex>(_impl->data);
+		return std::get<double>(_impl->data);
 	}
 
 	const std::string* Token::id() const
 	{
-		if (isEmpty() || _impl->data.index() != IdIndex)
+		if (isEmpty() || !std::holds_alternative<std::string>(
+				_impl->data))
 			return nullptr;
 
-		return &std::get<IdIndex>(_impl->data);
+		return &std::get<std::string>(_impl->data);
 	}
 }

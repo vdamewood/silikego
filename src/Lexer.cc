@@ -28,72 +28,84 @@
 #include <SilikegoCore/Lexer.h>
 #include <SilikegoCore/Token.h>
 
-// Taken from The Art of Computer Programming, Volume 2, Third Edition
-// By Donald E. Knuth
-static const double Pi =    0x3.243f6a8885a30p0;
-static const double Euler = 0x2.b7e151628aed2p0;
+namespace {
+	// Taken from
+	// The Art of Computer Programming, Volume 2, Third Edition
+	// By Donald E. Knuth
+	const double Pi =    0x3.243f6a8885a30p0;
+	const double Euler = 0x2.b7e151628aed2p0;
 
-static inline bool
-IsOperator(int character)
-{
-	return
-	(
-		character == '+'
-		|| character == '-'
-		|| character == '/'
-		|| character == '*'
-		|| character == '^'
-		|| character == ','
-		|| character == '('
-		|| character == ')'
-	);
-}
+	inline bool
+	IsOperator(int character)
+	{
+		return
+		(
+			character == '+'
+			|| character == '-'
+			|| character == '/'
+			|| character == '*'
+			|| character == '^'
+			|| character == ','
+			|| character == '('
+			|| character == ')'
+		);
+	}
 
-static inline bool
-IsIdCharacter(int character)
-{
-	return (std::isalnum(character) || character == '_');
-}
+	inline bool
+	IsIdCharacter(int character)
+	{
+		return (std::isalnum(character) || character == '_');
+	}
 
-enum SilikegoDfaState
-{
-	DFA_ERROR = -1,
-	DFA_START = 0,	/* "" */
-	DFA_E,		/* "e" */
-	DFA_PI_1,	/* "p" */
-	DFA_PI_2,	/* "pi" */
-	DFA_DICE,	/* "d" */
-	DFA_ID,		/* ([a-ce-z][a-z0-9]*) | (d[a-z][a-z0-9]*) */
-	DFA_INTEGER,	/* [0-9]+ */
-	DFA_FLOAT,	/* [0-9]+\.[0-9]+ */
-	DFA_TERM_INTEGER,
-	DFA_TERM_FLOAT,
-	DFA_TERM_E,
-	DFA_TERM_PI,
-	DFA_TERM_CHAR,
-	DFA_TERM_STRING,
-	DFA_TERM_EOI,
-	DFA_END
+	enum class DfaState
+	{
+		Error,
+		Start,	    /* "" */
+		Euler,		/* "e" */
+		PiStart,	/* "p" */
+		PiFull,	    /* "pi" */
+		Dice,	    /* "d" */
+		Id,		    /* ([a-ce-z][a-z0-9]*) | (d[a-z][a-z0-9]*) */
+		Integer,	/* [0-9]+ */
+		Real,	    /* [0-9]+\.[0-9]+ */
+		TerminateInteger,
+		TerminateReal,
+		TerminateEuler,
+		TerminatePi,
+		TerminateCharacter,
+		TerminateId,
+		TerminateEndOfInput,
+		Finish
+	};
 };
+
 namespace Silikego
 {
 	class Lexer::Impl
 	{
 	public:
-		Impl(std::unique_ptr<Input> NewSource, bool support_dice) :
-			Source(std::move(NewSource)),
+		Impl(
+			std::unique_ptr<Input> new_source,
+			bool support_dice
+		) :
+			source(std::move(new_source)),
 			supportDice(support_dice)
 		{
 		}
 
 		bool error = false;
-		std::unique_ptr<Input> Source;
-		Silikego::Token Token;
+		std::unique_ptr<Input> source;
+		Silikego::Token token;
 		bool supportDice;
 	};
 
-	Lexer::Lexer(std::unique_ptr<Input> source, bool support_dice) :
-		_impl(new(std::nothrow) Impl(std::move(source), support_dice))
+	Lexer::Lexer(
+		std::unique_ptr<Input> source,
+		bool support_dice
+	) :
+		_impl(new(std::nothrow) Impl(
+			std::move(source),
+			support_dice))
 	{
 		advance();
 	}
@@ -108,191 +120,193 @@ namespace Silikego
 		if (isEmpty())
 			return;
 
-		if (_impl->Token.status() == TokenStatus::EndOfInput || _impl->error)
+		if (_impl->token.status() == TokenStatus::EndOfInput
+				|| _impl->error)
 			return;
 
-		SilikegoDfaState dfaState = DFA_START;
+		DfaState dfa_state = DfaState::Start;
 		std::string lexeme;
 
-		while (dfaState != DFA_END)
-		switch (dfaState)
+		while (dfa_state != DfaState::Finish)
+		switch (dfa_state)
 		{
-		case DFA_END:
+		case DfaState::Finish:
 			break;
-		case DFA_START:
-			if(IsOperator(_impl->Source->character()))
+		case DfaState::Start:
+			if(IsOperator(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_TERM_CHAR;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::TerminateCharacter;
 			}
-			else if (_impl->supportDice && _impl->Source->character() == 'd')
+			else if (_impl->supportDice
+				&& _impl->source->character() == 'd')
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_DICE;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Dice;
 			}
-			else if (_impl->Source->character() == 'e')
+			else if (_impl->source->character() == 'e')
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_E;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Euler;
 			}
-			else if (_impl->Source->character() == 'p')
+			else if (_impl->source->character() == 'p')
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_PI_1;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::PiStart;
 			}
-			else if (std::isdigit(_impl->Source->character()))
+			else if (std::isdigit(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_INTEGER;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Integer;
 			}
-			else if (std::isalpha(_impl->Source->character()))
+			else if (std::isalpha(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_ID;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Id;
 			}
-			else if (std::isspace(_impl->Source->character()))
+			else if (std::isspace(_impl->source->character()))
 			{
-				_impl->Source->advance();
+				_impl->source->advance();
 			}
-			else if (_impl->Source->character() == '\0')
+			else if (_impl->source->character() == '\0')
 			{
-				dfaState = DFA_TERM_EOI;
+				dfa_state = DfaState::TerminateEndOfInput;
 			}
 			else
 			{
-				dfaState = DFA_ERROR;
+				dfa_state = DfaState::Error;
 			}
 			break;
-		case DFA_DICE:
-			if (std::isalpha(_impl->Source->character()))
+		case DfaState::Dice:
+			if (std::isalpha(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_ID;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Id;
 			}
 			else
 			{
-				dfaState = DFA_TERM_CHAR;
+				dfa_state = DfaState::TerminateCharacter;
 			}
 			break;
-		case DFA_E:
-			if (std::isalnum(_impl->Source->character()))
+		case DfaState::Euler:
+			if (std::isalnum(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_ID;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Id;
 			}
 			else
 			{
-				dfaState = DFA_TERM_E;
+				dfa_state = DfaState::TerminateEuler;
 			}
 			break;
-		case DFA_PI_1:
-			if (_impl->Source->character() == 'i')
+		case DfaState::PiStart:
+			if (_impl->source->character() == 'i')
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_PI_2;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::PiFull;
 			}
-			else if (IsIdCharacter(_impl->Source->character()))
+			else if (IsIdCharacter(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_ID;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Id;
 			}
 			else
 			{
-				dfaState = DFA_TERM_STRING;
+				dfa_state = DfaState::TerminateId;
 			}
 			break;
-		case DFA_PI_2:
-			if (IsIdCharacter(_impl->Source->character()))
+		case DfaState::PiFull:
+			if (IsIdCharacter(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_ID;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Id;
 			}
 			else
 			{
-				dfaState = DFA_TERM_PI;
+				dfa_state = DfaState::TerminatePi;
 			}
 			break;
-		case DFA_ID:
-			if (isalnum(_impl->Source->character()))
+		case DfaState::Id:
+			if (std::isalnum(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
+				lexeme += _impl->source->character();
+				_impl->source->advance();
 			}
 			else
 			{
-				dfaState = DFA_TERM_STRING;
+				dfa_state = DfaState::TerminateId;
 			}
 			break;
-		case DFA_INTEGER:
-			if (_impl->Source->character() == '.')
+		case DfaState::Integer:
+			if (_impl->source->character() == '.')
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
-				dfaState = DFA_FLOAT;
+				lexeme += _impl->source->character();
+				_impl->source->advance();
+				dfa_state = DfaState::Real;
 			}
-			else if (std::isdigit(_impl->Source->character()))
+			else if (std::isdigit(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
+				lexeme += _impl->source->character();
+				_impl->source->advance();
 			}
 			else
 			{
-				dfaState = DFA_TERM_INTEGER;
+				dfa_state = DfaState::TerminateInteger;
 			}
 			break;
-		case DFA_FLOAT:
-			if (std::isdigit(_impl->Source->character()))
+		case DfaState::Real:
+			if (std::isdigit(_impl->source->character()))
 			{
-				lexeme += _impl->Source->character();
-				_impl->Source->advance();
+				lexeme += _impl->source->character();
+				_impl->source->advance();
 			}
 			else
 			{
-				dfaState = DFA_TERM_FLOAT;
+				dfa_state = DfaState::TerminateReal;
 			}
 			break;
-		case DFA_TERM_INTEGER:
-			_impl->Token = std::strtoll(lexeme.c_str(), 0, 10);
-			dfaState = DFA_END;
+		case DfaState::TerminateInteger:
+			_impl->token = std::strtoll(lexeme.c_str(), 0, 10);
+			dfa_state = DfaState::Finish;
 			break;
-		case DFA_TERM_FLOAT:
-			_impl->Token = std::strtof(lexeme.c_str(), 0);
-			dfaState = DFA_END;
+		case DfaState::TerminateReal:
+			_impl->token = std::strtof(lexeme.c_str(), 0);
+			dfa_state = DfaState::Finish;
 			break;
-		case DFA_TERM_E:
-			_impl->Token = Euler;
-			dfaState = DFA_END;
+		case DfaState::TerminateEuler:
+			_impl->token = Euler;
+			dfa_state = DfaState::Finish;
 			break;
-		case DFA_TERM_PI:
-			_impl->Token = Pi;
-			dfaState = DFA_END;
+		case DfaState::TerminatePi:
+			_impl->token = Pi;
+			dfa_state = DfaState::Finish;
 			break;
-		case DFA_TERM_CHAR:
-			_impl->Token = lexeme[0];
-			dfaState = DFA_END;
+		case DfaState::TerminateCharacter:
+			_impl->token = lexeme[0];
+			dfa_state = DfaState::Finish;
 			break;
-		case DFA_TERM_STRING:
-			_impl->Token = lexeme;
-			dfaState = DFA_END;
+		case DfaState::TerminateId:
+			_impl->token = lexeme;
+			dfa_state = DfaState::Finish;
 			break;
-		case DFA_TERM_EOI:
-			_impl->Token = EndOfInput();
-			dfaState = DFA_END;
+		case DfaState::TerminateEndOfInput:
+			_impl->token = EndOfInput();
+			dfa_state = DfaState::Finish;
 			break;
-		case DFA_ERROR:
+		case DfaState::Error:
 			_impl->error = true;
-			dfaState = DFA_END;
+			dfa_state = DfaState::Finish;
 			break;
 		}
 	}
@@ -302,6 +316,6 @@ namespace Silikego
 		if (isEmpty())
 			return nullptr;
 
-		return &_impl->Token;
+		return &_impl->token;
 	}
 }

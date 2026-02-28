@@ -22,12 +22,24 @@
 
 namespace Silikego::Version
 {
-    const unsigned int  Major               = @SilikegoCore_VERSION_MAJOR@;
-    const unsigned int  Minor               = @SilikegoCore_VERSION_MINOR@;
-    const unsigned int  Patch               = @SilikegoCore_VERSION_PATCH@;
-    const char          PrereleaseSuffix[]  = "@SILIKEGO_CORE_PRERELEASE_SUFFIX@";
-    const char          PackageSuffix[]     = "@SILIKEGO_CORE_PACKAGE_SUFFIX@";
-    const char          String[]            = "@SilikegoCore_VERSION@@SILIKEGO_CORE_PRERELEASE_SUFFIX@";
-    const char          StringWithPackage[] = "@SilikegoCore_VERSION@@SILIKEGO_CORE_PRERELEASE_SUFFIX@@SILIKEGO_CORE_PACKAGE_SUFFIX@";
-    const char          Copyright[]         = "@SILIKEGO_CORE_COPYRIGHT@";
+    const unsigned int
+    Major = @SilikegoCore_VERSION_MAJOR@;
+    const unsigned int
+    Minor = @SilikegoCore_VERSION_MINOR@;
+    const unsigned int
+    Patch = @SilikegoCore_VERSION_PATCH@;
+    const char
+    PrereleaseSuffix[] = "@SILIKEGO_CORE_PRERELEASE_SUFFIX@";
+    const char
+    PackageSuffix[] = "@SILIKEGO_CORE_PACKAGE_SUFFIX@";
+    const char
+    String[] =
+        "@SilikegoCore_VERSION@@SILIKEGO_CORE_PRERELEASE_SUFFIX@";
+    const char
+    StringWithPackage[] =
+        "@SilikegoCore_VERSION@"
+        "@SILIKEGO_CORE_PRERELEASE_SUFFIX@"
+        "@SILIKEGO_CORE_PACKAGE_SUFFIX@";
+    const char
+    Copyright[] = "@SILIKEGO_CORE_COPYRIGHT@";
 };
