@@ -18,6 +18,7 @@
 // <http://www.gnu.org/licenses/>.
 
 
+#include <array>
 #include <string>
 #include <variant>
 
@@ -42,14 +43,24 @@ namespace Silikego
 			return *this;
 		}
 
-		std::variant<
+		using data_v = std::variant<
 			std::monostate,
 			char,
 			long long int,
 			double,
 			std::string,
 			EndOfInput
-		> data;
+		>;
+		data_v data;
+		std::array<TokenStatus, std::variant_size_v<data_v>> conversion
+		{
+			TokenStatus::Unset,
+			TokenStatus::Character,
+			TokenStatus::Integer,
+			TokenStatus::Real,
+			TokenStatus::Id,
+			TokenStatus::EndOfInput
+		};
 	};
 
 	Token::Token()
@@ -160,25 +171,7 @@ namespace Silikego
 	{
 		if (isEmpty())
 			return TokenStatus::Unset;
-
-		return std::visit([](auto&& data)
-		{
-			using T = std::decay_t<decltype(data)>;
-			if constexpr (std::is_same_v<T, std::monostate>)
-				return TokenStatus::Unset;
-			else if constexpr (std::is_same_v<T, char>)
-				return TokenStatus::Character;
-			else if constexpr (std::is_same_v<T, long long int>)
-				return TokenStatus::Integer;
-			else if constexpr (std::is_same_v<T, double>)
-				return TokenStatus::Real;
-			else if constexpr (std::is_same_v<T, std::string>)
-				return TokenStatus::Id;
-			else if constexpr (std::is_same_v<T, EndOfInput>)
-				return TokenStatus::EndOfInput;
-			else
-				return TokenStatus::Unset;
-		}, _impl->data);
+		return _impl->conversion[_impl->data.index()];
 	}
 
 	char Token::character() const

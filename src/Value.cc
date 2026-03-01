@@ -22,19 +22,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#include <array>
 #include <limits>
 #include <variant>
 
 #include <SilikegoCore/Value.h>
-
-namespace {
-	enum DataIndex
-	{
-		ErrorIndex = 0,
-		IntegerIndex = 1,
-		RealIndex = 2
-	};
-}
 
 namespace Silikego
 {
@@ -45,7 +37,14 @@ namespace Silikego
 		Impl(long long int source) : data(source) { }
 		Impl(double source) : data(source) { }
 
-		std::variant<Error, long long int, double> data;
+		using data_v = std::variant<Error, long long int, double>;
+		data_v data;
+		std::array<ValueStatus, std::variant_size_v<data_v>> conversion
+		{
+			ValueStatus::Error,
+			ValueStatus::Integer,
+			ValueStatus::Real
+		};
 	};
 
 	Value::Value(Error source)
@@ -137,17 +136,7 @@ namespace Silikego
 	{
 		if (isEmpty())
 			return ValueStatus::Error;
-		switch (_impl->data.index())
-		{
-		case ErrorIndex:
-			return ValueStatus::Error;
-		case IntegerIndex:
-			return ValueStatus::Integer;
-		case RealIndex:
-			return ValueStatus::Real;
-		}
-		// shouldn't happen
-		return ValueStatus::Error;
+		return _impl->conversion[_impl->data.index()];
 	}
 
 	Error Value::error() const
@@ -165,18 +154,16 @@ namespace Silikego
 		if (isEmpty())
 			return 0;
 
-		switch (_impl->data.index())
+		return std::visit([](auto& data)
 		{
-		case ErrorIndex:
-			return 0;
-		case IntegerIndex:
-			return std::get<long long int>(_impl->data);
-		case RealIndex:
-			return static_cast<long long int>(
-				std::get<double>(_impl->data));
-		}
-		// shouldn't happen
-		return 0;
+			using T = std::decay_t<decltype(data)>;
+			if constexpr (std::is_same_v<T, Error>)
+				return 0LL;
+			else if constexpr (std::is_same_v<T, long long int>)
+				return data;
+			else if constexpr (std::is_same_v<T, double>)
+				return static_cast<long long int>(data);
+		}, _impl->data);
 	}
 
 	double Value::real() const
@@ -184,18 +171,16 @@ namespace Silikego
 		if (isEmpty())
 			return std::numeric_limits<double>::quiet_NaN();
 
-		switch (_impl->data.index())
+		return std::visit([](auto& data)
 		{
-		case ErrorIndex:
-			return std::numeric_limits<double>::quiet_NaN();
-		case IntegerIndex:
-			return static_cast<double>(
-				std::get<long long int>(_impl->data));
-		case RealIndex:
-			return std::get<double>(_impl->data);
-		}
-		// shouldn't happen
-		return std::numeric_limits<double>::quiet_NaN();
+			using T = std::decay_t<decltype(data)>;
+			if constexpr (std::is_same_v<T, Error>)
+				return std::numeric_limits<double>::quiet_NaN();
+			else if constexpr (std::is_same_v<T, long long int>)
+				return static_cast<double>(data);
+			else if constexpr (std::is_same_v<T, double>)
+				return data;
+		}, _impl->data);
 	}
 
 	void Value::negate()
@@ -203,16 +188,15 @@ namespace Silikego
 		if (isEmpty())
 			return;
 
-		switch (_impl->data.index())
+		std::visit([](auto& data)
 		{
-		case ErrorIndex:
-			break;
-		case IntegerIndex:
-			std::get<long long int>(_impl->data) *= -1;
-			break;
-		case RealIndex:
-			std::get<double>(_impl->data) *= -1.0;
-			break;
-		}
+			using T = std::decay_t<decltype(data)>;
+			if constexpr (std::is_same_v<T, Error>)
+				; // Do nothing
+			else if constexpr (std::is_same_v<T, long long int>)
+				data *= -1;
+			else if constexpr (std::is_same_v<T, double>)
+				data *= -1.0;
+		}, _impl->data);
 	}
 }
