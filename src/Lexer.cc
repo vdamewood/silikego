@@ -86,10 +86,12 @@ namespace Silikego
 	public:
 		Impl(
 			std::unique_ptr<Input> new_source,
-			bool support_dice
+			bool support_dice,
+			bool support_constants
 		) :
 			source(std::move(new_source)),
-			supportDice(support_dice)
+			supportDice(support_dice),
+			supportConstants(support_constants)
 		{
 		}
 
@@ -97,15 +99,18 @@ namespace Silikego
 		std::unique_ptr<Input> source;
 		Silikego::Token token;
 		bool supportDice;
+		bool supportConstants;
 	};
 
 	Lexer::Lexer(
 		std::unique_ptr<Input> source,
-		bool support_dice
+		bool support_dice,
+		bool support_constants
 	) :
 		_impl(new(std::nothrow) Impl(
 			std::move(source),
-			support_dice))
+			support_dice,
+			support_constants))
 	{
 		advance();
 	}

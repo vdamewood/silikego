@@ -15,7 +15,7 @@ Test(LexerTests, NAME) \
     { \
         __VA_ARGS__ \
     }; \
-    Silikego::Lexer lex(std::move(source), true); \
+    Silikego::Lexer lex(std::move(source), true, true); \
     for (int i = 0; i < tokens.size(); i++) \
     { \
         Silikego::Token* current = lex.token(); \
