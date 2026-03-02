@@ -84,6 +84,7 @@ set_target_properties(SilikegoCore PROPERTIES
 	VISIBILITY_INLINES_HIDDEN On
 	VERSION                   ${PROJECT_VERSION}
 	SOVERSION                 ${PROJECT_VERSION_MAJOR}
+	DEBUG_POSTFIX             "-debug"
 )
 
 configure_file(
