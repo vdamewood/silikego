@@ -286,7 +286,7 @@ namespace Silikego
 			dfa_state = DfaState::Finish;
 			break;
 		case DfaState::TerminateReal:
-			_impl->token = std::strtof(lexeme.c_str(), 0);
+			_impl->token = std::strtod(lexeme.c_str(), 0);
 			dfa_state = DfaState::Finish;
 			break;
 		case DfaState::TerminateEuler:
