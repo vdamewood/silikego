@@ -46,12 +46,8 @@ namespace Silikego
 	static Node GetArguments(Lexer&, const std::string&);
 
 
-	Node ParseInfix(std::unique_ptr<Input> input_source)
+	Node ParseInfix(Lexer&& lexer)
 	{
-		if (!input_source)
-			return Error::NullObject;
-
-		Lexer lexer(std::move(input_source), true, true);
 		if (lexer.isEmpty())
 			return Error::NullObject;
 

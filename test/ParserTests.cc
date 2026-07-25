@@ -14,6 +14,7 @@ using std::unique_ptr;
 using Silikego::Input;
 using Silikego::StringInput;
 using Silikego::Engine;
+using Silikego::Lexer;
 using Silikego::Node;
 using Silikego::Value;
 using Silikego::ValueStatus;
@@ -28,7 +29,7 @@ Test(ParserTests, NAME) \
     InstallOperations(caller); \
     InstallMathFunctions(caller); \
 \
-	Node tree = Silikego::ParseInfix(std::move(src)); \
+	Node tree = Silikego::ParseInfix(Lexer(std::move(src), true, true)); \
     Value target{TARGET}; \
 	Value result{Silikego::Evaluate(caller, tree)}; \
     cr_assert(target.status() == result.status()); \

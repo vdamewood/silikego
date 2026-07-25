@@ -39,7 +39,7 @@ namespace Silikego
 			bool support_dice,
 			bool support_constants);
 		Lexer(const Lexer&) = delete;
-		Lexer(Lexer&&) = delete;
+		Lexer(Lexer&&);
 		~Lexer();
 
 		inline bool isEmpty() const

@@ -4,7 +4,7 @@
 // This file is part of Silikego.
 
 // Silikego is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Lesser General Public License as published 
+// under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
@@ -24,13 +24,13 @@
 #include <memory>
 
 #include <SilikegoCore/Api.h>
-#include <SilikegoCore/Input.h>
+#include <SilikegoCore/Lexer.h>
 #include <SilikegoCore/Node.h>
 
 namespace Silikego
 {
 	SILIKEGOCORE_EXPORT
-	Node ParseInfix(std::unique_ptr<Input> source_input);
+	Node ParseInfix(Lexer&& lexer);
 };
 
 #endif // SILIKEGO_CORE_PARSE_INFIX_H
