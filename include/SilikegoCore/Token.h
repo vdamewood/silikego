@@ -62,7 +62,7 @@ namespace Silikego
 		Token& operator=(const std::string& right_side);
 		Token& operator=(const EndOfInput& right_side);
 		Token& operator=(const Token& right_side);
-		Token& operator=(Token&& sright_side);
+		Token& operator=(Token&& right_side);
 
 		inline bool isEmpty() const
 		{
