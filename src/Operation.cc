@@ -126,16 +126,24 @@ namespace Silikego
 		if (args.size() < 1)
 			return Error::FunctionArguments;
 
-		if (args[0].status() == ValueStatus::Error)
-			return args[0];
+		const Value *error = nullptr;
+		long long int i = args.size() - 1;
 
-		double result = args[0].real();
-		for (auto i = args.begin()+1; i != args.end(); i++)
+		if (args[i].status() == ValueStatus::Error)
+			error = &args[i];
+		double result = args[i].real();
+
+		for (i--; i >= 0; i--)
 		{
-			if (i->status() == ValueStatus::Error)
-				return *i;
-			result = std::pow(result, i->real());
+			if (args[i].status() == ValueStatus::Error)
+				error = &args[i];
+			if (!error)
+				result = std::pow(args[i].real(), result);
 		}
+
+		if (error)
+			return *error;
+
 		return result;
 	}
 }
